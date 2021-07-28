@@ -73,8 +73,8 @@
         <div class="display">
           <h4>显示模式</h4>
           <span>
-            <img :class="isDark===true?'':'img-active'" src="src/assets/images/light.png" alt="">
-            <img :class="isDark===false?'':'img-active'" src="src/assets/images/dark.png" alt="">
+            <img :class="isDark===true?'':'img-active'" src="~@/assets/images/light.png" alt="">
+            <img :class="isDark===false?'':'img-active'" src="~@/assets/images/dark.png" alt="">
           </span>
             <el-switch
                 style="display: block"
