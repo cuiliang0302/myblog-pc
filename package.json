@@ -1,0 +1,28 @@
+{
+  "name": "myblog_pc",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --mode development",
+    "build": "vite build --mode production",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "^6.0.1",
+    "element-plus": "^1.0.2-beta.55",
+    "normalize.css": "^8.0.1",
+    "vue": "^3.1.5",
+    "vue-router": "^4.0.10",
+    "vuex": "^4.0.2",
+    "vuex-along": "^1.2.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.2.5",
+    "@vue/compiler-sfc": "^3.0.5",
+    "axios": "^0.21.1",
+    "node-sass": "^6.0.1",
+    "sass": "^1.35.2",
+    "sass-loader": "^12.1.0",
+    "vite": "^2.4.3",
+    "vite-plugin-style-import": "^1.0.1"
+  }
+}

@@ -1,0 +1,40 @@
+@import "./normalize.css";
+@import "./hover-min.css";
+@import "./element-ui.scss";
+@import "./transition.scss";
+@import "./variable.scss";
+@import "./theme.scss";
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: $color-background-base;
+  min-width: 1200px;
+}
+
+// 文本禁止选中
+.no-choose {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.page {
+  padding-top: 15px;
+  width: 1200px;
+  margin: 0 auto;
+
+  article {
+    display: inline-block;
+    width: 900px;
+    margin-right: 20px;
+  }
+
+  aside {
+    display: inline-block;
+    width: 280px;
+    float: right;
+  }
+}
