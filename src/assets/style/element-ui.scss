@@ -1,7 +1,9 @@
+// 图片加载错误提示
 .el-image__error {
   background-color: $color-background-white !important;
 }
 
+// 图片圆角
 .el-image {
   img {
     border-radius: 8px;
@@ -14,4 +16,9 @@
     transform: scale(1.1);
     cursor: pointer;
   }
+}
+
+// 分割线提示文件
+.el-divider__text {
+  color: $color-text-regular!important;
 }

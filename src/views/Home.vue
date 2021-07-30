@@ -9,7 +9,8 @@
               <el-image
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
-                  :fit="'fill'">
+                  :fit="'fill'"
+                  lazy>
                 <template #placeholder>
                   <Loading></Loading>
                 </template>
@@ -24,11 +25,19 @@
                 <span class="card-title">🆕 最新文章</span>
               </div>
             </template>
-            <ul>
+            <ul v-infinite-scroll="load"
+                infinite-scroll-disabled="disabled">
               <li v-for="item in article.list" :key="item.id">
                 <ArticleItem :article="item"></ArticleItem>
               </li>
             </ul>
+            <p v-if="loading" v-loading="loading"
+               element-loading-text="玩命加载中"
+               element-loading-spinner="el-icon-loading"
+               element-loading-background="#ffffff"></p>
+            <p v-if="noMore">
+              <el-divider>我是有底线的</el-divider>
+            </p>
           </el-card>
         </div>
       </article>
@@ -45,12 +54,12 @@ import {
   ElCarouselItem,
   ElImage,
   ElCard,
-  ElButton,
+  ElDivider,
 } from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import ArticleItem from "@/components/common/ArticleItem.vue";
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
 import {getArticle} from "@/api/blog";
 
@@ -68,16 +77,31 @@ const article = reactive({
   count: '',
 })
 
-async function articleData() {
-  let data = await getArticle()
+async function articleData(page, order) {
+  let data = await getArticle(page, order)
   article.list = data.results
   article.count = data.count
   console.log(article.list, article.count)
 }
 
+// 无限滚动
+const count = ref(0)
+const page = ref(1)
+const loading = ref(false);
+const noMore = computed(() => count.value >= article.count);
+const disabled = computed(() => loading.value || noMore.value);
+const load = () => {
+  page.value++
+  loading.value = true;
+  getArticle(page.value, '-created_time').then((response) => {
+    article.list.push(...response.results)
+    count.value = article.list.length;
+    loading.value = false;
+  })
+};
 onMounted(() => {
   CarouselData()
-  articleData()
+  articleData(page.value, '-created_time')
 })
 </script>
 
@@ -98,13 +122,13 @@ article {
     ul {
       list-style-type: none;
       padding: 0;
+      margin: 0;
 
       li {
       }
     }
   }
 }
-
 aside {
 }
 </style>

@@ -39,3 +39,12 @@ body {
     float: right;
   }
 }
+
+// 最后一个分割线不显示
+ul {
+  li:last-child {
+    .el-divider--horizontal {
+      display: none !important;
+    }
+  }
+}

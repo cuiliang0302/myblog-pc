@@ -3,7 +3,8 @@
     <span class="cover">
       <el-image :src="article.cover"
                 style="width: 270px; height: 180px"
-                :fit="'fill'">
+                :fit="'fill'"
+                lazy>
         <template #placeholder>
           <Loading></Loading>
         </template>
@@ -23,11 +24,13 @@
       </div>
     </span>
   </section>
+  <el-divider></el-divider>
 </template>
 
 <script setup>
 import {
   ElImage,
+  ElDivider,
 } from 'element-plus'
 import Loading from "@/components/common/Loading.vue"
 import icon from "@/utils/icon";
@@ -66,7 +69,7 @@ let {tagColor} = setColor()
 
     h2 {
       color: $color-text-primary;
-      margin-top: 0;
+      margin: 0;
     }
 
     p {
@@ -98,5 +101,9 @@ let {tagColor} = setColor()
       }
     }
   }
+}
+
+.el-divider--horizontal {
+  margin: 5px 0 !important;
 }
 </style>
