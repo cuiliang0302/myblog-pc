@@ -1,0 +1,29 @@
+.article-item-hover, .article-title-hover, .article-abstract-hover, .article-tag-hover {
+  transition: all 0.5s;
+}
+
+.article-item-hover:hover {
+  box-shadow: 0 0 10px 5px rgb(48 55 66 / 10%);
+  transform: translate(0, -5px);
+  transition-delay: 0s !important;
+  //background-color: $color-background-base;
+}
+
+
+.article-title-hover:hover {
+  color: $color-primary !important;
+  cursor: pointer;
+  font-style: italic
+}
+
+.article-abstract-hover:hover {
+  color: $color-text-regular !important;
+  cursor: pointer;
+}
+
+.article-tag-hover:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+  font-weight: bold;
+  color: $color-text-placeholder !important;
+}

@@ -10,6 +10,9 @@
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
                   :fit="'fill'">
+                <template #placeholder>
+                  <Loading></Loading>
+                </template>
               </el-image>
             </el-carousel-item>
           </el-carousel>
@@ -21,10 +24,11 @@
                 <span class="card-title">🆕 最新文章</span>
               </div>
             </template>
-            aaaaaaaaaaaaaa
-<!--            <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">-->
-<!--              <li v-for="i in count" class="infinite-list-item">{{ i }}</li>-->
-<!--            </ul>-->
+            <ul>
+              <li v-for="item in article.list" :key="item.id">
+                <ArticleItem :article="item"></ArticleItem>
+              </li>
+            </ul>
           </el-card>
         </div>
       </article>
@@ -44,8 +48,12 @@ import {
   ElButton,
 } from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
-import {onMounted, ref} from "vue";
+import Loading from "@/components/common/Loading.vue"
+import ArticleItem from "@/components/common/ArticleItem.vue";
+import {onMounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
+import {getArticle} from "@/api/blog";
+
 //轮播图
 const carouselList = ref([])
 
@@ -53,12 +61,23 @@ async function CarouselData() {
   carouselList.value = await getCarousel()
   console.log(carouselList.value)
 }
-const count = ref(0);
-const load = () => {
-  count.value += 2;
-};
+
+//最新文章列表
+const article = reactive({
+  list: [],
+  count: '',
+})
+
+async function articleData() {
+  let data = await getArticle()
+  article.list = data.results
+  article.count = data.count
+  console.log(article.list, article.count)
+}
+
 onMounted(() => {
   CarouselData()
+  articleData()
 })
 </script>
 
@@ -70,11 +89,19 @@ article {
 
   .new {
     margin-top: 15px;
-    .card-title{
+
+    .card-title {
       color: $color-primary;
       font-size: 25px;
     }
 
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+      }
+    }
   }
 }
 
