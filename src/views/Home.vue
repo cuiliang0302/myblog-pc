@@ -42,7 +42,7 @@
         </div>
       </article>
       <aside>
-        这是侧边栏
+        <Aside></Aside>
       </aside>
     </div>
   </section>
@@ -59,6 +59,7 @@ import {
 import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import ArticleItem from "@/components/common/ArticleItem.vue";
+import Aside from "@/components/common/Aside.vue"
 import {computed, onMounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
 import {getArticle} from "@/api/blog";
@@ -114,11 +115,6 @@ article {
   .new {
     margin-top: 15px;
 
-    .card-title {
-      color: $color-primary;
-      font-size: 25px;
-    }
-
     ul {
       list-style-type: none;
       padding: 0;
@@ -129,6 +125,7 @@ article {
     }
   }
 }
+
 aside {
 }
 </style>

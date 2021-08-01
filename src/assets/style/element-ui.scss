@@ -11,7 +11,7 @@
   }
 }
 
-.cover {
+.cover, .recommend {
   img:hover {
     transform: scale(1.1);
     cursor: pointer;
@@ -20,5 +20,5 @@
 
 // 分割线提示文件
 .el-divider__text {
-  color: $color-text-regular!important;
+  color: $color-text-regular !important;
 }

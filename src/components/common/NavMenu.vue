@@ -49,10 +49,10 @@
         <MyIcon type="icon-search"/>
       </span>
       <span class="user hvr-grow">
-        <el-dropdown>
+        <el-dropdown @visible-change="dropdownChange">
           <span class="no-choose">
             <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-            <p>逆飞的流星<i class="el-icon-arrow-down el-icon--right"></i></p>
+            <p>逆飞的流星<i :class="isDropdown?'el-icon-arrow-up':'el-icon-arrow-down'+' el-icon--right'"></i></p>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -170,6 +170,13 @@ async function NoteData() {
   console.log(noteList.value)
 }
 
+// 个人中心-是否下拉状态
+const isDropdown = ref(false)
+
+// 个人中心-下拉事件
+const dropdownChange = (value) => {
+  isDropdown.value = value
+}
 //设置-菜单默认关闭
 const drawer = ref(false);
 //设置-菜单关闭事件

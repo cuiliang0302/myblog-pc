@@ -28,8 +28,8 @@ a {
 }
 
 .loadEffect {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   position: absolute;
   top: 50%;
   left: 50%;

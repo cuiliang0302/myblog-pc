@@ -1,4 +1,10 @@
-.article-item-hover, .article-title-hover, .article-abstract-hover, .article-tag-hover {
+.article-item-hover,
+.article-title-hover,
+.article-abstract-hover,
+.article-tag-hover,
+.card-hover,
+.ranking-hover
+{
   transition: all 0.5s;
 }
 
@@ -6,7 +12,6 @@
   box-shadow: 0 0 10px 5px rgb(48 55 66 / 10%);
   transform: translate(0, -5px);
   transition-delay: 0s !important;
-  //background-color: $color-background-base;
 }
 
 
@@ -26,4 +31,19 @@
   cursor: pointer;
   font-weight: bold;
   color: $color-text-placeholder !important;
+}
+
+.recommend-hover:hover {
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  box-shadow: 0 0 10px 5px rgb(48 55 66 / 10%);
+  transform: translate(0, -5px);
+  transition-delay: 0s !important;
+}
+.ranking-hover:hover{
+  color: $color-primary !important;
+  cursor: pointer;
+  font-weight: 700;
 }
