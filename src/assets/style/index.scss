@@ -14,6 +14,11 @@ body {
   min-width: 1200px;
 }
 
+body, ol, ul, li, h1, h2, h3, p, form {
+  margin: 0;
+  padding: 0;
+}
+
 // 文本禁止选中
 .no-choose {
   -webkit-user-select: none;
@@ -53,4 +58,11 @@ ul {
 .card-title {
   color: $color-primary;
   font-size: 25px;
+}
+
+// 标签云卡片适配
+.tag-box {
+  .el-card__body {
+    padding: 10px 0
+  }
 }

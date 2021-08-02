@@ -46,15 +46,120 @@
         </li>
       </ol>
     </el-card>
-    <div class="tag-list">
-      各种标签
-    </div>
-    <div class="about">
-      关于博主
-    </div>
-    <div class="statistics">
-      网站信息
-    </div>
+    <el-card class="card-hover tag-box">
+      <template #header>
+        <span class="card-title no-choose">🏷️ 所有标签</span>
+      </template>
+      <div class="all-tag">
+        <TagCloud></TagCloud>
+      </div>
+    </el-card>
+    <el-card class="card-hover">
+      <template #header>
+        <span class="card-title no-choose">👦 关于博主</span>
+      </template>
+      <div class="info">
+        <div class="no-choose">
+          <MyIcon type="icon-position"/>
+          {{ info.position }}
+        </div>
+        <div class="no-choose">
+          <MyIcon type="icon-company"/>
+          {{ info.company }}
+        </div>
+        <div class="no-choose">
+          <MyIcon type="icon-location"/>
+          {{ info.location }}
+        </div>
+        <div>
+          <MyIcon type="icon-email"/>
+          {{ info.email }}
+        </div>
+        <div class="contact">
+          <span>
+              <el-popover
+                  placement="top-start"
+                  :width="215"
+                  trigger="hover"
+              >
+                <div>
+                   <el-image
+                       style="width: 210px; height: 210px"
+                       :src="info.qq_img"
+                       :fit="'fill'" lazy></el-image>
+                </div>
+                <template #reference>
+                  <MyIcon type="icon-qq"/>
+                </template>
+              </el-popover>
+          </span>
+          <span>
+            <el-popover
+                placement="top-start"
+                :width="215"
+                trigger="hover"
+            >
+                <div>
+                   <el-image
+                       style="width: 210px; height: 210px"
+                       :src="info.wechat_img"
+                       :fit="'fill'" lazy></el-image>
+                </div>
+                <template #reference>
+                  <MyIcon type="icon-wechat"/>
+                </template>
+              </el-popover>
+
+          </span>
+          <span><a :href="info.github" target="_blank"><MyIcon type="icon-github"/></a></span>
+          <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
+        </div>
+      </div>
+    </el-card>
+    <el-card class="card-hover">
+      <template #header>
+        <span class="card-title no-choose">📊 网站信息</span>
+      </template>
+      <div class="statistics">
+        <div>
+          <MyIcon type="icon-uptime"/>
+          运行时间：{{ statistics.uptime }}天
+        </div>
+        <div>
+          <MyIcon type="icon-pv"/>
+          总访问量：{{ statistics.pv }}次
+        </div>
+        <div>
+          <MyIcon type="icon-uv"/>
+          访问人数：{{ statistics.uv }}次
+        </div>
+        <div>
+          <MyIcon type="icon-ip"/>
+          访问IP数：{{ statistics.ip }}个
+        </div>
+        <div>
+          <MyIcon type="icon-article"/>
+          文章篇数：{{ statistics.article }}篇
+        </div>
+        <div>
+          <MyIcon type="icon-section"/>
+          笔记篇数：{{ statistics.section }}篇
+        </div>
+        <div>
+          <MyIcon type="icon-category"/>
+          文章分类数：{{ statistics.category }}个
+        </div>
+        <div>
+          <MyIcon type="icon-tag"/>
+          文章标签数：{{ statistics.tag }}个
+        </div>
+        <div>
+          <MyIcon type="icon-note"/>
+          笔记分类数：{{ statistics.note }}个
+        </div>
+      </div>
+    </el-card>
+
   </section>
 </template>
 
@@ -65,17 +170,23 @@ import {
   ElDropdown,
   ElDropdownMenu,
   ElDropdownItem,
+  ElPopover
 } from 'element-plus'
 import Loading from "@/components/common/Loading.vue"
+import TagCloud from "@/components/TagCloud.vue";
 import {onMounted, reactive, ref} from "vue";
 import {getArticle} from "@/api/blog";
+import {getInfo, getSiteStatistics} from "@/api/management";
+import icon from "@/utils/icon";
+
+let {MyIcon} = icon()
 //推荐阅读文章列表
 const recommend = ref([])
 
 async function recommendData() {
   let data = await getArticle(1, 6, '-is_recommend,-created_time')
   recommend.value = data.results
-  console.log(recommend.value)
+  console.log("recommend", recommend.value)
 }
 
 // 排行列表-全部种类
@@ -92,7 +203,7 @@ const articleRanking = ref([])
 // 排行列表-切换种类
 const handleCommand = (index) => {
   isRanking.value = ranking.value[index].name
-  getArticle(1, 10,ranking.value[index].value).then((response) => {
+  getArticle(1, 10, ranking.value[index].value).then((response) => {
     articleRanking.value = response.results
   })
 };
@@ -107,12 +218,30 @@ const dropdownChange = (value) => {
 async function rankingData() {
   let data = await getArticle(1, 10, '-view')
   articleRanking.value = data.results
-  console.log(articleRanking.value)
+  console.log("articleRanking", articleRanking.value)
+}
+
+//关于博主信息
+let info = reactive({})
+
+async function infoData() {
+  Object.assign(info, await getInfo());
+  console.log("info", info)
+}
+
+// 网站数据统计
+let statistics = reactive({})
+
+async function statisticsData() {
+  Object.assign(statistics, await getSiteStatistics());
+  console.log("statistics", statistics)
 }
 
 onMounted(() => {
   recommendData()
   rankingData()
+  infoData()
+  statisticsData()
 })
 </script>
 
@@ -151,14 +280,12 @@ onMounted(() => {
   }
 
   .ranking {
-    margin: 0;
     padding-left: 20px;
     line-height: 28px;
 
     li {
       p {
         color: $color-text-regular;
-        margin: 0;
       }
     }
 
@@ -200,6 +327,44 @@ onMounted(() => {
 
     li:nth-child(10) {
       color: #3498db;
+    }
+  }
+
+  .info {
+    line-height: 30px;
+    color: $color-text-regular;
+
+    .anticon {
+      margin-right: 5px;
+      font-size: 20px;
+    }
+
+    .contact {
+      display: flex;
+      justify-content: center;
+
+      span {
+        margin: 10px 7px 0 7px;
+
+        .anticon {
+          font-size: 30px !important;
+        }
+      }
+
+      span:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .statistics {
+    div {
+      font-size: 16px;
+      line-height: 30px;
+      color: $color-text-regular;
+      .anticon{
+        margin-right: 5px;
+      }
     }
   }
 }

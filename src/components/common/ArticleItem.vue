@@ -73,6 +73,7 @@ let {tagColor} = setColor()
     }
 
     p {
+      margin: 15px 0;
       color: $color-text-secondary;
       line-height: 28px;
       height: 108px;

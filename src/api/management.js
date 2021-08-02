@@ -29,3 +29,7 @@ export function getSiteConfig() {
   return index.get('management/siteConfig/1/')
 }
 
+// 获取网站数据统计
+export function getSiteStatistics() {
+  return index.get('management/siteStatistics/')
+}
