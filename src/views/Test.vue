@@ -1,15 +1,20 @@
 <template>
-  <Loading></Loading>
+  <div class="main">
+    <BackTop></BackTop>
+  </div>
+
 </template>
 
 <script setup>
-import {
-  ElButton,
-  ElInfiniteScroll,
-} from 'element-plus'
-import Loading from '@/components/common/Loading.vue'
+import BackTop from "@/components/common/BackTop.vue"
+import icon from "@/utils/icon";
+
+let {MyIcon} = icon()
 </script>
 
 <style scoped lang="scss">
-
+.main {
+  height: 3000px;
+  background-color: skyblue;
+}
 </style>

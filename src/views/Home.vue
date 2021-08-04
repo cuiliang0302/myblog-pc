@@ -45,6 +45,8 @@
         <Aside></Aside>
       </aside>
     </div>
+    <Footer></Footer>
+    <BackTop></BackTop>
   </section>
 </template>
 
@@ -60,10 +62,11 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import ArticleItem from "@/components/common/ArticleItem.vue";
 import Aside from "@/components/common/Aside.vue"
+import Footer from "@/components/common/Footer.vue"
+import BackTop from "@/components/common/BackTop.vue"
 import {computed, onMounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
 import {getArticle} from "@/api/blog";
-
 //轮播图
 const carouselList = ref([])
 

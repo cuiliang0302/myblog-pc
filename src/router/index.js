@@ -5,6 +5,7 @@ const router = createRouter({
 	history: createWebHistory(),  //h5模式createWebHistory
 	routes: [
 		{path: '/', component: () => import('@/views/Home.vue')},
+		{path: '/about', component: () => import('@/views/About.vue')},
 		{path: '/test', component: () => import('@/views/Test.vue')}
 	]
 })
