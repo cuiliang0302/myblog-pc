@@ -54,28 +54,29 @@
         <TagCloud></TagCloud>
       </div>
     </el-card>
-    <el-card class="card-hover">
-      <template #header>
-        <span class="card-title no-choose">👦 关于博主</span>
-      </template>
-      <div class="info">
-        <div class="no-choose">
-          <MyIcon type="icon-position"/>
-          {{ info.position }}
-        </div>
-        <div class="no-choose">
-          <MyIcon type="icon-company"/>
-          {{ info.company }}
-        </div>
-        <div class="no-choose">
-          <MyIcon type="icon-location"/>
-          {{ info.location }}
-        </div>
-        <div>
-          <MyIcon type="icon-email"/>
-          {{ info.email }}
-        </div>
-        <div class="contact">
+    <el-affix :offset="20">
+      <el-card class="card-hover">
+        <template #header>
+          <span class="card-title no-choose">👦 关于博主</span>
+        </template>
+        <div class="info">
+          <div class="no-choose">
+            <MyIcon type="icon-position"/>
+            {{ info.position }}
+          </div>
+          <div class="no-choose">
+            <MyIcon type="icon-company"/>
+            {{ info.company }}
+          </div>
+          <div class="no-choose">
+            <MyIcon type="icon-location"/>
+            {{ info.location }}
+          </div>
+          <div>
+            <MyIcon type="icon-email"/>
+            {{ info.email }}
+          </div>
+          <div class="contact">
           <span>
               <el-popover
                   placement="top-start"
@@ -93,7 +94,7 @@
                 </template>
               </el-popover>
           </span>
-          <span>
+            <span>
             <el-popover
                 placement="top-start"
                 :width="215"
@@ -111,54 +112,56 @@
               </el-popover>
 
           </span>
-          <span><a :href="info.github" target="_blank"><MyIcon type="icon-github"/></a></span>
-          <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
+            <span><a :href="info.github" target="_blank"><MyIcon type="icon-github"/></a></span>
+            <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
+          </div>
         </div>
-      </div>
-    </el-card>
-    <el-card class="card-hover">
-      <template #header>
-        <span class="card-title no-choose">📊 网站信息</span>
-      </template>
-      <div class="statistics">
-        <div>
-          <MyIcon type="icon-uptime"/>
-          运行时间：{{ statistics.uptime }}天
+      </el-card>
+      <el-card class="card-hover">
+        <template #header>
+          <span class="card-title no-choose">📊 网站信息</span>
+        </template>
+        <div class="statistics">
+          <div>
+            <MyIcon type="icon-uptime"/>
+            运行时间：{{ statistics.uptime }}天
+          </div>
+          <div>
+            <MyIcon type="icon-pv"/>
+            总访问量：{{ statistics.pv }}次
+          </div>
+          <div>
+            <MyIcon type="icon-uv"/>
+            访问人数：{{ statistics.uv }}次
+          </div>
+          <div>
+            <MyIcon type="icon-ip"/>
+            访问IP数：{{ statistics.ip }}个
+          </div>
+          <div>
+            <MyIcon type="icon-article"/>
+            文章篇数：{{ statistics.article }}篇
+          </div>
+          <div>
+            <MyIcon type="icon-section"/>
+            笔记篇数：{{ statistics.section }}篇
+          </div>
+          <div>
+            <MyIcon type="icon-category"/>
+            文章分类数：{{ statistics.category }}个
+          </div>
+          <div>
+            <MyIcon type="icon-tag"/>
+            文章标签数：{{ statistics.tag }}个
+          </div>
+          <div>
+            <MyIcon type="icon-note"/>
+            笔记分类数：{{ statistics.note }}个
+          </div>
         </div>
-        <div>
-          <MyIcon type="icon-pv"/>
-          总访问量：{{ statistics.pv }}次
-        </div>
-        <div>
-          <MyIcon type="icon-uv"/>
-          访问人数：{{ statistics.uv }}次
-        </div>
-        <div>
-          <MyIcon type="icon-ip"/>
-          访问IP数：{{ statistics.ip }}个
-        </div>
-        <div>
-          <MyIcon type="icon-article"/>
-          文章篇数：{{ statistics.article }}篇
-        </div>
-        <div>
-          <MyIcon type="icon-section"/>
-          笔记篇数：{{ statistics.section }}篇
-        </div>
-        <div>
-          <MyIcon type="icon-category"/>
-          文章分类数：{{ statistics.category }}个
-        </div>
-        <div>
-          <MyIcon type="icon-tag"/>
-          文章标签数：{{ statistics.tag }}个
-        </div>
-        <div>
-          <MyIcon type="icon-note"/>
-          笔记分类数：{{ statistics.note }}个
-        </div>
-      </div>
-    </el-card>
+      </el-card>
+    </el-affix>
+
 
   </section>
 </template>
@@ -170,7 +173,8 @@ import {
   ElDropdown,
   ElDropdownMenu,
   ElDropdownItem,
-  ElPopover
+  ElPopover,
+  ElAffix,
 } from 'element-plus'
 import Loading from "@/components/common/Loading.vue"
 import TagCloud from "@/components/TagCloud.vue";
@@ -362,7 +366,8 @@ onMounted(() => {
       font-size: 16px;
       line-height: 30px;
       color: $color-text-regular;
-      .anticon{
+
+      .anticon {
         margin-right: 5px;
       }
     }

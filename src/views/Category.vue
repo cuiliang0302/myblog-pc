@@ -23,15 +23,7 @@
               </li>
             </ul>
             <div class="paging">
-<!--              <el-pagination-->
-<!--                  @size-change="handleSizeChange"-->
-<!--                  @current-change="handleCurrentChange"-->
-<!--                  :current-page="currentPage"-->
-<!--                  :page-sizes="[5, 10, 15, 20]"-->
-<!--                  :page-size="10"-->
-<!--                  layout="total, sizes, prev, pager, next, jumper"-->
-<!--                  :total="article.count">-->
-<!--              </el-pagination>-->
+              <Pagination :total="parseInt(article.count)" @changePage="changePage"></Pagination>
             </div>
           </el-card>
         </div>
@@ -51,17 +43,19 @@ import ArticleItem from "@/components/common/ArticleItem.vue";
 import Aside from "@/components/common/Aside.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
+import Pagination from "@/components/common/Pagination.vue"
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
   ElCard,
-  ElPagination
 } from 'element-plus'
 import {onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getArticle, getCategoryName} from "@/api/blog";
 
 const router = useRouter()
+// 当前文章id
+const categoryID = ref()
 // 文章分类名
 const categoryName = ref('')
 
@@ -77,31 +71,27 @@ const article = reactive({
   count: '',
 })
 
-async function articleData(categoryID) {
-  let data = await getArticle(1, 20, '-created_time', categoryID, NaN)
+async function articleData(page, size, categoryID) {
+  let data = await getArticle(page, size, '-created_time', categoryID, NaN)
   article.list = data.results
   article.count = data.count
   console.log(article.list, article.count)
 }
 
-// // 分页-直接前往页
-// const currentPage = ref(1)
-// // 分页-页码大小改变
-// const handleSizeChange = (val) => {
-//   console.log(`每页 ${val} 条`);
-// };
-// // 分页-当前页变动
-// const handleCurrentChange = (val) => {
-//   console.log(`当前页: ${val}`);
-// };
+// 分页-页面跳转
+const changePage = (pageSize, pageNumber) => {
+  console.log("爹收到了", pageSize, pageNumber)
+  articleData(pageNumber, pageSize, categoryID.value)
+}
+
 onMounted(() => {
-  let categoryID = router.currentRoute.value.params.id
-  categoryNameData(categoryID)
-  articleData(categoryID)
+  categoryID.value = router.currentRoute.value.params.id
+  categoryNameData(categoryID.value)
+  articleData(1, 10, categoryID.value)
 })
 onBeforeRouteUpdate(async (to) => {
   await categoryNameData(to.params.id)
-  await articleData(to.params.id)
+  await articleData(1, 10, to.params.id)
 });
 </script>
 
@@ -125,8 +115,7 @@ onBeforeRouteUpdate(async (to) => {
     }
 
     .paging {
-      text-align: center;
-      margin-top: 40px;
+
     }
   }
 }
