@@ -1,6 +1,6 @@
 <template>
   <section class="home">
-    <NavMenu></NavMenu>
+    <NavMenu :activeMenu="'1'"></NavMenu>
     <div class="page">
       <article>
         <div class="carousel">

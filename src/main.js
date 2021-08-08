@@ -4,6 +4,9 @@ import router from '@/router';
 import store from '@/store';
 import '@/assets/style/index.scss'
 import ElementPlus from '@/plugins/ElementPlus'
+// import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import 'element-plus/lib/theme-chalk/index.css'
+
 const app = createApp(App)
 app.use(router)
 app.use(store)

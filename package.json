@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
-    "element-plus": "^1.0.2-beta.55",
+    "element-plus": "^1.0.2-beta.70",
     "normalize.css": "^8.0.1",
     "vue": "^3.1.5",
     "vue-router": "^4.0.10",

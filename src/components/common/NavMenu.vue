@@ -8,8 +8,8 @@
       <span class="no-choose">{{ siteConfig.name }}</span>
     </span>
     <span class="middle">
-      <el-menu :default-active="activeMenu" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">
+      <el-menu :default-active="activeMenu" class="el-menu-demo" mode="horizontal">
+        <el-menu-item index="1" @click="router.push('/')">
           <MyIcon type="icon-home"/>
           首页
         </el-menu-item>
@@ -18,7 +18,8 @@
             <MyIcon type="icon-article"/>
             文章
           </template>
-          <el-menu-item v-for="category in categoryList" :key="category.id">{{ category.name }}</el-menu-item>
+          <el-menu-item v-for="category in categoryList" :key="category.id"
+                        :index="'2-'+category.id" @click="toCategory(category.id)">{{ category.name }}</el-menu-item>
         </el-submenu>
         <el-submenu index="3">
           <template #title>
@@ -133,14 +134,19 @@ import {onMounted, reactive, ref} from "vue";
 import icon from '@/utils/icon'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 let {MyIcon} = icon()
-// 导航菜单-当前选中的菜单
-const activeMenu = ref('1');
-// 导航菜单-点击切换菜单事件
-const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath);
-};
+const props = defineProps({
+  // 导航菜单-当前选中的菜单
+  activeMenu: {
+    type: String,
+    required: true,
+    default: 1
+  },
+})
+// const activeMenu = ref('1')
 //导航菜单-logo和name
 const siteConfig = reactive({
   logo: '',
@@ -162,6 +168,10 @@ async function categoryData() {
   console.log(categoryList.value)
 }
 
+//导航菜单-跳转文章列表
+const toCategory = (categoryId) => {
+  router.push({path: `/category/${categoryId}`})
+}
 //导航菜单-笔记分类
 const noteList = ref([])
 
@@ -234,7 +244,7 @@ header {
   }
 
   .middle {
-    flex: 1
+    flex: 1;
   }
 
   .right {

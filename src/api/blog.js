@@ -17,6 +17,11 @@ export function getCategory() {
 	return index.get('blog/category/')
 }
 
+// 获取文章分类名称
+export function getCategoryName(id) {
+	return index.get('blog/category/' + id + '/')
+}
+
 // 获取文章标签列表
 export function getTag() {
 	return index.get('blog/tag/')
