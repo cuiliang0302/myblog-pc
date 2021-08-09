@@ -4,11 +4,14 @@
     <div class="page">
       <article>
         <div class="current-position">
-          <el-breadcrumb separator=">">
+          <span>您的位置：</span>
+          <span>
+            <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>文章分类</el-breadcrumb-item>
             <el-breadcrumb-item>{{ categoryName }}</el-breadcrumb-item>
           </el-breadcrumb>
+          </span>
         </div>
         <div class="article-list">
           <el-card class="box-card">
@@ -80,7 +83,6 @@ async function articleData(page, size, categoryID) {
 
 // 分页-页面跳转
 const changePage = (pageSize, pageNumber) => {
-  console.log("爹收到了", pageSize, pageNumber)
   articleData(pageNumber, pageSize, categoryID.value)
 }
 
@@ -97,11 +99,6 @@ onBeforeRouteUpdate(async (to) => {
 
 <style scoped lang="scss">
 .category {
-  .current-position {
-    background-color: $color-background-white;
-    padding: 20px
-  }
-
   .article-list {
     margin-top: 15px;
 

@@ -27,6 +27,7 @@ body, ol, ul, li, h1, h2, h3, p, form {
   user-select: none;
 }
 
+// 页面主体布局
 .page {
   padding-top: 15px;
   padding-bottom: 20px;
@@ -65,5 +66,17 @@ ul {
 .tag-box {
   .el-card__body {
     padding: 10px 0
+  }
+}
+
+// 您的位置面包屑
+.current-position {
+  background-color: $color-background-white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+
+  span:nth-child(1) {
+    color: $color-text-regular;
   }
 }

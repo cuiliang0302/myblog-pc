@@ -32,5 +32,8 @@ export default defineConfig({
 				additionalData: '@use "./src/assets/style/variable.scss" as *;'
 			}
 		}
-	}
+	},
+	optimizeDeps: {
+		include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],
+	},
 })

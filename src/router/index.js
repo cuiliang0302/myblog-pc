@@ -20,6 +20,14 @@ const router = createRouter({
 				title: '文章分类',
 			}
 		},
+		{
+			path: '/detail/:id',
+			name: 'Detail',
+			component: () => import('@/views/Detail.vue'),
+			meta: {
+				title: '文章正文',
+			}
+		},
 		{path: '/about', component: () => import('@/views/About.vue')},
 		{path: '/test', component: () => import('@/views/Test.vue')}
 	]

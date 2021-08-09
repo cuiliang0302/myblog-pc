@@ -49,11 +49,12 @@
       <span class="search hvr-grow">
         <MyIcon type="icon-search"/>
       </span>
-      <span class="user hvr-grow">
+      <span class="user">
         <el-dropdown @visible-change="dropdownChange">
           <span class="no-choose">
             <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-            <p>逆飞的流星<i :class="isDropdown?'el-icon-arrow-up':'el-icon-arrow-down'+' el-icon--right'"></i></p>
+            <p>逆飞的流星<i
+                :class="isDropdown?' el-icon-arrow-up'+' el-icon--right':' el-icon-arrow-down'+' el-icon--right'"></i></p>
           </span>
           <template #dropdown>
             <el-dropdown-menu>

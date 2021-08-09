@@ -1,6 +1,6 @@
 <template>
   <section class="article-item article-item-hover">
-    <span class="cover">
+    <span class="cover" @click="toDetail(article.id)">
       <el-image :src="article.cover"
                 style="width: 270px; height: 180px"
                 :fit="'fill'"
@@ -11,8 +11,8 @@
       </el-image>
     </span>
     <span class="describe no-choose">
-      <h2 class="article-title-hover">{{ article.title }}</h2>
-      <p class="article-abstract-hover">{{ article.abstract }}</p>
+      <h2 class="article-title-hover" @click="toDetail(article.id)">{{ article.title }}</h2>
+      <p class="article-abstract-hover" @click="toDetail(article.id)">{{ article.abstract }}</p>
       <div class="info">
         <span class="tag article-tag-hover"
               :style="'background-color: '+tagColor(article.category_id)">{{ article.category }}</span>
@@ -36,7 +36,9 @@ import Loading from "@/components/common/Loading.vue"
 import icon from "@/utils/icon";
 import timeFormat from "@/utils/timeFormat";
 import setColor from "@/utils/setColor";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const props = defineProps({
   // 参数校验与默认值
   article: {
@@ -47,6 +49,10 @@ const props = defineProps({
 let {MyIcon} = icon()
 let {timeAgo} = timeFormat()
 let {tagColor} = setColor()
+// 跳转文章详情页
+const toDetail = (detailID) => {
+  router.push({path: `/detail/${detailID}`})
+}
 </script>
 
 <style scoped lang="scss">

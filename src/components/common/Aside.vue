@@ -6,7 +6,8 @@
       </template>
       <div class="recommend">
           <span class="recommend-hover"
-                v-for="(article,item) in recommend" :key="article.id">
+                v-for="(article,item) in recommend" :key="article.id"
+                @click="toDetail(article.id)">
           <el-image
               style="width: 115px;height: 76px"
               :src="article.cover"
@@ -41,7 +42,7 @@
         </el-dropdown>
       </template>
       <ol class="ranking">
-        <li v-for="article in articleRanking" :key="article.id">
+        <li v-for="article in articleRanking" :key="article.id" @click="toDetail(article.id)">
           <p class="no-choose ranking-hover">{{ article.title }}</p>
         </li>
       </ol>
@@ -184,6 +185,9 @@ import {getInfo, getSiteStatistics} from "@/api/management";
 import icon from "@/utils/icon";
 
 let {MyIcon} = icon()
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 //推荐阅读文章列表
 const recommend = ref([])
 
@@ -241,6 +245,10 @@ async function statisticsData() {
   console.log("statistics", statistics)
 }
 
+// 跳转文章详情页
+const toDetail = (detailID) => {
+  router.push({path: `/detail/${detailID}`})
+}
 onMounted(() => {
   recommendData()
   rankingData()
