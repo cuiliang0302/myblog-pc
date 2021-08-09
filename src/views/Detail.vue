@@ -17,14 +17,14 @@
         <h1>{{ article.title }}</h1>
         <div class="info">
           <span><MyIcon type="icon-category"/>{{ article.category }}</span>
+          <span><MyIcon type="icon-tag"/>
+            <span v-for="(tag,index) in article.tags" :key="index">{{ tag.name }}</span>
+          </span>
           <span><MyIcon type="icon-time"/>{{ timeFull(article.created_time) }}</span>
           <span><MyIcon type="icon-view"/>{{ article.view }}</span>
           <span><MyIcon type="icon-like"/>{{ article.like }}</span>
           <span><MyIcon type="icon-collect"/>{{ article.collect }}</span>
           <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
-          <span><MyIcon type="icon-tag"/>
-            <span v-for="(tag,index) in article.tags" :key="index">{{ tag }}</span>
-          </span>
         </div>
         <div class="body">
           <v-md-preview :text="article.body" @image-click="showImg"></v-md-preview>
@@ -155,6 +155,7 @@ onMounted(() => {
   .main {
     h1 {
       text-align: center;
+      margin: 20px 0;
     }
 
     .info {
@@ -162,9 +163,19 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       color: $color-text-regular;
+      background-color: $color-other-clouds;
+      padding: 5px 0px;
+      margin: 10px 110px;
+      border-radius: 20px;
 
       > span {
-        margin: 0 20px;
+        margin: 0 25px;
+      }
+
+      span:nth-child(2) {
+        span:nth-child(2) {
+          margin-right: 10px;
+        }
       }
     }
   }
