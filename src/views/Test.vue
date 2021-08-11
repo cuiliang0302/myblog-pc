@@ -1,32 +1,35 @@
 <template>
-  <div class="demo-image__preview">
-    <h1 @click="showImg">点我</h1>
-    <el-image-viewer v-if="images.isShow" :initial-index="images.currentIndex"
-                     :url-list="images.MDimages" @close="images.isShow=false">
-    </el-image-viewer>
-  </div>
+    <ul
+        class="list"
+        v-infinite-scroll="load"
+        infinite-scroll-disabled="disabled">
+      <li v-for="i in count" class="list-item">{{ i }}</li>
+    </ul>
+    <p v-if="loading">加载中...</p>
+    <p v-if="noMore">没有更多了</p>
 </template>
 
 <script setup>
-import {defineComponent, reactive, ref} from 'vue';
-import {
-  ElImageViewer,
-} from 'element-plus'
+import {defineComponent, ref, computed} from 'vue';
 
-const images = reactive({
-  MDimages: [
-    'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-    'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
-  ],
-  currentIndex: 1,
-  isShow: false,
-})
-// markdown图片查看
-const showImg = () => {
-  images.isShow = true
-  console.log(images)
+const count = ref(10);
+const loading = ref(false);
+const noMore = computed(() => count.value >= 20);
+const disabled = computed(() => loading.value || noMore.value);
+const load = () => {
+  loading.value = true;
+  setTimeout(() => {
+    count.value += 2;
+    loading.value = false;
+  }, 2000);
 }
 </script>
-<style>
-
+<style lang="scss">
+ul {
+  li {
+    background-color: skyblue;
+    height: 100px;
+    margin: 10px;
+  }
+}
 </style>

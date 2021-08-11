@@ -55,29 +55,28 @@
         <TagCloud></TagCloud>
       </div>
     </el-card>
-    <el-affix :offset="20">
-      <el-card class="card-hover">
-        <template #header>
-          <span class="card-title no-choose">👦 关于博主</span>
-        </template>
-        <div class="info">
-          <div class="no-choose">
-            <MyIcon type="icon-position"/>
-            {{ info.position }}
-          </div>
-          <div class="no-choose">
-            <MyIcon type="icon-company"/>
-            {{ info.company }}
-          </div>
-          <div class="no-choose">
-            <MyIcon type="icon-location"/>
-            {{ info.location }}
-          </div>
-          <div>
-            <MyIcon type="icon-email"/>
-            {{ info.email }}
-          </div>
-          <div class="contact">
+    <el-card class="card-hover">
+      <template #header>
+        <span class="card-title no-choose">👦 关于博主</span>
+      </template>
+      <div class="info">
+        <div class="no-choose">
+          <MyIcon type="icon-position"/>
+          {{ info.position }}
+        </div>
+        <div class="no-choose">
+          <MyIcon type="icon-company"/>
+          {{ info.company }}
+        </div>
+        <div class="no-choose">
+          <MyIcon type="icon-location"/>
+          {{ info.location }}
+        </div>
+        <div>
+          <MyIcon type="icon-email"/>
+          {{ info.email }}
+        </div>
+        <div class="contact">
           <span>
               <el-popover
                   placement="top-start"
@@ -95,7 +94,7 @@
                 </template>
               </el-popover>
           </span>
-            <span>
+          <span>
             <el-popover
                 placement="top-start"
                 :width="215"
@@ -113,11 +112,12 @@
               </el-popover>
 
           </span>
-            <span><a :href="info.github" target="_blank"><MyIcon type="icon-github"/></a></span>
-            <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
-          </div>
+          <span><a :href="info.github" target="_blank"><MyIcon type="icon-github"/></a></span>
+          <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
         </div>
-      </el-card>
+      </div>
+    </el-card>
+    <el-affix :offset="20">
       <el-card class="card-hover">
         <template #header>
           <span class="card-title no-choose">📊 网站信息</span>

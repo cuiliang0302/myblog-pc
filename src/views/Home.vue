@@ -31,7 +31,7 @@
                 <ArticleItem :article="item"></ArticleItem>
               </li>
             </ul>
-            <p v-if="loading" v-loading="loading"
+            <p class="isLoading" v-if="loading" v-loading="loading"
                element-loading-text="玩命加载中"
                element-loading-spinner="el-icon-loading"
                element-loading-background="#ffffff"></p>
@@ -126,6 +126,11 @@ article {
       li {
       }
     }
+  }
+
+  .isLoading {
+    padding: 30px;
+    font-size: 30px;
   }
 }
 
