@@ -1,10 +1,14 @@
 <template>
   <section class="detail">
-    <NavMenu :activeMenu="'1'"></NavMenu>
-    <div class="page">
-      <div class="current-position">
-        <span>您的位置：</span>
-        <span>
+    <NavMenu :activeMenu="activeMenu"></NavMenu>
+    <div class="detail-page">
+      <div class="detail-left">
+        这是左边部分
+      </div>
+      <div class="detail-center">
+        <div class="current-position">
+          <span>您的位置：</span>
+          <span>
             <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item><a @click="toCategory(article.category_id)">
@@ -12,30 +16,76 @@
             <el-breadcrumb-item>文章正文</el-breadcrumb-item>
           </el-breadcrumb>
           </span>
-      </div>
-      <div class="main detail-card">
-        <h1>{{ article.title }}</h1>
-        <div class="info">
-          <span><MyIcon type="icon-category"/>{{ article.category }}</span>
-          <span><MyIcon type="icon-tag"/>
-            <span v-for="(tag,index) in article.tags" :key="index">{{ tag.name }}</span>
-          </span>
-          <span><MyIcon type="icon-time"/>{{ timeFull(article.created_time) }}</span>
-          <span><MyIcon type="icon-view"/>{{ article.view }}</span>
-          <span><MyIcon type="icon-like"/>{{ article.like }}</span>
-          <span><MyIcon type="icon-collect"/>{{ article.collect }}</span>
-          <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
         </div>
-        <div class="body">
-          <v-md-preview :text="article.body" @image-click="showImg"></v-md-preview>
-          <el-image-viewer v-if="images.isShow" :initial-index="images.currentIndex"
-                           :url-list="images.MDimages" @close="images.isShow=false">
-          </el-image-viewer>
+        <div class="main detail-card">
+          <div v-if="JSON.stringify(article) == '{}'">
+            <el-skeleton :rows="20" animated/>
+          </div>
+          <div v-else>
+            <h1>{{ article.title }}</h1>
+            <div class="info">
+              <span><MyIcon type="icon-category"/>{{ article.category }}</span>
+              <span><MyIcon type="icon-tag"/>
+                  <span v-for="(tag,index) in article.tags" :key="index">{{ tag.name }}</span>
+                </span>
+              <span><MyIcon type="icon-time"/>{{ timeFull(article.created_time) }}</span>
+              <span><MyIcon type="icon-view"/>{{ article.view }}</span>
+              <span><MyIcon type="icon-like"/>{{ article.like }}</span>
+              <span><MyIcon type="icon-collect"/>{{ article.collect }}</span>
+              <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
+            </div>
+            <div class="body" ref="editor">
+              <v-md-preview :text="article.body" @image-click="showImg"></v-md-preview>
+            </div>
+            <el-image-viewer v-if="images.isShow" :initial-index="images.currentIndex"
+                             :url-list="images.MDimages" @close="images.isShow=false">
+            </el-image-viewer>
+          </div>
+        </div>
+      </div>
+      <div class="detail-right">
+        <div class="outline" v-if="titleList.length !== 0">
+          <p v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
+             :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
+             @click="rollTo(anchor)"
+          >
+            {{ anchor.title }}
+          </p>
+        </div>
+        <div v-else>
+          空了
+        </div>
+        <div class="action">
+          <el-tooltip class="item" effect="dark" content="大纲" placement="left">
+            <div>
+              <MyIcon type="icon-outline"/>
+            </div>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="点赞" placement="left">
+            <div>
+              <MyIcon type="icon-like"/>
+            </div>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="收藏" placement="left">
+            <div>
+              <MyIcon type="icon-collect"/>
+            </div>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="评论" placement="left">
+            <div>
+              <MyIcon type="icon-comment"/>
+            </div>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="打赏" placement="left">
+            <div>
+              <MyIcon type="icon-exceptional"/>
+            </div>
+          </el-tooltip>
+          <BackTop></BackTop>
         </div>
       </div>
     </div>
     <Footer></Footer>
-    <BackTop></BackTop>
   </section>
 </template>
 
@@ -49,9 +99,11 @@ import {
   ElBreadcrumbItem,
   ElCard,
   ElImageViewer,
+  ElSkeleton,
+  ElTooltip,
 } from 'element-plus'
 import {getArticleDetail} from "@/api/blog";
-import {onMounted, reactive, ref} from "vue";
+import {nextTick, onMounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -101,6 +153,8 @@ const toCategory = (categoryId) => {
 const articleID = ref()
 // 文章详情数据
 const article = reactive({})
+// 当前文章分类id
+const activeMenu = ref()
 
 // 获取文章详情
 async function articleData(DetailID) {
@@ -109,7 +163,7 @@ async function articleData(DetailID) {
     if (i === 'body') {
       // 图片防盗链处理
       article.body = detail_data.body
-      const pattern = /!\[(.*?)\]\((.*?)\)/gm;
+      const pattern = /!\[(.*?)\]\((https:\/\/cdn.nlark.com.*?)\)/gm;
       let matcher;
       let imgArr = [];
       while ((matcher = pattern.exec(article.body)) !== null) {
@@ -125,8 +179,12 @@ async function articleData(DetailID) {
       article[i] = detail_data[i]
     }
   }
+  console.log(article)
+  activeMenu.value = "2-" + article.category_id
+  await getTitle()
 }
 
+// markdown图片对象
 const images = reactive({
   MDimages: [],
   currentIndex: 0,
@@ -138,6 +196,41 @@ const showImg = (MDimages, currentIndex) => {
   images.currentIndex = currentIndex
   images.isShow = true
 }
+// markdown对象
+let editor = ref(null)
+// 文章标题列表
+let titleList = ref([])
+// markdown标题跳转
+const rollTo = (anchor) => {
+  console.log('收到跳转请求')
+  const {lineIndex} = anchor;
+  const heading = editor.value.querySelector(
+      `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
+  );
+  if (heading) {
+    heading.scrollIntoView({behavior: "smooth", block: "start"})
+  }
+}
+
+// 获取markdown标题
+async function getTitle() {
+  await nextTick()
+  const anchors = editor.value.querySelectorAll(
+      '.v-md-editor-preview h1,h2,h3'
+  )
+  const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
+  if (!titles.length) {
+    titleList.value = [];
+    return;
+  }
+  const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
+  titleList.value = titles.map((el) => ({
+    title: el.innerText,
+    lineIndex: el.getAttribute('data-v-md-line'),
+    indent: hTags.indexOf(el.tagName),
+  }));
+}
+
 onMounted(() => {
   articleID.value = router.currentRoute.value.params.id
   articleData(articleID.value)
@@ -146,38 +239,103 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .detail {
+  .detail-page {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    .detail-left {
+      width: 15%;
+    }
+
+    .detail-center {
+      width: 70%;
+
+      .main {
+        h1 {
+          text-align: center;
+          margin: 20px 0;
+        }
+
+        .info {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: $color-text-regular;
+          background-color: $color-other-clouds;
+          padding: 5px 0px;
+          margin: 10px 30px;
+          border-radius: 20px;
+
+          > span {
+            margin: 0 25px;
+
+            .anticon {
+              margin-right: 10px;
+            }
+          }
+
+          span:nth-child(2) {
+            span:nth-child(2) {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+
+    .detail-right {
+      width: 15%;
+
+      .outline {
+        position: fixed;
+        font-size: 13px;
+        line-height: 25px;
+        color: $color-text-secondary;
+        margin-left: 10px;
+        border-left: 1px solid $color-border-base;
+        padding-left: 5px;
+
+        p {
+          cursor: pointer;
+        }
+
+        p:hover {
+          color: $color-primary;
+        }
+      }
+
+      .action {
+        position: fixed;
+        bottom: 130px;
+        width: 40px;
+        height: 250px;
+        right: 40px;
+
+        > div {
+          width: 40px;
+          height: 40px;
+          background-color: $color-background-white;
+          border-radius: 20px;
+          box-shadow: 0 0 6px rgb(0 0 0 / 12%);
+          cursor: pointer;
+          margin-bottom: 10px;
+
+          .anticon {
+            transform: translate(50%, 50%);
+            color: $color-text-regular;
+            transition: all 0.5s;
+            font-size: 20px
+          }
+        }
+      }
+    }
+  }
+
   .detail-card {
     margin-top: 15px;
     padding: 20px 10px;
     background-color: $color-background-white;
-  }
-
-  .main {
-    h1 {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .info {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: $color-text-regular;
-      background-color: $color-other-clouds;
-      padding: 5px 0px;
-      margin: 10px 110px;
-      border-radius: 20px;
-
-      > span {
-        margin: 0 25px;
-      }
-
-      span:nth-child(2) {
-        span:nth-child(2) {
-          margin-right: 10px;
-        }
-      }
-    }
   }
 }
 </style>

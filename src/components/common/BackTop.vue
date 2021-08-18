@@ -1,12 +1,18 @@
 <template>
   <el-backtop :bottom="80">
-    <MyIcon type="icon-backTop"/>
+    <el-tooltip class="item" effect="dark" content="回到顶部" placement="left">
+      <div>
+        <MyIcon type="icon-backTop"/>
+      </div>
+    </el-tooltip>
+
   </el-backtop>
 </template>
 
 <script setup>
 import {
   ElBacktop,
+  ElTooltip,
 } from 'element-plus'
 import icon from "@/utils/icon";
 
@@ -15,7 +21,6 @@ let {MyIcon} = icon()
 
 <style scoped lang="scss">
 .el-backtop {
-  opacity: 0.5;
   color: $color-text-regular;
   transition: all 0.5s;
 }

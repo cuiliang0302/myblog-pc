@@ -43,12 +43,16 @@
       </el-menu>
     </span>
     <span class="right">
-      <span class="setting hvr-grow" @click="drawer = true">
-        <MyIcon type="icon-setting"/>
-      </span>
-      <span class="search hvr-grow">
-        <MyIcon type="icon-search"/>
-      </span>
+      <el-tooltip class="item" effect="dark" content="设置" placement="bottom">
+        <span class="setting hvr-grow" @click="drawer = true">
+          <MyIcon type="icon-setting"/>
+        </span>
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="搜索" placement="bottom">
+        <span class="search hvr-grow">
+          <MyIcon type="icon-search"/>
+        </span>
+      </el-tooltip>
       <span class="user">
         <el-dropdown @visible-change="dropdownChange">
           <span class="no-choose">
@@ -144,10 +148,9 @@ const props = defineProps({
   activeMenu: {
     type: String,
     required: true,
-    default: 1
+    default: '1'
   },
 })
-// const activeMenu = ref('1')
 //导航菜单-logo和name
 const siteConfig = reactive({
   logo: '',
@@ -256,6 +259,7 @@ header {
     border-bottom: 1px solid $color-border-base;
     height: 60px;
     flex-direction: row-reverse;
+    cursor: pointer;
 
     .user {
       display: flex;
