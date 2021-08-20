@@ -3,7 +3,7 @@
     <NavMenu :activeMenu="activeMenu"></NavMenu>
     <div class="detail-page">
       <div class="detail-left">
-        这是左边部分
+        <!--        这是左边部分-->
       </div>
       <div class="detail-center">
         <div class="current-position">
@@ -45,40 +45,43 @@
         </div>
       </div>
       <div class="detail-right">
-        <div class="outline" v-if="titleList.length !== 0">
-          <p v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
-             :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
-             @click="rollTo(anchor,index)" :class="index===heightTitle?'title-active':''"
-          >
-            {{ anchor.title }}
-          </p>
-        </div>
-        <div v-else>
-          空了
+        <div
+            :class="'outline  animate__animated animate__'+ (outlineShow===true?'fadeInRight':'fadeOutRight')">
+          <div v-if="titleList.length !== 0">
+            <p v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
+               :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
+               @click="rollTo(anchor,index)" :class="index===heightTitle?'title-active':''"
+            >
+              {{ anchor.title }}
+            </p>
+          </div>
+          <div v-else>
+            <el-empty description="暂无目录"></el-empty>
+          </div>
         </div>
         <div class="action">
           <el-tooltip class="item" effect="dark" content="大纲" placement="left">
-            <div>
+            <div @click="outlineShow=!outlineShow" class="detail-active-hover">
               <MyIcon type="icon-outline"/>
             </div>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="点赞" placement="left">
-            <div>
+            <div class="detail-active-hover">
               <MyIcon type="icon-like"/>
             </div>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="收藏" placement="left">
-            <div>
+            <div class="detail-active-hover">
               <MyIcon type="icon-collect"/>
             </div>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="评论" placement="left">
-            <div>
+            <div class="detail-active-hover">
               <MyIcon type="icon-comment"/>
             </div>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="打赏" placement="left">
-            <div>
+            <div class="detail-active-hover">
               <MyIcon type="icon-exceptional"/>
             </div>
           </el-tooltip>
@@ -103,6 +106,7 @@ import {
   ElSkeleton,
   ElTooltip,
   ElMessage,
+  ElEmpty,
 } from 'element-plus'
 import {getArticleDetail} from "@/api/blog";
 import {nextTick, onMounted, reactive, ref, onBeforeUnmount} from "vue";
@@ -186,35 +190,60 @@ async function articleData(DetailID) {
   }
   console.log(article)
   activeMenu.value = "2-" + article.category_id
-  await getTitle()
 }
 
-// markdown代码复制
+// markdown-代码复制
 const handleCopyCodeSuccess = () => {
   ElMessage.success({
     message: '代码已复制至剪切板',
     type: 'success'
   });
 }
-// markdown图片对象
+// markdown-图片对象
 const images = reactive({
   MDimages: [],
   currentIndex: 0,
   isShow: false,
 })
-// markdown图片查看
+// markdown-图片查看
 const showImg = (MDimages, currentIndex) => {
   images.MDimages = MDimages
   images.currentIndex = currentIndex
   images.isShow = true
 }
+
+// 大纲模块
+// 大纲是否显示
+const outlineShow = ref(true)
 // markdown-对象
-let editor = ref(null)
+const editor = ref(null)
 // markdown-文章标题列表
-let titleList = ref([])
+const titleList = ref([])
+
+// markdown-获取标题
+async function getTitle() {
+  await nextTick()
+  const anchors = editor.value.querySelectorAll(
+      '.v-md-editor-preview h1,h2,h3,h4,h5,h6'
+  )
+  // console.log(anchors)
+  const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
+  console.log(titles)
+  if (!titles.length) {
+    titleList.value = [];
+    return;
+  }
+  const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
+  titleList.value = titles.map((el) => ({
+    title: el.innerText,
+    lineIndex: el.getAttribute('data-v-md-line'),
+    indent: hTags.indexOf(el.tagName),
+    height: el.offsetTop,
+  }));
+}
+
 // markdown-标题跳转
 const rollTo = (anchor, index) => {
-  console.log(anchor)
   const {lineIndex} = anchor;
   const heading = editor.value.querySelector(
       `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
@@ -226,26 +255,6 @@ const rollTo = (anchor, index) => {
   heightTitle.value = index
 }
 
-// markdown-获取标题
-async function getTitle() {
-  await nextTick()
-  const anchors = editor.value.querySelectorAll(
-      '.v-md-editor-preview h1,h2,h3'
-  )
-  const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
-  if (!titles.length) {
-    titleList.value = [];
-    return;
-  }
-  const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
-  titleList.value = titles.map((el) => ({
-    title: el.innerText,
-    lineIndex: el.getAttribute('data-v-md-line'),
-    indent: hTags.indexOf(el.tagName),
-    height: editor.value.querySelector(`.v-md-editor-preview [data-v-md-line="${el.getAttribute('data-v-md-line')}"]`).offsetTop,
-  }));
-}
-
 // markdown-当前高亮的标题
 const heightTitle = ref(0)
 // markdown-页面滚动
@@ -255,19 +264,21 @@ const scroll = () => {
     clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
     timeOut = setTimeout(() => {  // 只执行最后一次事件
       let scrollTop = window.pageYOffset
-      console.log(window.pageYOffset)
+      console.log("当前滚动距离", window.pageYOffset)
       const absList = [] // 各个h标签与当前距离绝对值
       titleList.value.forEach((item) => {
         absList.push(Math.abs(item.height - scrollTop))
       })
       // 屏幕滚动距离与标题具体最近的index高亮
       heightTitle.value = absList.indexOf(Math.min.apply(null, absList))
+      console.log("距离最近的标题index", heightTitle.value)
     }, 500)
   }
 }
-onMounted(() => {
+onMounted(async () => {
   articleID.value = router.currentRoute.value.params.id
-  articleData(articleID.value)
+  await articleData(articleID.value)
+  await getTitle()
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
@@ -331,7 +342,6 @@ onBeforeUnmount(() => {
         line-height: 25px;
         color: $color-text-secondary;
         margin-left: 10px;
-        border-left: 1px solid $color-border-base;
         height: 82vh;
         overflow: auto;
 
@@ -358,7 +368,6 @@ onBeforeUnmount(() => {
         width: 40px;
         height: 240px;
         right: 40px;
-        opacity: 0.7;
 
         > div {
           width: 40px;
@@ -368,6 +377,7 @@ onBeforeUnmount(() => {
           box-shadow: 0 0 6px rgb(0 0 0 / 12%);
           cursor: pointer;
           margin-bottom: 10px;
+          opacity: 0.7;
 
           .anticon {
             transform: translate(50%, 50%);
