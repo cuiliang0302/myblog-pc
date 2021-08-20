@@ -4,10 +4,15 @@
 
 <script setup>
 import {defineComponent, ref, computed, onMounted} from 'vue';
-onMounted(()=>{
-  console.log("aaa")
-  let arr = [{height:1,title:'aaa'},{height:2,title:'abb'},{height:3,title:'acc'}]
-  arr.indexOf()
+
+onMounted(() => {
+  const a = [1, 43, 124, 232, 432, 542, 654, 755, 788]
+  const b = 452
+  const absList = []
+  a.forEach((item) => {
+    absList.push(Math.abs(item - b))
+  })
+  console.log(absList.indexOf(Math.min.apply(null, absList)))
 })
 </script>
 <style lang="scss">

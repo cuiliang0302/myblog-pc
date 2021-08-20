@@ -48,7 +48,7 @@
         <div class="outline" v-if="titleList.length !== 0">
           <p v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
              :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
-             @click="rollTo(anchor)"
+             @click="rollTo(anchor,index)" :class="index===heightTitle?'title-active':''"
           >
             {{ anchor.title }}
           </p>
@@ -105,7 +105,7 @@ import {
   ElMessage,
 } from 'element-plus'
 import {getArticleDetail} from "@/api/blog";
-import {nextTick, onMounted, reactive, ref, watch} from "vue";
+import {nextTick, onMounted, reactive, ref, onBeforeUnmount} from "vue";
 import {useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -190,8 +190,7 @@ async function articleData(DetailID) {
 }
 
 // markdown代码复制
-const handleCopyCodeSuccess = (code) => {
-  console.log(code);
+const handleCopyCodeSuccess = () => {
   ElMessage.success({
     message: '代码已复制至剪切板',
     type: 'success'
@@ -209,13 +208,12 @@ const showImg = (MDimages, currentIndex) => {
   images.currentIndex = currentIndex
   images.isShow = true
 }
-// markdown对象
+// markdown-对象
 let editor = ref(null)
-// 文章标题列表
+// markdown-文章标题列表
 let titleList = ref([])
-// markdown标题跳转
-const rollTo = (anchor) => {
-  console.log('收到跳转请求')
+// markdown-标题跳转
+const rollTo = (anchor, index) => {
   console.log(anchor)
   const {lineIndex} = anchor;
   const heading = editor.value.querySelector(
@@ -225,9 +223,10 @@ const rollTo = (anchor) => {
   if (heading) {
     heading.scrollIntoView({behavior: "smooth", block: "start"})
   }
+  heightTitle.value = index
 }
 
-// 获取markdown标题
+// markdown-获取标题
 async function getTitle() {
   await nextTick()
   const anchors = editor.value.querySelectorAll(
@@ -244,20 +243,35 @@ async function getTitle() {
     lineIndex: el.getAttribute('data-v-md-line'),
     indent: hTags.indexOf(el.tagName),
     height: editor.value.querySelector(`.v-md-editor-preview [data-v-md-line="${el.getAttribute('data-v-md-line')}"]`).offsetTop,
-    active: false
   }));
 }
 
-
-const rollingHeight = () => {
-  console.log(window.pageYOffset)
-  // let v=titleList.value.indexOf(value.height=>value.height=4);
-  // console.log(v);// 5
+// markdown-当前高亮的标题
+const heightTitle = ref(0)
+// markdown-页面滚动
+const scroll = () => {
+  let timeOut = null; // 初始化空定时器
+  return () => {
+    clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
+    timeOut = setTimeout(() => {  // 只执行最后一次事件
+      let scrollTop = window.pageYOffset
+      console.log(window.pageYOffset)
+      const absList = [] // 各个h标签与当前距离绝对值
+      titleList.value.forEach((item) => {
+        absList.push(Math.abs(item.height - scrollTop))
+      })
+      // 屏幕滚动距离与标题具体最近的index高亮
+      heightTitle.value = absList.indexOf(Math.min.apply(null, absList))
+    }, 500)
+  }
 }
 onMounted(() => {
   articleID.value = router.currentRoute.value.params.id
   articleData(articleID.value)
-  window.addEventListener('scroll', rollingHeight, true)
+  window.addEventListener('scroll', scroll())
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', scroll())
 })
 </script>
 
@@ -318,16 +332,23 @@ onMounted(() => {
         color: $color-text-secondary;
         margin-left: 10px;
         border-left: 1px solid $color-border-base;
-        padding-left: 5px;
         height: 82vh;
         overflow: auto;
 
         p {
           cursor: pointer;
+          margin-left: 5px;
+          transition: all 0.5s;
         }
 
         p:hover {
           color: $color-primary;
+        }
+
+        .title-active {
+          background-color: $color-background-input;
+          color: $color-text-primary;
+          border-left: 2px solid $color-primary;
         }
       }
 
