@@ -35,7 +35,8 @@
               <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
             </div>
             <div class="body" ref="editor">
-              <v-md-preview :text="article.body" @image-click="showImg"></v-md-preview>
+              <v-md-preview :text="article.body" @image-click="showImg"
+                            @copy-code-success="handleCopyCodeSuccess"></v-md-preview>
             </div>
             <el-image-viewer v-if="images.isShow" :initial-index="images.currentIndex"
                              :url-list="images.MDimages" @close="images.isShow=false">
@@ -101,9 +102,10 @@ import {
   ElImageViewer,
   ElSkeleton,
   ElTooltip,
+  ElMessage,
 } from 'element-plus'
 import {getArticleDetail} from "@/api/blog";
-import {nextTick, onMounted, reactive, ref} from "vue";
+import {nextTick, onMounted, reactive, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -115,6 +117,9 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import '@kangc/v-md-editor/lib/style/preview.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
+import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
+import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
+import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
 import hljs from 'highlight.js/lib/core';
 import python from 'highlight.js/lib/languages/python';
 import bash from 'highlight.js/lib/languages/bash';
@@ -143,7 +148,7 @@ VMdPreview.use(githubTheme, {
     less: 'scss',
   },
   Hljs: hljs,
-});
+}).use(createCopyCodePlugin()).use(createLineNumbertPlugin());
 const router = useRouter()
 //跳转文章列表
 const toCategory = (categoryId) => {
@@ -184,6 +189,14 @@ async function articleData(DetailID) {
   await getTitle()
 }
 
+// markdown代码复制
+const handleCopyCodeSuccess = (code) => {
+  console.log(code);
+  ElMessage.success({
+    message: '代码已复制至剪切板',
+    type: 'success'
+  });
+}
 // markdown图片对象
 const images = reactive({
   MDimages: [],
@@ -203,10 +216,12 @@ let titleList = ref([])
 // markdown标题跳转
 const rollTo = (anchor) => {
   console.log('收到跳转请求')
+  console.log(anchor)
   const {lineIndex} = anchor;
   const heading = editor.value.querySelector(
       `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
   );
+  console.log(heading)
   if (heading) {
     heading.scrollIntoView({behavior: "smooth", block: "start"})
   }
@@ -228,12 +243,21 @@ async function getTitle() {
     title: el.innerText,
     lineIndex: el.getAttribute('data-v-md-line'),
     indent: hTags.indexOf(el.tagName),
+    height: editor.value.querySelector(`.v-md-editor-preview [data-v-md-line="${el.getAttribute('data-v-md-line')}"]`).offsetTop,
+    active: false
   }));
 }
 
+
+const rollingHeight = () => {
+  console.log(window.pageYOffset)
+  // let v=titleList.value.indexOf(value.height=>value.height=4);
+  // console.log(v);// 5
+}
 onMounted(() => {
   articleID.value = router.currentRoute.value.params.id
   articleData(articleID.value)
+  window.addEventListener('scroll', rollingHeight, true)
 })
 </script>
 
@@ -268,7 +292,7 @@ onMounted(() => {
           border-radius: 20px;
 
           > span {
-            margin: 0 25px;
+            margin: 0 2%;
 
             .anticon {
               margin-right: 10px;
@@ -295,6 +319,8 @@ onMounted(() => {
         margin-left: 10px;
         border-left: 1px solid $color-border-base;
         padding-left: 5px;
+        height: 82vh;
+        overflow: auto;
 
         p {
           cursor: pointer;
@@ -309,8 +335,9 @@ onMounted(() => {
         position: fixed;
         bottom: 130px;
         width: 40px;
-        height: 250px;
+        height: 240px;
         right: 40px;
+        opacity: 0.7;
 
         > div {
           width: 40px;
