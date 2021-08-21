@@ -4,7 +4,8 @@
 .article-tag-hover,
 .card-hover,
 .ranking-hover,
-.detail-active-hover {
+.detail-active-hover,
+.detail-context-hover {
   transition: all 0.5s;
 }
 
@@ -62,4 +63,12 @@
   .anticon {
     color: $color-primary !important;
   }
+}
+
+// 文章内容-上下篇
+.detail-context-hover:hover {
+  background-color: $color-secondary;
+  border-radius: 5px;
+  color: $color-background-white;
+  cursor: pointer;
 }

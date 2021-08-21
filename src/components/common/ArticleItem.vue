@@ -51,7 +51,7 @@ let {timeAgo} = timeFormat()
 let {tagColor} = setColor()
 // 跳转文章详情页
 const toDetail = (detailID) => {
-  router.push({path: `/detail/${detailID}`})
+  router.push({path: `/detail/article/${detailID}`})
 }
 </script>
 
@@ -94,14 +94,6 @@ const toDetail = (detailID) => {
       justify-content: center;
       align-items: center;
       color: $color-text-placeholder;
-
-      .tag {
-        background-color: skyblue;
-        border-radius: 5px;
-        color: white;
-        font-size: 10px;
-        padding: 5px;
-      }
 
       span {
         margin: 0 5px 0 20px;

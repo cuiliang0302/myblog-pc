@@ -42,6 +42,53 @@
                              :url-list="images.MDimages" @close="images.isShow=false">
             </el-image-viewer>
           </div>
+          <div class="context">
+            <span :class="context.last?'detail-context-hover':''">
+              <p><MyIcon type="icon-last"/></p>
+              <p v-if="context.last">{{ context.last.title }}</p>
+              <p v-else>已是第一篇</p>
+            </span>
+            <span>
+              <p>文章分类：
+                <span class="tag article-tag-hover" :style="'background-color: '+tagColor(article.category_id)">
+                  {{ article.category }}
+                </span>
+              </p>
+              <p>文章标签：
+                <span v-for="item in article.tags" class="tag article-tag-hover"
+                      :style="'background-color: '+tagColor(item.id)">
+                  {{ item.name }}
+                </span>
+              </p>
+            </span>
+            <span :class="context.next?'detail-context-hover':''">
+              <p><MyIcon type="icon-next"/></p>
+              <p v-if="context.next">{{ context.next.title }}</p>
+              <p v-else>已是最后一篇</p>
+            </span>
+          </div>
+        </div>
+        <div class="guess detail-card">
+          <h2>💖 猜你喜欢</h2>
+          <div>
+            <span class="recommend-hover" v-for="item in recommendList">
+            <el-image :src="item.cover"
+                      style="width: 90%"
+                      :fit="'fill'"
+                      lazy>
+              <template #placeholder>
+                <Loading></Loading>
+              </template>
+            </el-image>
+            <p>{{ item.title }}</p>
+          </span>
+          </div>
+        </div>
+        <div class="comments detail-card">
+          <h2>📝 评论交流</h2>
+          <div>
+            这是评论内容，占个位先
+          </div>
         </div>
       </div>
       <div class="detail-right">
@@ -56,7 +103,7 @@
             </p>
           </div>
           <div v-else>
-            <el-empty description="暂无目录"></el-empty>
+            <el-empty description="该文章暂无大纲"></el-empty>
           </div>
         </div>
         <div class="action">
@@ -107,8 +154,9 @@ import {
   ElTooltip,
   ElMessage,
   ElEmpty,
+  ElImage,
 } from 'element-plus'
-import {getArticleDetail} from "@/api/blog";
+import {getArticleDetail, getContextArticle, getGuessLike} from "@/api/blog";
 import {nextTick, onMounted, reactive, ref, onBeforeUnmount} from "vue";
 import {useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -117,6 +165,7 @@ import icon from "@/utils/icon";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
+let {tagColor} = setColor()
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import '@kangc/v-md-editor/lib/style/preview.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
@@ -135,6 +184,7 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import css from 'highlight.js/lib/languages/css';
 import scss from 'highlight.js/lib/languages/scss';
 import xml from 'highlight.js/lib/languages/xml';
+import setColor from "@/utils/setColor";
 
 hljs.registerLanguage('json', json);
 hljs.registerLanguage('python', python);
@@ -164,6 +214,10 @@ const articleID = ref()
 const article = reactive({})
 // 当前文章分类id
 const activeMenu = ref()
+// 文章上下篇
+const context = reactive({})
+// 猜你喜欢
+const recommendList = ref([])
 
 // 获取文章详情
 async function articleData(DetailID) {
@@ -190,6 +244,18 @@ async function articleData(DetailID) {
   }
   console.log(article)
   activeMenu.value = "2-" + article.category_id
+}
+
+// 获取文章上下篇
+async function contextData(DetailID) {
+  Object.assign(context, await getContextArticle(DetailID));
+  console.log(context)
+}
+
+// 获取猜你喜欢
+async function guessLikeData(DetailID) {
+  recommendList.value = await getGuessLike(DetailID)
+  console.log(recommendList.value)
 }
 
 // markdown-代码复制
@@ -228,7 +294,7 @@ async function getTitle() {
   )
   // console.log(anchors)
   const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
-  console.log(titles)
+  // console.log(titles)
   if (!titles.length) {
     titleList.value = [];
     return;
@@ -248,7 +314,7 @@ const rollTo = (anchor, index) => {
   const heading = editor.value.querySelector(
       `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
   );
-  console.log(heading)
+  // console.log(heading)
   if (heading) {
     heading.scrollIntoView({behavior: "smooth", block: "start"})
   }
@@ -264,14 +330,14 @@ const scroll = () => {
     clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
     timeOut = setTimeout(() => {  // 只执行最后一次事件
       let scrollTop = window.pageYOffset
-      console.log("当前滚动距离", window.pageYOffset)
+      // console.log("当前滚动距离", window.pageYOffset)
       const absList = [] // 各个h标签与当前距离绝对值
       titleList.value.forEach((item) => {
         absList.push(Math.abs(item.height - scrollTop))
       })
       // 屏幕滚动距离与标题具体最近的index高亮
       heightTitle.value = absList.indexOf(Math.min.apply(null, absList))
-      console.log("距离最近的标题index", heightTitle.value)
+      // console.log("距离最近的标题index", heightTitle.value)
     }, 500)
   }
 }
@@ -279,6 +345,8 @@ onMounted(async () => {
   articleID.value = router.currentRoute.value.params.id
   await articleData(articleID.value)
   await getTitle()
+  await contextData(articleID.value)
+  await guessLikeData(articleID.value)
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
@@ -330,6 +398,81 @@ onBeforeUnmount(() => {
             }
           }
         }
+
+        .context {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $color-text-regular;
+          background-color: $color-background-base;
+          margin: 10px 30px;
+          padding: 10px 10px;
+          border-radius: 10px;
+
+          span {
+            flex: 1;
+            text-align: center;
+
+            .anticon {
+              color: $color-primary;
+              margin: 0 10px;
+              font-size: 25px;
+            }
+
+            p {
+              margin: 15px 0;
+            }
+          }
+
+          > span:nth-child(2) {
+            border-left: 2px solid $color-text-placeholder;
+            border-right: 2px solid $color-text-placeholder;
+
+            span {
+              margin: 0 5px
+            }
+          }
+        }
+      }
+
+      .guess {
+        > div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 10px 0px;
+
+          &:hover {
+            span {
+              opacity: 0.5;
+            }
+          }
+
+          span {
+            text-align: center;
+            flex: 1;
+
+            &:hover {
+              opacity: 1;
+            }
+
+            p {
+              font-size: 14px;
+              color: $color-text-secondary;
+              margin: 10px 0px;
+            }
+          }
+        }
+      }
+
+      .comments {
+        margin-bottom: 15px;
+      }
+
+      h2 {
+        border-bottom: 1px solid $color-border-base;
+        padding: 10px 0;
+        font-weight: normal;
       }
     }
 

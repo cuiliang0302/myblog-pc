@@ -80,10 +80,13 @@ export function getCatalogue(id) {
 }
 
 // 获取笔记上下篇
-export function getContext(id) {
-	return index.get('blog/context/' + id + '/')
+export function getContextSection(id) {
+	return index.get('blog/context/' + id + '/?kind=section')
 }
-
+// 获取文章上下篇
+export function getContextArticle(id) {
+	return index.get('blog/context/' + id + '/?kind=article')
+}
 // 获取文章笔记二维码
 export function getQRcode(url) {
 	return index.get('blog/QRcode/?url=' + url)

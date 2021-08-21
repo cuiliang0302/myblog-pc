@@ -7,7 +7,7 @@ const router = createRouter({
 		{
 			path: '/',
 			name: 'Home',
-			component: () => import('@/views/Home.vue'),
+			component: () => import('@/views/home/Home.vue'),
 			meta: {
 				title: '首页',
 			}
@@ -15,17 +15,21 @@ const router = createRouter({
 		{
 			path: '/category/:id',
 			name: 'Category',
-			component: () => import('@/views/Category.vue'),
+			component: () => import('@/views/article/Category.vue'),
 			meta: {
 				title: '文章分类',
 			}
 		},
 		{
-			path: '/detail/:id',
-			name: 'Detail',
-			component: () => import('@/views/Detail.vue'),
+			path: '/detail/article/:id',
+			name: 'articleDetail',
+			component: () => import('@/views/article/ArticleDetail.vue'),
 			meta: {
 				title: '文章正文',
+				keepAlive: false,
+				transitionClass: 'back',//前进后退
+				index: 2,
+				isAuth: false
 			}
 		},
 		{path: '/about', component: () => import('@/views/About.vue')},

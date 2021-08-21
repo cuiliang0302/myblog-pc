@@ -6,7 +6,7 @@
       </template>
       <div class="recommend">
           <span class="recommend-hover"
-                v-for="(article,item) in recommend" :key="article.id"
+                v-for="article in recommend" :key="article.id"
                 @click="toDetail(article.id)">
           <el-image
               style="width: 115px;height: 76px"
@@ -247,7 +247,7 @@ async function statisticsData() {
 
 // 跳转文章详情页
 const toDetail = (detailID) => {
-  router.push({path: `/detail/${detailID}`})
+  router.push({path: `/detail/article/${detailID}`})
 }
 onMounted(() => {
   recommendData()
@@ -271,12 +271,10 @@ onMounted(() => {
     }
 
     span {
+      width: 113px;
       &:hover {
         opacity: 1;
       }
-
-      width: 113px;
-
       p {
         text-align: center;
         color: $color-text-regular;
