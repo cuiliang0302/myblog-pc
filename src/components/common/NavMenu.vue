@@ -36,7 +36,7 @@
           <MyIcon type="icon-message"/>
           留言板
         </el-menu-item>
-        <el-menu-item index="6">
+        <el-menu-item index="6" @click="router.push('/about')">
           <MyIcon type="icon-about"/>
           关于
         </el-menu-item>

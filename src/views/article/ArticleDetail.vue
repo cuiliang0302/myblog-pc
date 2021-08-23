@@ -83,7 +83,7 @@
         <div class="comments detail-card">
           <h2>📝 评论交流</h2>
           <div>
-            这是评论内容，占个位先
+            评论模块正在开发中，敬请期待！
           </div>
         </div>
       </div>
@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
 })
 onBeforeRouteUpdate(async (to) => {
   console.log(to)
-  for(let key in context){
+  for (let key in context) {
     delete context[key];
   }
   loading.value = true

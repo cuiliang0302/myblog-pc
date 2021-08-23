@@ -1,11 +1,44 @@
 <template>
+  <NavMenu :activeMenu="'6'"></NavMenu>
+  <div class="page">
+    <el-collapse v-model="activeNames">
+      <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id">
+        <MarkDown :text="item.body"></MarkDown>
+      </el-collapse-item>
+    </el-collapse>
+  </div>
   <Footer></Footer>
 </template>
 
 <script setup>
+import {
+  ElCollapse,
+  ElCollapseItem,
+} from 'element-plus'
+import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
+import MarkDown from "@/components/detail/MarkDown.vue"
+import {onMounted, ref} from "vue";
+import {getAbout} from "@/api/management";
+// 关于页数据
+const about = ref([])
+
+// 获取关于页数据
+async function aboutData() {
+  about.value = await getAbout()
+}
+
+onMounted(() => {
+  aboutData()
+})
+// 默认展开的数据
+const activeNames = ref([0, 1, 2, 3, 4, 5]);
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.el-collapse-item__header {
+  font-size: 25px !important;
+  color: $color-primary !important;
+  padding-left: 1em;
+}
 </style>
