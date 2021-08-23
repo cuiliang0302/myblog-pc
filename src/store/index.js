@@ -12,7 +12,7 @@ export default createStore({
 				list: [],
 			},
 			session: {
-				list: ["count"],
+				list: ["outline","outlineShow"],
 			}
 		})
 	]

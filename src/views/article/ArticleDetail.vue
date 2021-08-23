@@ -1,5 +1,7 @@
 <template>
-  <section class="detail">
+  <section class="detail" v-loading="loading"
+           element-loading-text="拼命加载中"
+           element-loading-spinner="el-icon-loading">
     <NavMenu :activeMenu="activeMenu"></NavMenu>
     <div class="detail-page">
       <div class="detail-left">
@@ -34,16 +36,10 @@
               <span><MyIcon type="icon-collect"/>{{ article.collect }}</span>
               <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
             </div>
-            <div class="body" ref="editor">
-              <v-md-preview :text="article.body" @image-click="showImg"
-                            @copy-code-success="handleCopyCodeSuccess"></v-md-preview>
-            </div>
-            <el-image-viewer v-if="images.isShow" :initial-index="images.currentIndex"
-                             :url-list="images.MDimages" @close="images.isShow=false">
-            </el-image-viewer>
+            <MarkDown :text="article.body"></MarkDown>
           </div>
           <div class="context">
-            <span :class="context.last?'detail-context-hover':''">
+            <span :class="context.last?'detail-context-hover':''" @click="toDetail(context.last.id)">
               <p><MyIcon type="icon-last"/></p>
               <p v-if="context.last">{{ context.last.title }}</p>
               <p v-else>已是第一篇</p>
@@ -61,7 +57,7 @@
                 </span>
               </p>
             </span>
-            <span :class="context.next?'detail-context-hover':''">
+            <span :class="context.next?'detail-context-hover':''" @click="toDetail(context.next.id)">
               <p><MyIcon type="icon-next"/></p>
               <p v-if="context.next">{{ context.next.title }}</p>
               <p v-else>已是最后一篇</p>
@@ -71,16 +67,16 @@
         <div class="guess detail-card">
           <h2>💖 猜你喜欢</h2>
           <div>
-            <span class="recommend-hover" v-for="item in recommendList">
-            <el-image :src="item.cover"
-                      style="width: 90%"
-                      :fit="'fill'"
-                      lazy>
-              <template #placeholder>
-                <Loading></Loading>
-              </template>
-            </el-image>
-            <p>{{ item.title }}</p>
+            <span class="recommend-hover" v-for="item in recommendList" @click="toDetail(item.id)">
+              <el-image :src="item.cover"
+                        style="width: 90%"
+                        :fit="'fill'"
+                        lazy>
+                <template #placeholder>
+                  <Loading></Loading>
+                </template>
+              </el-image>
+              <p>{{ item.title }}</p>
           </span>
           </div>
         </div>
@@ -92,48 +88,9 @@
         </div>
       </div>
       <div class="detail-right">
-        <div
-            :class="'outline  animate__animated animate__'+ (outlineShow===true?'fadeInRight':'fadeOutRight')">
-          <div v-if="titleList.length !== 0">
-            <p v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
-               :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
-               @click="rollTo(anchor,index)" :class="index===heightTitle?'title-active':''"
-            >
-              {{ anchor.title }}
-            </p>
-          </div>
-          <div v-else>
-            <el-empty description="该文章暂无大纲"></el-empty>
-          </div>
-        </div>
-        <div class="action">
-          <el-tooltip class="item" effect="dark" content="大纲" placement="left">
-            <div @click="outlineShow=!outlineShow" class="detail-active-hover">
-              <MyIcon type="icon-outline"/>
-            </div>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="点赞" placement="left">
-            <div class="detail-active-hover">
-              <MyIcon type="icon-like"/>
-            </div>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="收藏" placement="left">
-            <div class="detail-active-hover">
-              <MyIcon type="icon-collect"/>
-            </div>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="评论" placement="left">
-            <div class="detail-active-hover">
-              <MyIcon type="icon-comment"/>
-            </div>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="打赏" placement="left">
-            <div class="detail-active-hover">
-              <MyIcon type="icon-exceptional"/>
-            </div>
-          </el-tooltip>
-          <BackTop></BackTop>
-        </div>
+        <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
+        <Action></Action>
+        <BackTop></BackTop>
       </div>
     </div>
     <Footer></Footer>
@@ -145,64 +102,28 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
+import MarkDown from "@/components/detail/MarkDown.vue"
+import Action from "@/components/detail/Action.vue"
+import Outline from "@/components/detail/Outline.vue"
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
   ElCard,
-  ElImageViewer,
   ElSkeleton,
-  ElTooltip,
-  ElMessage,
-  ElEmpty,
   ElImage,
 } from 'element-plus'
 import {getArticleDetail, getContextArticle, getGuessLike} from "@/api/blog";
-import {nextTick, onMounted, reactive, ref, onBeforeUnmount} from "vue";
-import {useRouter} from "vue-router";
+import {onMounted, reactive, ref, onBeforeUnmount} from "vue";
+import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
+import setColor from "@/utils/setColor";
+import store from "@/store";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
-import VMdPreview from '@kangc/v-md-editor/lib/preview';
-import '@kangc/v-md-editor/lib/style/preview.css';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-import '@kangc/v-md-editor/lib/theme/style/github.css';
-import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
-import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
-import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
-import hljs from 'highlight.js/lib/core';
-import python from 'highlight.js/lib/languages/python';
-import bash from 'highlight.js/lib/languages/bash';
-import dockerfile from 'highlight.js/lib/languages/dockerfile';
-import json from 'highlight.js/lib/languages/json';
-import yaml from 'highlight.js/lib/languages/yaml';
-import sql from 'highlight.js/lib/languages/sql';
-import javascript from 'highlight.js/lib/languages/javascript';
-import css from 'highlight.js/lib/languages/css';
-import scss from 'highlight.js/lib/languages/scss';
-import xml from 'highlight.js/lib/languages/xml';
-import setColor from "@/utils/setColor";
-
-hljs.registerLanguage('json', json);
-hljs.registerLanguage('python', python);
-hljs.registerLanguage('bash', bash);
-hljs.registerLanguage('dockerfile', dockerfile);
-hljs.registerLanguage('yaml', yaml);
-hljs.registerLanguage('sql', sql);
-hljs.registerLanguage('javascript', javascript);
-hljs.registerLanguage('scss', scss);
-hljs.registerLanguage('css', css);
-hljs.registerLanguage('xml', xml);
-VMdPreview.use(githubTheme, {
-  codeHighlightExtensionMap: {
-    vue: 'xml',
-    less: 'scss',
-  },
-  Hljs: hljs,
-}).use(createCopyCodePlugin()).use(createLineNumbertPlugin());
 const router = useRouter()
 //跳转文章列表
 const toCategory = (categoryId) => {
@@ -218,6 +139,8 @@ const activeMenu = ref()
 const context = reactive({})
 // 猜你喜欢
 const recommendList = ref([])
+// 是否开启加载中动画
+const loading = ref(false)
 
 // 获取文章详情
 async function articleData(DetailID) {
@@ -244,6 +167,7 @@ async function articleData(DetailID) {
   }
   console.log(article)
   activeMenu.value = "2-" + article.category_id
+  loading.value = false
 }
 
 // 获取文章上下篇
@@ -258,100 +182,55 @@ async function guessLikeData(DetailID) {
   console.log(recommendList.value)
 }
 
-// markdown-代码复制
-const handleCopyCodeSuccess = () => {
-  ElMessage.success({
-    message: '代码已复制至剪切板',
-    type: 'success'
-  });
+// 点击跳转其他文章事件
+const toDetail = (detailID) => {
+  articleID.value = detailID
+  router.push({path: `/detail/article/${articleID.value}`})
 }
-// markdown-图片对象
-const images = reactive({
-  MDimages: [],
-  currentIndex: 0,
-  isShow: false,
-})
-// markdown-图片查看
-const showImg = (MDimages, currentIndex) => {
-  images.MDimages = MDimages
-  images.currentIndex = currentIndex
-  images.isShow = true
-}
-
-// 大纲模块
-// 大纲是否显示
-const outlineShow = ref(true)
-// markdown-对象
-const editor = ref(null)
-// markdown-文章标题列表
-const titleList = ref([])
-
-// markdown-获取标题
-async function getTitle() {
-  await nextTick()
-  const anchors = editor.value.querySelectorAll(
-      '.v-md-editor-preview h1,h2,h3,h4,h5,h6'
-  )
-  // console.log(anchors)
-  const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
-  // console.log(titles)
-  if (!titles.length) {
-    titleList.value = [];
-    return;
-  }
-  const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
-  titleList.value = titles.map((el) => ({
-    title: el.innerText,
-    lineIndex: el.getAttribute('data-v-md-line'),
-    indent: hTags.indexOf(el.tagName),
-    height: el.offsetTop,
-  }));
-}
-
-// markdown-标题跳转
-const rollTo = (anchor, index) => {
+// 点击大纲跳转事件
+const rollTo = (anchor) => {
   const {lineIndex} = anchor;
-  const heading = editor.value.querySelector(
+  const heading = document.querySelector(
       `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
   );
-  // console.log(heading)
   if (heading) {
     heading.scrollIntoView({behavior: "smooth", block: "start"})
   }
-  heightTitle.value = index
 }
-
-// markdown-当前高亮的标题
-const heightTitle = ref(0)
+// markdown-页面滚动高度
+const scrollTop = ref()
 // markdown-页面滚动
 const scroll = () => {
   let timeOut = null; // 初始化空定时器
   return () => {
     clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
     timeOut = setTimeout(() => {  // 只执行最后一次事件
-      let scrollTop = window.pageYOffset
-      // console.log("当前滚动距离", window.pageYOffset)
-      const absList = [] // 各个h标签与当前距离绝对值
-      titleList.value.forEach((item) => {
-        absList.push(Math.abs(item.height - scrollTop))
-      })
-      // 屏幕滚动距离与标题具体最近的index高亮
-      heightTitle.value = absList.indexOf(Math.min.apply(null, absList))
-      // console.log("距离最近的标题index", heightTitle.value)
+      scrollTop.value = window.pageYOffset
     }, 500)
   }
 }
 onMounted(async () => {
   articleID.value = router.currentRoute.value.params.id
   await articleData(articleID.value)
-  await getTitle()
   await contextData(articleID.value)
   await guessLikeData(articleID.value)
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
+  store.commit('setOutline', '')
 })
+onBeforeRouteUpdate(async (to) => {
+  console.log(to)
+  for(let key in context){
+    delete context[key];
+  }
+  loading.value = true
+  await articleData(to.params.id)
+  await contextData(to.params.id)
+  await guessLikeData(to.params.id)
+  window.scrollTo({top: 0})
+});
 </script>
 
 <style scoped lang="scss">
@@ -478,58 +357,6 @@ onBeforeUnmount(() => {
 
     .detail-right {
       width: 15%;
-
-      .outline {
-        position: fixed;
-        font-size: 13px;
-        line-height: 25px;
-        color: $color-text-secondary;
-        margin-left: 10px;
-        height: 82vh;
-        overflow: auto;
-
-        p {
-          cursor: pointer;
-          margin-left: 5px;
-          transition: all 0.5s;
-        }
-
-        p:hover {
-          color: $color-primary;
-        }
-
-        .title-active {
-          background-color: $color-background-input;
-          color: $color-text-primary;
-          border-left: 2px solid $color-primary;
-        }
-      }
-
-      .action {
-        position: fixed;
-        bottom: 130px;
-        width: 40px;
-        height: 240px;
-        right: 40px;
-
-        > div {
-          width: 40px;
-          height: 40px;
-          background-color: $color-background-white;
-          border-radius: 20px;
-          box-shadow: 0 0 6px rgb(0 0 0 / 12%);
-          cursor: pointer;
-          margin-bottom: 10px;
-          opacity: 0.7;
-
-          .anticon {
-            transform: translate(50%, 50%);
-            color: $color-text-regular;
-            transition: all 0.5s;
-            font-size: 20px
-          }
-        }
-      }
     }
   }
 
