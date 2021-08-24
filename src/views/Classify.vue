@@ -19,6 +19,7 @@
     </el-collapse>
   </div>
   <Footer></Footer>
+  <BackTop></BackTop>
 </template>
 
 <script setup>
@@ -31,6 +32,7 @@ import {
 } from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
+import BackTop from "@/components/common/BackTop.vue"
 
 import {onMounted, ref} from "vue";
 import {getClassify, getClassifyArticle} from "@/api/blog";
