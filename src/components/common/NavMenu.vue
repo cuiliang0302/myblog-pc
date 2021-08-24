@@ -28,7 +28,7 @@
           </template>
           <el-menu-item v-for="note in noteList" :key="note.id">{{ note.name }}</el-menu-item>
         </el-submenu>
-        <el-menu-item index="4">
+        <el-menu-item index="4" @click="router.push('/classify')">
           <MyIcon type="icon-classify"/>
           归档
         </el-menu-item>

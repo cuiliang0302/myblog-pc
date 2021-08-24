@@ -36,6 +36,14 @@ const router = createRouter({
 				title: '关于',
 			}
 		},
+		{
+			path: '/classify',
+			name: 'Classify',
+			component: () => import('@/views/Classify.vue'),
+			meta: {
+				title: '归档',
+			}
+		},
 		{path: '/test', component: () => import('@/views/Test.vue')}
 	]
 })
