@@ -8,6 +8,7 @@
     </el-collapse>
   </div>
   <Footer></Footer>
+  <BackTop></BackTop>
 </template>
 
 <script setup>
@@ -18,6 +19,7 @@ import {
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import MarkDown from "@/components/detail/MarkDown.vue"
+import BackTop from "@/components/common/BackTop.vue"
 import {onMounted, ref} from "vue";
 import {getAbout} from "@/api/management";
 // 关于页数据
