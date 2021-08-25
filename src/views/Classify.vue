@@ -34,9 +34,10 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 
-import {onMounted, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {getClassify, getClassifyArticle} from "@/api/blog";
 import timeFormat from "@/utils/timeFormat";
+import setFixed from "@/utils/setFixed";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -46,6 +47,8 @@ let {timeFull} = timeFormat()
 const formatMonth = (value) => {
   return value.replace("-", "年") + '月'
 }
+// 文章日期完整显示
+let {elHeight} = setFixed()
 // 默认展开的数据
 const activeNames = ref([0]);
 // 月份列表
@@ -66,8 +69,13 @@ async function classifyArticleData(month) {
 
 // 切换月份事件
 const handleChange = (val) => {
-  console.log(val);
-  classifyArticleData(classifyList.value[val].month)
+  if (val) {
+    classifyArticleData(classifyList.value[val].month)
+  }
+  // nextTick()
+  // elHeight('.el-collapse')
+  // const div = document.querySelector('.page')
+  // console.log(div.offsetHeight)   // 返回元素的总宽度
 };
 onMounted(async () => {
   await classifyData()

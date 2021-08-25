@@ -26,7 +26,8 @@
             <MyIcon type="icon-note"/>
             笔记
           </template>
-          <el-menu-item v-for="note in noteList" :key="note.id">{{ note.name }}</el-menu-item>
+          <el-menu-item v-for="note in noteList" :key="note.id" :index="'3-'+note.id"
+                        @click="router.push(`/catalog/${note.id}`)">{{ note.name }}</el-menu-item>
         </el-submenu>
         <el-menu-item index="4" @click="router.push('/classify')">
           <MyIcon type="icon-classify"/>
@@ -192,7 +193,7 @@ const dropdownChange = (value) => {
   isDropdown.value = value
 }
 //设置-菜单默认关闭
-const drawer = ref(false);
+let drawer = ref(false);
 //设置-菜单关闭事件
 const handleClose = () => {
   drawer.value = false
@@ -328,7 +329,7 @@ header {
 
     .color-active {
       box-shadow: 0 2px 13px 2px grey;
-      background-image: url("src/assets/images/yes.png");
+      background-image: url("/src/assets/images/yes.png");
       background-repeat: no-repeat;
     }
 

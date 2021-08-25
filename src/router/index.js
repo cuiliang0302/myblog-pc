@@ -29,6 +29,14 @@ const router = createRouter({
 			}
 		},
 		{
+			path: '/catalog/:id',
+			name: 'Catalog',
+			component: () => import('@/views/note/Catalog.vue'),
+			meta: {
+				title: '笔记目录',
+			}
+		},
+		{
 			path: '/about',
 			name: 'About',
 			component: () => import('@/views/About.vue'),

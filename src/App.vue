@@ -14,6 +14,4 @@ const locale = zhCn
 </script>
 
 <style>
-#app {
-}
 </style>
