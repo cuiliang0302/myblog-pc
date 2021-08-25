@@ -13,22 +13,22 @@
           <MyIcon type="icon-home"/>
           首页
         </el-menu-item>
-        <el-submenu index="2">
+        <el-sub-menu index="2">
           <template #title>
             <MyIcon type="icon-article"/>
             文章
           </template>
           <el-menu-item v-for="category in categoryList" :key="category.id"
                         :index="'2-'+category.id" @click="toCategory(category.id)">{{ category.name }}</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
+        </el-sub-menu>
+        <el-sub-menu index="3">
           <template #title>
             <MyIcon type="icon-note"/>
             笔记
           </template>
           <el-menu-item v-for="note in noteList" :key="note.id" :index="'3-'+note.id"
                         @click="router.push(`/catalog/${note.id}`)">{{ note.name }}</el-menu-item>
-        </el-submenu>
+        </el-sub-menu>
         <el-menu-item index="4" @click="router.push('/classify')">
           <MyIcon type="icon-classify"/>
           归档
@@ -123,7 +123,7 @@
 import {
   ElMenuItem,
   ElMenu,
-  ElSubmenu,
+  ElSubMenu,
   ElIcon,
   ElImage,
   ElAvatar,
