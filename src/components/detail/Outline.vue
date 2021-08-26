@@ -17,7 +17,7 @@
 
 <script setup>
 
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import store from "@/store";
 import {
   ElTooltip,
@@ -40,7 +40,7 @@ const outlineShow = computed(() => store.state.outlineShow)
 const heightTitle = ref(0)
 
 // 定义事件(子组件向父组件传参)
-const emit = defineEmit(['rollTo']);
+const emit = defineEmits(['rollTo']);
 
 // markdown-标题跳转
 const rollTo = (anchor, index) => {

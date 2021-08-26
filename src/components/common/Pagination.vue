@@ -34,6 +34,7 @@ const pageNumber = ref(1)
 const pageSize = ref(10)
 // 总页数
 const pageCount = ref(1)
+const emit = defineEmits(['changePage']);
 // 页码大小改变
 const handleSizeChange = (val) => {
   console.log(`每页 ${val} 条`);
@@ -42,7 +43,6 @@ const handleSizeChange = (val) => {
   pageNumber.value = 1
   emit('changePage', pageSize.value, pageNumber.value);
 };
-const emit = defineEmit(['changePage']);
 const handleCurrentChange = (val) => {
   console.log(`当前页: ${val}`);
   pageNumber.value = val

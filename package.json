@@ -9,10 +9,10 @@
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
     "@kangc/v-md-editor": "^2.3.8",
-    "element-plus": "^1.1.0-beta.5",
+    "element-plus": "^1.1.0-beta.6",
     "highlight.js": "^10.7.3",
     "normalize.css": "^8.0.1",
-    "vue": "^3.1.5",
+    "vue": "^3.2.6",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2",
     "vuex-along": "^1.2.13"
