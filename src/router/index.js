@@ -37,6 +37,14 @@ const router = createRouter({
 			}
 		},
 		{
+			path: '/detail/section/:id',
+			name: 'SectionDetail',
+			component: () => import('@/views/note/SectionDetail.vue'),
+			meta: {
+				title: '笔记正文',
+			}
+		},
+		{
 			path: '/about',
 			name: 'About',
 			component: () => import('@/views/About.vue'),

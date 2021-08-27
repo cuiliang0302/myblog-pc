@@ -24,7 +24,7 @@ const router = useRouter()
 // 点击跳转笔记详情页
 const handleNodeClick = (data) => {
   if (!data.children) {
-    router.push({path: `/detail/note/${data.id}`})
+    router.push({path: `/detail/section/${data.id}`})
   }
 }
 // 笔记目录列表
@@ -63,15 +63,17 @@ onBeforeRouteUpdate(async (to) => {
 .catalog {
   padding: 20px 10px;
   background-color: $color-background-white;
+
+  .el-tree {
+    .el-tree-node {
+      padding: 10px 0;
+    }
+
+    span {
+      font-size: 16px !important;
+    }
+  }
 }
 
-.el-tree {
-  .el-tree-node {
-    padding: 10px 0;
-  }
 
-  span {
-    font-size: 16px !important;
-  }
-}
 </style>

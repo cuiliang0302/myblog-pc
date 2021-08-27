@@ -1,55 +1,48 @@
 <template>
-  <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-    <el-menu-item index="1">处理中心</el-menu-item>
-    <el-sub-menu index="2">
-      <template #title>我的工作台</template>
-      <el-menu-item index="2-1">选项1</el-menu-item>
-      <el-menu-item index="2-2">选项2</el-menu-item>
-      <el-menu-item index="2-3">选项3</el-menu-item>
-    </el-sub-menu>
-    <el-menu-item index="3" disabled>消息中心</el-menu-item>
-    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
-  </el-menu>
-  <div class="line"></div>
-  <el-menu
-      :default-active="activeIndex2"
-      class="el-menu-demo"
-      mode="horizontal"
-      @select="handleSelect"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b">
-    <el-menu-item index="1">处理中心</el-menu-item>
-    <el-sub-menu index="2">
-      <template #title>我的工作台</template>
-      <el-menu-item index="2-1">选项1</el-menu-item>
-      <el-menu-item index="2-2">选项2</el-menu-item>
-      <el-menu-item index="2-3">选项3</el-menu-item>
-      <el-sub-menu index="2-4">
-        <template #title>选项4</template>
-        <el-menu-item index="2-4-1">选项1</el-menu-item>
-        <el-menu-item index="2-4-2">选项2</el-menu-item>
-        <el-menu-item index="2-4-3">选项3</el-menu-item>
-      </el-sub-menu>
-    </el-sub-menu>
-    <el-menu-item index="3" disabled>消息中心</el-menu-item>
-    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
-  </el-menu>
+  <el-tree :data="data"
+           show-checkbox
+           :props="defaultProps" @node-click="handleNodeClick" node-key="id"
+           :default-expanded-keys="[2, 3]"
+           :default-checked-keys="[5]"></el-tree>
 </template>
 
 <script setup>
-import {defineComponent, ref} from 'vue';
+import {ref} from 'vue';
 import {
-  ElMenuItem,
-  ElMenu,
-  ElSubMenu
+  ElTree
 } from 'element-plus'
 
-const activeIndex = ref('1');
-const activeIndex2 = ref('1');
-const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath);
-};
+const data = [{
+  id: 1,
+  label: '一级 1',
+  children: [{
+    id: 4,
+    label: '二级 1-1',
+  }]
+}, {
+  id: 2,
+  label: '一级 2',
+  children: [{
+    id: 5,
+    label: '二级 2-1'
+  }, {
+    id: 6,
+    label: '二级 2-2'
+  }]
+}, {
+  id: 3,
+  label: '一级 3',
+  children: [{
+    id: 7,
+    label: '二级 3-1'
+  }, {
+    id: 8,
+    label: '二级 3-2'
+  }]
+}]
+const handleNodeClick = (data) => {
+  console.log(data);
+}
 </script>
 
 <style scoped>

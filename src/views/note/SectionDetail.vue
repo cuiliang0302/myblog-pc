@@ -5,7 +5,7 @@
     <NavMenu :activeMenu="activeMenu"></NavMenu>
     <div class="detail-page">
       <div class="detail-left">
-        <!--        这是左边部分-->
+        <el-tree accordion :data="catalogList" @node-click="handleNodeClick"></el-tree>
       </div>
       <div class="detail-center">
         <div class="current-position">
@@ -13,30 +13,27 @@
           <span>
             <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item><a @click="toCategory(article.category_id)">
-              {{ article.category }}</a></el-breadcrumb-item>
-            <el-breadcrumb-item>文章正文</el-breadcrumb-item>
+            <el-breadcrumb-item><a @click="toNote(section.note_id)">
+              {{ section.note }}</a></el-breadcrumb-item>
+            <el-breadcrumb-item>笔记正文</el-breadcrumb-item>
           </el-breadcrumb>
           </span>
         </div>
         <div class="main detail-card">
-          <div v-if="JSON.stringify(article) == '{}'">
+          <div v-if="JSON.stringify(section) == '{}'">
             <el-skeleton :rows="20" animated/>
           </div>
           <div v-else>
-            <h1>{{ article.title }}</h1>
+            <h1>{{ section.title }}</h1>
             <div class="info">
-              <span><MyIcon type="icon-category"/>{{ article.category }}</span>
-              <span><MyIcon type="icon-tag"/>
-                  <span v-for="(tag,index) in article.tags" :key="index">{{ tag.name }}</span>
-                </span>
-              <span><MyIcon type="icon-time"/>{{ timeFull(article.created_time) }}</span>
-              <span><MyIcon type="icon-view"/>{{ article.view }}</span>
-              <span><MyIcon type="icon-like"/>{{ article.like }}</span>
-              <span><MyIcon type="icon-collect"/>{{ article.collect }}</span>
-              <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
+              <span><MyIcon type="icon-category"/>{{ section.note }}</span>
+              <span><MyIcon type="icon-time"/>{{ timeFull(section.created_time) }}</span>
+              <span><MyIcon type="icon-view"/>{{ section.view }}</span>
+              <span><MyIcon type="icon-like"/>{{ section.like }}</span>
+              <span><MyIcon type="icon-collect"/>{{ section.collect }}</span>
+              <span><MyIcon type="icon-comment"/>{{ section.comment }}</span>
             </div>
-            <MarkDown :text="article.body"></MarkDown>
+            <MarkDown :text="section.body"></MarkDown>
           </div>
           <div class="context">
             <span :class="context.last?'detail-context-hover':''" @click="toDetail(context.last.id)">
@@ -44,40 +41,11 @@
               <p v-if="context.last">{{ context.last.title }}</p>
               <p v-else>已是第一篇</p>
             </span>
-            <span>
-              <p>文章分类：
-                <span class="tag article-tag-hover" :style="'background-color: '+tagColor(article.category_id)">
-                  {{ article.category }}
-                </span>
-              </p>
-              <p>文章标签：
-                <span v-for="item in article.tags" class="tag article-tag-hover"
-                      :style="'background-color: '+tagColor(item.id)">
-                  {{ item.name }}
-                </span>
-              </p>
-            </span>
             <span :class="context.next?'detail-context-hover':''" @click="toDetail(context.next.id)">
               <p><MyIcon type="icon-next"/></p>
               <p v-if="context.next">{{ context.next.title }}</p>
               <p v-else>已是最后一篇</p>
             </span>
-          </div>
-        </div>
-        <div class="guess detail-card">
-          <h2>💖 猜你喜欢</h2>
-          <div>
-            <span class="recommend-hover" v-for="item in recommendList" @click="toDetail(item.id)">
-              <el-image :src="item.cover"
-                        style="width: 90%"
-                        :fit="'fill'"
-                        lazy>
-                <template #placeholder>
-                  <Loading></Loading>
-                </template>
-              </el-image>
-              <p>{{ item.title }}</p>
-          </span>
           </div>
         </div>
         <div class="comments detail-card">
@@ -111,8 +79,9 @@ import {
   ElCard,
   ElSkeleton,
   ElImage,
+  ElTree,
 } from 'element-plus'
-import {getArticleDetail, getContextArticle, getGuessLike} from "@/api/blog";
+import {getSectionDetail, getContextSection, getCatalogue} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -125,67 +94,89 @@ let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
 const router = useRouter()
-//跳转文章列表
-const toCategory = (categoryId) => {
-  router.push({path: `/category/${categoryId}`})
+//跳转笔记列表
+const toNote = (noteId) => {
+  router.push({path: `/note/${noteId}`})
 }
-// 当前文章id
-const articleID = ref()
-// 文章详情数据
-const article = reactive({})
-// 当前文章分类id
+// 当前笔记id
+const sectionID = ref()
+// 笔记详情数据
+const section = reactive({})
+// 当前笔记分类id
 const activeMenu = ref()
-// 文章上下篇
+// 笔记上下篇
 const context = reactive({})
 // 猜你喜欢
 const recommendList = ref([])
 // 是否开启加载中动画
 const loading = ref(false)
+// 笔记目录列表
+const catalogList = ref([])
 
-// 获取文章详情
-async function articleData(DetailID) {
-  const detail_data = await getArticleDetail(DetailID)
+// 获取笔记目录数据
+async function catalogueData(catalogueID) {
+  let data = await getCatalogue(catalogueID)
+  console.log(data)
+  catalogList.value = data.map((i, index) => {
+    return {
+      id: i['id'],
+      label: '第' + (index + 1) + '章：' + i['name'],
+      children: i['child'].map((j, index) => {
+        return {
+          id: j['section_id'],
+          label: (index + 1) + '. ' + j['name'],
+          children: NaN
+        }
+      })
+    }
+  })
+}
+
+// 点击跳转指定笔记
+const handleNodeClick = (data) => {
+  if (!data.children) {
+    router.push({path: `/detail/section/${data.id}`})
+  }
+}
+
+// 获取笔记详情
+async function sectionData(DetailID) {
+  const detail_data = await getSectionDetail(DetailID)
   for (let i in detail_data) {
     if (i === 'body') {
       // 图片防盗链处理
-      article.body = detail_data.body
+      section.body = detail_data.body
       const pattern = /!\[(.*?)\]\((https:\/\/cdn.nlark.com.*?)\)/gm;
       let matcher;
       let imgArr = [];
-      while ((matcher = pattern.exec(article.body)) !== null) {
+      while ((matcher = pattern.exec(section.body)) !== null) {
         imgArr.push(matcher[2]);
       }
       for (let i = 0; i < imgArr.length; i++) {
-        article.body = article.body.replace(
+        section.body = section.body.replace(
             imgArr[i],
             getImgProxy(imgArr[i])
         );
       }
     } else {
-      article[i] = detail_data[i]
+      section[i] = detail_data[i]
     }
   }
-  console.log(article)
-  activeMenu.value = "2-" + article.category_id
+  console.log(section)
+  activeMenu.value = "3-" + section.note_id
   loading.value = false
 }
 
-// 获取文章上下篇
+// 获取笔记上下篇
 async function contextData(DetailID) {
-  Object.assign(context, await getContextArticle(DetailID));
+  Object.assign(context, await getContextSection(DetailID));
   console.log(context)
 }
 
-// 获取猜你喜欢
-async function guessLikeData(DetailID) {
-  recommendList.value = await getGuessLike(DetailID)
-  console.log(recommendList.value)
-}
-
-// 点击跳转其他文章事件
+// 点击跳转其他笔记事件
 const toDetail = (detailID) => {
-  articleID.value = detailID
-  router.push({path: `/detail/article/${articleID.value}`})
+  sectionID.value = detailID
+  router.push({path: `/detail/section/${sectionID.value}`})
 }
 // 点击大纲跳转事件
 const rollTo = (anchor) => {
@@ -210,10 +201,10 @@ const scroll = () => {
   }
 }
 onMounted(async () => {
-  articleID.value = router.currentRoute.value.params.id
-  await articleData(articleID.value)
-  await contextData(articleID.value)
-  await guessLikeData(articleID.value)
+  sectionID.value = router.currentRoute.value.params.id
+  await sectionData(sectionID.value)
+  await contextData(sectionID.value)
+  await catalogueData(section.note_id)
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
@@ -226,9 +217,8 @@ onBeforeRouteUpdate(async (to) => {
     delete context[key];
   }
   loading.value = true
-  await articleData(to.params.id)
+  await sectionData(to.params.id)
   await contextData(to.params.id)
-  await guessLikeData(to.params.id)
   window.scrollTo({top: 0})
 });
 </script>
@@ -242,6 +232,12 @@ onBeforeRouteUpdate(async (to) => {
 
     .detail-left {
       width: 15%;
+
+      .el-tree {
+        max-width: 15%;
+        position: fixed;
+        background-color: $color-background-base;
+      }
     }
 
     .detail-center {
@@ -305,40 +301,9 @@ onBeforeRouteUpdate(async (to) => {
 
           > span:nth-child(2) {
             border-left: 2px solid $color-text-placeholder;
-            border-right: 2px solid $color-text-placeholder;
 
             span {
               margin: 0 5px
-            }
-          }
-        }
-      }
-
-      .guess {
-        > div {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin: 10px 0px;
-
-          &:hover {
-            span {
-              opacity: 0.5;
-            }
-          }
-
-          span {
-            text-align: center;
-            flex: 1;
-
-            &:hover {
-              opacity: 1;
-            }
-
-            p {
-              font-size: 14px;
-              color: $color-text-secondary;
-              margin: 10px 0px;
             }
           }
         }
