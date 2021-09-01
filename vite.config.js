@@ -1,39 +1,35 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path';
-import styleImport from 'vite-plugin-style-import'
+import VitePluginElementPlus from 'vite-plugin-element-plus'
+
 // https://vitejs.dev/config/
-export default defineConfig({
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, 'src')
-		}
-	},
-	plugins: [
-		vue(),
-		styleImport({
-			libs: [{
-				libraryName: 'element-plus',
-				esModule: true,
-				ensureStyleFile: true,
-				resolveStyle: (name) => {
-					name = name.slice(3)
-					return `element-plus/packages/theme-chalk/src/${name}.scss`;
-				},
-				resolveComponent: (name) => {
-					return `element-plus/lib/${name}`;
-				},
-			}]
-		})
-	],
-	css: {
-		preprocessorOptions: {
-			scss: {
-				additionalData: '@use "./src/assets/style/variable.scss" as *;'
+export default defineConfig(({mode}) => {
+	return {
+		resolve: {
+			alias: {
+				'@': path.resolve(__dirname, 'src')
 			}
-		}
-	},
-	optimizeDeps: {
-		include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],
-	},
+		},
+		plugins: [
+			vue(),
+			VitePluginElementPlus({
+				// 如果你需要使用 [component name].scss 源文件，你需要把下面的注释取消掉。
+				// 对于所有的 API 你可以参考 https://github.com/element-plus/vite-plugin-element-plus
+				// 的文档注释
+				// useSource: true
+				format: mode === 'development' ? 'esm' : 'cjs',
+			}),
+		],
+		css: {
+			preprocessorOptions: {
+				scss: {
+					additionalData: '@use "./src/assets/style/variable.scss" as *;'
+				}
+			}
+		},
+		optimizeDeps: {
+			include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],
+		},
+	}
 })

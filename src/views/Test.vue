@@ -1,132 +1,18 @@
 <template>
   <h1>aaaa</h1>
-  <div class="test">
-    <span><div ref='editor'></div></span>
-    <span>
-      <el-button type="primary" round @click='syncHTML'>发表评论</el-button>
-    </span>
-  </div>
-<!--  <div :innerHTML='content.html'></div>-->
 </template>
 
 <script setup>
 import {ElMessage, ElButton} from 'element-plus'
 import {onBeforeUnmount, onMounted, reactive, ref} from 'vue';
-import WangEditor from 'wangeditor';
-import hljs from 'highlight.js'
-import 'highlight.js/styles/monokai-sublime.css'
-import qiniuUpload from "@/utils/qiniuUpload";
-import icon from "@/utils/icon";
 
-let {MyIcon} = icon()
-// 七牛图片上传
-let {upload} = qiniuUpload()
-// 添加清空功能按钮
-// 获取必要的变量，这些在下文中都会用到
-const {BtnMenu} = WangEditor
-
-class AlertMenu extends BtnMenu {
-  constructor(editor) {
-    // data-title属性表示当鼠标悬停在该按钮上时提示该按钮的功能简述
-    const $elem = WangEditor.$(
-        `<div class="w-e-menu" data-title="清空">
-               <i class="el-icon-delete"></i>
-            </div>`
-    )
-    super($elem, editor)
-  }
-
-  // 菜单点击事件
-  clickHandler() {
-    instance.txt.clear()
-    content.html = ''
-  }
-
-  // 菜单是否被激活
-  tryChangeActive() {
-    if (instance.txt.html()) {
-      this.active()
-    } else {
-      this.unActive()
-    }
-  }
-}
-
-// 菜单 key ，各个菜单不能重复
-const menuKey = 'alertMenuKey'
-// 注册菜单
-WangEditor.registerMenu(menuKey, AlertMenu)
-const editor = ref();
-const content = reactive({
-  html: '',
-  text: '',
-});
-
-let instance;
 onMounted(() => {
-  instance = new WangEditor(editor.value);
-  // 设置编辑器高度
-  instance.config.height = 300
-  // 自定义提示内容
-  instance.config.placeholder = '元芳，你怎么看？'
-  // 配置菜单栏，删减菜单，调整顺序
-  instance.config.menus = [
-    'emoticon',
-    'image',
-    'link',
-    'code',
-    'undo',
-    'redo',
-  ]
-  // 挂载highlight代码高亮插件
-  instance.highlight = hljs
-  // z-index
-  instance.config.zIndex = 1
-  // 图片上传
-  instance.config.customUploadImg = function (resultFiles, insertImgFn) {
-    upload('comment', resultFiles[0]).then((response) => {
-      console.log(response)
-      ElMessage.success({
-        message: '图片上传成功',
-        type: 'success'
-      });
-      insertImgFn(response)
-    }).catch(response => {
-      //发生错误时执行的代码
-      console.log(response)
-      ElMessage.error('图片上传失败');
-    });
-  }
-  instance.create();
-});
+  console.log(import.meta.env.MODE)
+})
 
-onBeforeUnmount(() => {
-  instance.destroy();
-  instance = null;
-});
 
-const syncHTML = () => {
-  content.html = instance.txt.html();
-  console.log(instance.txt.html())
-};
 </script>
 
 <style scoped lang="scss">
-.editor-menu {
-  width: 100px;
-  height: 50px;
-  background-color: red;
-}
 
-.test {
-  display: flex;
-
-  span:nth-child(1) {
-    width: 80%;
-  }
-
-  span:nth-child(2) {
-    width: 20%;
-  }
-}
 </style>
