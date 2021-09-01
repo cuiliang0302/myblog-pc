@@ -1,16 +1,11 @@
 <template>
-  <h1>aaaa</h1>
-  <div class="test">
-    <span><div ref='editor'></div></span>
-    <span>
-      <el-button type="primary" round @click='syncHTML'>发表评论</el-button>
-    </span>
+  <div class="editor">
+    <div ref='editor'></div>
   </div>
-<!--  <div :innerHTML='content.html'></div>-->
 </template>
 
 <script setup>
-import {ElMessage, ElButton} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import {onBeforeUnmount, onMounted, reactive, ref} from 'vue';
 import WangEditor from 'wangeditor';
 import hljs from 'highlight.js'
@@ -25,7 +20,7 @@ let {upload} = qiniuUpload()
 // 获取必要的变量，这些在下文中都会用到
 const {BtnMenu} = WangEditor
 
-class AlertMenu extends BtnMenu {
+class ClearMenu extends BtnMenu {
   constructor(editor) {
     // data-title属性表示当鼠标悬停在该按钮上时提示该按钮的功能简述
     const $elem = WangEditor.$(
@@ -36,10 +31,10 @@ class AlertMenu extends BtnMenu {
     super($elem, editor)
   }
 
-  // 菜单点击事件
+  // 菜单点击清空事件
   clickHandler() {
     instance.txt.clear()
-    content.html = ''
+    content.value = ''
   }
 
   // 菜单是否被激活
@@ -53,20 +48,17 @@ class AlertMenu extends BtnMenu {
 }
 
 // 菜单 key ，各个菜单不能重复
-const menuKey = 'alertMenuKey'
+const menuKey = 'clearMenuKey'
 // 注册菜单
-WangEditor.registerMenu(menuKey, AlertMenu)
+WangEditor.registerMenu(menuKey, ClearMenu)
 const editor = ref();
-const content = reactive({
-  html: '',
-  text: '',
-});
+const content = ref('')
 
 let instance;
 onMounted(() => {
   instance = new WangEditor(editor.value);
   // 设置编辑器高度
-  instance.config.height = 300
+  instance.config.height = 150
   // 自定义提示内容
   instance.config.placeholder = '元芳，你怎么看？'
   // 配置菜单栏，删减菜单，调整顺序
@@ -104,29 +96,18 @@ onBeforeUnmount(() => {
   instance.destroy();
   instance = null;
 });
-
+// 获取编辑器导出的html代码
 const syncHTML = () => {
-  content.html = instance.txt.html();
+  content.value = instance.txt.html();
   console.log(instance.txt.html())
 };
+// 声明暴露的对象
+defineExpose({
+  syncHTML,
+  content
+})
 </script>
 
 <style scoped lang="scss">
-.editor-menu {
-  width: 100px;
-  height: 50px;
-  background-color: red;
-}
 
-.test {
-  display: flex;
-
-  span:nth-child(1) {
-    width: 80%;
-  }
-
-  span:nth-child(2) {
-    width: 20%;
-  }
-}
 </style>

@@ -5,7 +5,9 @@
     <NavMenu :activeMenu="activeMenu"></NavMenu>
     <div class="detail-page">
       <div class="detail-left">
-        <el-tree accordion :data="catalogList" @node-click="handleNodeClick"></el-tree>
+        <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
+                 :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
+                 :current-node-key="current"></el-tree>
       </div>
       <div class="detail-center">
         <div class="current-position">
@@ -94,10 +96,6 @@ let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
 const router = useRouter()
-//跳转笔记列表
-const toNote = (noteId) => {
-  router.push({path: `/note/${noteId}`})
-}
 // 当前笔记id
 const sectionID = ref()
 // 笔记详情数据
@@ -112,18 +110,27 @@ const recommendList = ref([])
 const loading = ref(false)
 // 笔记目录列表
 const catalogList = ref([])
+// 当前笔记展开的目录id
+const expanded = ref([])
+// 当前高亮的笔记目录id
+const current = ref()
+//跳转笔记列表
+const toNote = (noteId) => {
+  router.push({path: `/note/${noteId}`})
+}
 
 // 获取笔记目录数据
 async function catalogueData(catalogueID) {
   let data = await getCatalogue(catalogueID)
-  console.log(data)
+  // console.log(data)
   catalogList.value = data.map((i, index) => {
     return {
       id: i['id'],
       label: '第' + (index + 1) + '章：' + i['name'],
       children: i['child'].map((j, index) => {
         return {
-          id: j['section_id'],
+          id: j['id'],
+          section_id: j['section_id'],
           label: (index + 1) + '. ' + j['name'],
           children: NaN
         }
@@ -135,8 +142,30 @@ async function catalogueData(catalogueID) {
 // 点击跳转指定笔记
 const handleNodeClick = (data) => {
   if (!data.children) {
-    router.push({path: `/detail/section/${data.id}`})
+    // console.log(sectionID.value)
+    sectionID.value = data.section_id
+    findCatalogId(sectionID.value)
+    router.push({path: `/detail/section/${data.section_id}`})
   }
+}
+// 查找笔记id对应的目录id
+const findCatalogId = (sectionId) => {
+  catalogList.value.forEach((i) => {
+    // console.log(i.children, i.id)
+    i.children.forEach((j) => {
+      // console.log(j.section_id)
+      if (j.section_id === parseInt(sectionId)) {
+        // console.log(j.label)
+        // console.log(i.id)
+        expanded.value = [i.id]
+        current.value = j.id
+        return false
+      }
+    })
+  })
+  console.log("文章id", sectionID.value)
+  console.log("父id", expanded.value)
+  console.log("子id", current.value)
 }
 
 // 获取笔记详情
@@ -162,7 +191,7 @@ async function sectionData(DetailID) {
       section[i] = detail_data[i]
     }
   }
-  console.log(section)
+  // console.log(section)
   activeMenu.value = "3-" + section.note_id
   loading.value = false
 }
@@ -170,12 +199,13 @@ async function sectionData(DetailID) {
 // 获取笔记上下篇
 async function contextData(DetailID) {
   Object.assign(context, await getContextSection(DetailID));
-  console.log(context)
+  // console.log(context)
 }
 
 // 点击跳转其他笔记事件
 const toDetail = (detailID) => {
   sectionID.value = detailID
+  findCatalogId(sectionID.value)
   router.push({path: `/detail/section/${sectionID.value}`})
 }
 // 点击大纲跳转事件
@@ -201,24 +231,30 @@ const scroll = () => {
   }
 }
 onMounted(async () => {
+  store.commit('setOutline', '')
   sectionID.value = router.currentRoute.value.params.id
   await sectionData(sectionID.value)
   await contextData(sectionID.value)
   await catalogueData(section.note_id)
+  findCatalogId(sectionID.value)
   window.addEventListener('scroll', scroll())
+  // current.value = 6
+  console.log(current.value, typeof current.value)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
   store.commit('setOutline', '')
 })
 onBeforeRouteUpdate(async (to) => {
-  console.log(to)
+  // console.log(to)
+  store.commit('setOutline', '')
   for (let key in context) {
     delete context[key];
   }
+  // sectionID.value = to.params.id
   loading.value = true
-  await sectionData(to.params.id)
-  await contextData(to.params.id)
+  await sectionData(sectionID.value)
+  await contextData(sectionID.value)
   window.scrollTo({top: 0})
 });
 </script>
@@ -234,7 +270,7 @@ onBeforeRouteUpdate(async (to) => {
       width: 15%;
 
       .el-tree {
-        max-width: 15%;
+        width: 15%;
         position: fixed;
         background-color: $color-background-base;
       }
@@ -260,7 +296,7 @@ onBeforeRouteUpdate(async (to) => {
           border-radius: 20px;
 
           > span {
-            margin: 0 2%;
+            margin: 0 4%;
 
             .anticon {
               margin-right: 10px;

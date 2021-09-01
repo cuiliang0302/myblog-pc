@@ -1,4 +1,4 @@
-import {ElInfiniteScroll, ElLoading, ElConfigProvider, ElMessage} from 'element-plus'
+import {ElLoading, ElConfigProvider, ElMessage,  ElInfiniteScroll} from 'element-plus'
 
 
 export default function (app) {

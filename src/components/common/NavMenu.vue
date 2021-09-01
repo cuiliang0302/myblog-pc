@@ -33,7 +33,7 @@
           <MyIcon type="icon-classify"/>
           归档
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="5" @click="router.push('/message')">
           <MyIcon type="icon-message"/>
           留言板
         </el-menu-item>
@@ -162,7 +162,7 @@ async function siteConfigData() {
   let data = await getSiteConfig()
   siteConfig.logo = data.logo
   siteConfig.name = data.name
-  console.log(siteConfig)
+  // console.log(siteConfig)
 }
 
 //导航菜单-文章分类
@@ -170,7 +170,7 @@ const categoryList = ref([])
 
 async function categoryData() {
   categoryList.value = await getCategory()
-  console.log(categoryList.value)
+  // console.log(categoryList.value)
 }
 
 //导航菜单-跳转文章列表
@@ -182,7 +182,7 @@ const noteList = ref([])
 
 async function NoteData() {
   noteList.value = await getNote()
-  console.log(noteList.value)
+  // console.log(noteList.value)
 }
 
 // 个人中心-是否下拉状态

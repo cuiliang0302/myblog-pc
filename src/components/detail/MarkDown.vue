@@ -102,7 +102,7 @@ async function getTitle() {
     indent: hTags.indexOf(el.tagName),
     height: el.offsetTop,
   }));
-  console.log(titleList.value)
+  // console.log(titleList.value)
   store.commit('setOutline', titleList.value)
 }
 

@@ -33,7 +33,7 @@ async function siteConfigData() {
   footerData.icp_url = data.icp_url
   footerData.police_num = data.police_num
   footerData.police_url = data.police_url
-  console.log(footerData)
+  // console.log(footerData)
 }
 
 onMounted(() => {

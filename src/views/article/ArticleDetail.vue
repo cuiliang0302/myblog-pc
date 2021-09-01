@@ -83,7 +83,7 @@
         <div class="comments detail-card">
           <h2>📝 评论交流</h2>
           <div>
-            评论模块正在开发中，敬请期待！
+            <Editor></Editor>
           </div>
         </div>
       </div>
@@ -105,6 +105,7 @@ import BackTop from "@/components/common/BackTop.vue"
 import MarkDown from "@/components/detail/MarkDown.vue"
 import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
+import Editor from "@/components/common/Editor.vue"
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
@@ -218,10 +219,10 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
-  store.commit('setOutline', '')
 })
 onBeforeRouteUpdate(async (to) => {
   console.log(to)
+  store.commit('setOutline', '')
   for (let key in context) {
     delete context[key];
   }
