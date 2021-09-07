@@ -9,7 +9,7 @@ const router = createRouter({
 			name: 'Home',
 			component: () => import('@/views/Home.vue'),
 			meta: {
-				title: '首页',
+				title: '崔亮的博客-专注devops自动化运维，传播优秀it运维技术文章',
 			}
 		},
 		{
@@ -75,6 +75,12 @@ const router = createRouter({
 // 路由导航守卫
 router.beforeEach((to, from, next) => {
 	// to 访问的路径 from 从哪来 next 响应路径
+	// 百度统计API跳转
+	if (to.path) {
+		if (window._hmt) {
+			window._hmt.push(['_trackPageview', '/#' + to.fullPath])
+		}
+	}
 	// if (to.meta.isAuth === true && JSON.stringify(store.state.userSession) === '{}') {
 	// 	Toast.fail('还未登录，即将跳转至登录页')
 	// 	return next('/login_register')

@@ -9,7 +9,8 @@
               <el-image
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
-                  :fit="'fill'">
+                  :fit="'fill'"
+                  lazy>
                 <template #placeholder>
                   <Loading></Loading>
                 </template>
