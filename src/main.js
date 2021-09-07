@@ -4,7 +4,8 @@ import router from '@/router';
 import store from '@/store';
 import '@/assets/style/index.scss'
 import ElementPlus from '@/plugins/ElementPlus'
-import 'element-plus/theme-chalk/src/index.scss'
+// import 'element-plus/theme-chalk/src/index.scss'
+import 'element-plus/dist/index.css'
 import animate from "animate.css";
 
 const app = createApp(App)
