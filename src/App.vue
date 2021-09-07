@@ -11,7 +11,7 @@
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {onMounted} from "vue";
 import {
-  ElMessageBox, ElMessage
+  ElMessageBox
 } from 'element-plus'
 
 const locale = zhCn
