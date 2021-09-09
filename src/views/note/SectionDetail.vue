@@ -1,18 +1,19 @@
 <template>
-  <section class="detail" v-loading="loading"
-           element-loading-text="拼命加载中"
-           element-loading-spinner="el-icon-loading">
-    <NavMenu :activeMenu="activeMenu"></NavMenu>
-    <div class="detail-page">
-      <div class="detail-left">
-        <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
-                 :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
-                 :current-node-key="current"></el-tree>
-      </div>
-      <div class="detail-center">
-        <div class="current-position">
-          <span>您的位置：</span>
-          <span>
+  <div v-title="section.title+'-'+sitename">
+    <section class="detail" v-loading="loading"
+             element-loading-text="拼命加载中"
+             element-loading-spinner="el-icon-loading">
+      <NavMenu :activeMenu="activeMenu"></NavMenu>
+      <div class="detail-page">
+        <div class="detail-left">
+          <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
+                   :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
+                   :current-node-key="current"></el-tree>
+        </div>
+        <div class="detail-center">
+          <div class="current-position">
+            <span>您的位置：</span>
+            <span>
             <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item><a @click="toNote(section.note_id)">
@@ -20,51 +21,52 @@
             <el-breadcrumb-item>笔记正文</el-breadcrumb-item>
           </el-breadcrumb>
           </span>
-        </div>
-        <div class="main detail-card">
-          <div v-if="JSON.stringify(section) == '{}'">
-            <el-skeleton :rows="20" animated/>
           </div>
-          <div v-else>
-            <h1>{{ section.title }}</h1>
-            <div class="info">
-              <span><MyIcon type="icon-category"/>{{ section.note }}</span>
-              <span><MyIcon type="icon-time"/>{{ timeFull(section.created_time) }}</span>
-              <span><MyIcon type="icon-view"/>{{ section.view }}</span>
-              <span><MyIcon type="icon-like"/>{{ section.like }}</span>
-              <span><MyIcon type="icon-collect"/>{{ section.collect }}</span>
-              <span><MyIcon type="icon-comment"/>{{ section.comment }}</span>
+          <div class="main detail-card">
+            <div v-if="JSON.stringify(section) == '{}'">
+              <el-skeleton :rows="20" animated/>
             </div>
-            <MarkDown :text="section.body"></MarkDown>
-          </div>
-          <div class="context">
+            <div v-else>
+              <h1>{{ section.title }}</h1>
+              <div class="info">
+                <span><MyIcon type="icon-category"/>{{ section.note }}</span>
+                <span><MyIcon type="icon-time"/>{{ timeFull(section.created_time) }}</span>
+                <span><MyIcon type="icon-view"/>{{ section.view }}</span>
+                <span><MyIcon type="icon-like"/>{{ section.like }}</span>
+                <span><MyIcon type="icon-collect"/>{{ section.collect }}</span>
+                <span><MyIcon type="icon-comment"/>{{ section.comment }}</span>
+              </div>
+              <MarkDown :text="section.body"></MarkDown>
+            </div>
+            <div class="context">
             <span :class="context.last?'detail-context-hover':''" @click="toDetail(context.last.id)">
               <p><MyIcon type="icon-last"/></p>
               <p v-if="context.last">{{ context.last.title }}</p>
               <p v-else>已是第一篇</p>
             </span>
-            <span :class="context.next?'detail-context-hover':''" @click="toDetail(context.next.id)">
+              <span :class="context.next?'detail-context-hover':''" @click="toDetail(context.next.id)">
               <p><MyIcon type="icon-next"/></p>
               <p v-if="context.next">{{ context.next.title }}</p>
               <p v-else>已是最后一篇</p>
             </span>
+            </div>
+          </div>
+          <div class="comments detail-card">
+            <h2>📝 评论交流</h2>
+            <div>
+              评论模块正在开发中，敬请期待！
+            </div>
           </div>
         </div>
-        <div class="comments detail-card">
-          <h2>📝 评论交流</h2>
-          <div>
-            评论模块正在开发中，敬请期待！
-          </div>
+        <div class="detail-right">
+          <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
+          <Action></Action>
+          <BackTop></BackTop>
         </div>
       </div>
-      <div class="detail-right">
-        <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
-        <Action></Action>
-        <BackTop></BackTop>
-      </div>
-    </div>
-    <Footer></Footer>
-  </section>
+      <Footer></Footer>
+    </section>
+  </div>
 </template>
 
 <script setup>
@@ -91,6 +93,7 @@ import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import setColor from "@/utils/setColor";
 import store from "@/store";
+import {getSiteConfig} from "@/api/management";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
@@ -118,7 +121,14 @@ const current = ref()
 const toNote = (noteId) => {
   router.push({path: `/note/${noteId}`})
 }
-
+// 站点名称
+const sitename = ref('')
+// 获取站点名称
+async function siteConfigData() {
+  let siteConfig_data = await getSiteConfig()
+  console.log(siteConfig_data)
+  sitename.value = siteConfig_data.name
+}
 // 获取笔记目录数据
 async function catalogueData(catalogueID) {
   let data = await getCatalogue(catalogueID)
@@ -163,9 +173,9 @@ const findCatalogId = (sectionId) => {
       }
     })
   })
-  console.log("文章id", sectionID.value)
-  console.log("父id", expanded.value)
-  console.log("子id", current.value)
+  // console.log("文章id", sectionID.value)
+  // console.log("父id", expanded.value)
+  // console.log("子id", current.value)
 }
 
 // 获取笔记详情
@@ -236,6 +246,7 @@ onMounted(async () => {
   await sectionData(sectionID.value)
   await contextData(sectionID.value)
   await catalogueData(section.note_id)
+  await siteConfigData()
   findCatalogId(sectionID.value)
   window.addEventListener('scroll', scroll())
   // current.value = 6
