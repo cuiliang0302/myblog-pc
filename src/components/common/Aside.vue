@@ -87,7 +87,7 @@
                    <el-image
                        style="width: 210px; height: 210px"
                        :src="info.qq_img"
-                       :fit="'fill'" lazy></el-image>
+                       :fit="'fill'"></el-image>
                 </div>
                 <template #reference>
                   <MyIcon type="icon-qq"/>
@@ -104,7 +104,7 @@
                    <el-image
                        style="width: 210px; height: 210px"
                        :src="info.wechat_img"
-                       :fit="'fill'" lazy></el-image>
+                       :fit="'fill'"></el-image>
                 </div>
                 <template #reference>
                   <MyIcon type="icon-wechat"/>
