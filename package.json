@@ -12,6 +12,7 @@
     "element-plus": "^1.1.0-beta.9",
     "highlight.js": "^10.7.3",
     "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
     "qiniu-js": "^3.3.3",
     "vite-plugin-style-import": "^1.2.1",
     "vue": "^3.2.9",

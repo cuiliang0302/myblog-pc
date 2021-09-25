@@ -1,3 +1,6 @@
+// 导入Nprogress加载效果插件
+import Nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
 import {createRouter, createWebHistory} from 'vue-router';
 
 const router = createRouter({
@@ -85,6 +88,7 @@ const router = createRouter({
 })
 // 路由导航守卫
 router.beforeEach((to, from, next) => {
+	Nprogress.start()
 	// to 访问的路径 from 从哪来 next 响应路径
 	// 百度统计API跳转
 	if (to.path) {
@@ -100,5 +104,8 @@ router.beforeEach((to, from, next) => {
 	// }
 	document.title = to.meta.title
 	next()
+})
+router.afterEach(() => {
+	Nprogress.done()
 })
 export default router;

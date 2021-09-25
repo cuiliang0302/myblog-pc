@@ -18,7 +18,12 @@ body, ol, ul, li, h1, h2, h3, p, form {
   margin: 0;
   padding: 0;
 }
-
+// 切换页面加载进度条样式
+#nprogress .bar {
+  background: #74b9ff !important;
+  height: 3px !important;
+  border-radius: 3px;
+}
 // 文本禁止选中
 .no-choose {
   -webkit-user-select: none;
