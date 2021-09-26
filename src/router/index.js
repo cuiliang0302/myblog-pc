@@ -1,6 +1,5 @@
 // 导入Nprogress加载效果插件
 import Nprogress from 'nprogress'
-import 'nprogress/nprogress.css'
 import {createRouter, createWebHistory} from 'vue-router';
 
 const router = createRouter({

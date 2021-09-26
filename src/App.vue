@@ -27,7 +27,7 @@ onMounted(() => {
     });
   }
   try {
-    document.body.removeChild(document.getElementById('loading'))
+    document.body.removeChild(document.getElementById('Loading'))
     setTimeout(function () {
       document.getElementById('app').style.display = 'block';
     }, 500)

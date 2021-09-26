@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-
 export function request(config) {
 	// 创建axios的实例
 	const instance = axios.create({

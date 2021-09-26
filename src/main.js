@@ -7,6 +7,7 @@ import ElementPlus from '@/plugins/ElementPlus'
 // import 'element-plus/theme-chalk/src/index.scss'
 import 'element-plus/dist/index.css'
 import animate from "animate.css";
+import 'nprogress/nprogress.css'
 
 const app = createApp(App)
 app.use(router)

@@ -98,7 +98,7 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .input-field {
   display: flex;
   justify-content: center;
