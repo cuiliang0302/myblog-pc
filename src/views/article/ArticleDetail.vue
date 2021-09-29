@@ -222,6 +222,7 @@ const scroll = () => {
   }
 }
 onMounted(async () => {
+  store.commit('setOutline', '')
   articleID.value = router.currentRoute.value.params.id
   await articleData(articleID.value)
   await contextData(articleID.value)
