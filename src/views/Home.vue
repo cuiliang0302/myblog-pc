@@ -56,6 +56,7 @@ import {
   ElImage,
   ElCard,
   ElDivider,
+  ElInfiniteScroll
 } from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
