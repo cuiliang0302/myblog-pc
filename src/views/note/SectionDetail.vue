@@ -28,6 +28,7 @@
             </div>
             <div v-else>
               <h1>{{ section.title }}</h1>
+              <h1>展开目录{{ expanded }},高亮文章id{{ current }}</h1>
               <div class="info">
                 <span><MyIcon type="icon-category"/>{{ section.note }}</span>
                 <span><MyIcon type="icon-time"/>{{ timeFull(section.created_time) }}</span>
@@ -71,7 +72,6 @@
 
 <script setup>
 import NavMenu from "@/components/common/NavMenu.vue";
-import Loading from "@/components/common/Loading.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import MarkDown from "@/components/detail/MarkDown.vue"
@@ -123,16 +123,17 @@ const toNote = (noteId) => {
 }
 // 站点名称
 const sitename = ref('')
+
 // 获取站点名称
 async function siteConfigData() {
   let siteConfig_data = await getSiteConfig()
   console.log(siteConfig_data)
   sitename.value = siteConfig_data.name
 }
+
 // 获取笔记目录数据
 async function catalogueData(catalogueID) {
   let data = await getCatalogue(catalogueID)
-  // console.log(data)
   catalogList.value = data.map((i, index) => {
     return {
       id: i['id'],
@@ -147,6 +148,7 @@ async function catalogueData(catalogueID) {
       })
     }
   })
+  return Promise.resolve('')
 }
 
 // 点击跳转指定笔记
@@ -161,21 +163,14 @@ const handleNodeClick = (data) => {
 // 查找笔记id对应的目录id
 const findCatalogId = (sectionId) => {
   catalogList.value.forEach((i) => {
-    // console.log(i.children, i.id)
     i.children.forEach((j) => {
-      // console.log(j.section_id)
       if (j.section_id === parseInt(sectionId)) {
-        // console.log(j.label)
-        // console.log(i.id)
         expanded.value = [i.id]
-        current.value = j.id
+        // current.value = j.id
         return false
       }
     })
   })
-  // console.log("文章id", sectionID.value)
-  // console.log("父id", expanded.value)
-  // console.log("子id", current.value)
 }
 
 // 获取笔记详情
@@ -244,13 +239,12 @@ onMounted(async () => {
   store.commit('setOutline', '')
   sectionID.value = router.currentRoute.value.params.id
   await sectionData(sectionID.value)
-  await contextData(sectionID.value)
   await catalogueData(section.note_id)
+  current.value = 13
+  await findCatalogId(sectionID.value)
+  await contextData(sectionID.value)
   await siteConfigData()
-  findCatalogId(sectionID.value)
   window.addEventListener('scroll', scroll())
-  // current.value = 6
-  console.log(current.value, typeof current.value)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
