@@ -62,6 +62,7 @@ const categoryID = ref()
 // 文章分类名
 const categoryName = ref('')
 
+// 获取文章分类名称
 async function categoryNameData(categoryID) {
   let data = await getCategoryName(categoryID)
   console.log(data)
@@ -74,6 +75,7 @@ const article = reactive({
   count: '',
 })
 
+// 获取文章数据
 async function articleData(page, size, categoryID) {
   let data = await getArticle(page, size, '-created_time', categoryID, NaN)
   article.list = data.results

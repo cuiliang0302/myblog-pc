@@ -1,5 +1,5 @@
 <template>
-  <div v-title="section.title+'-'+sitename">
+  <div v-title="sectionData.title+'-'+sitename">
     <section class="detail" v-loading="loading"
              element-loading-text="拼命加载中"
              element-loading-spinner="el-icon-loading">
@@ -8,7 +8,7 @@
         <div class="detail-left">
           <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
-                   :current-node-key="current"></el-tree>
+                   :current-node-key="current" ref="treeRef"></el-tree>
         </div>
         <div class="detail-center">
           <div class="current-position">
@@ -16,8 +16,8 @@
             <span>
             <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item><a @click="toNote(section.note_id)">
-              {{ section.note }}</a></el-breadcrumb-item>
+            <el-breadcrumb-item><a @click="toNote(sectionData.note_id)">
+              {{ sectionData.note }}</a></el-breadcrumb-item>
             <el-breadcrumb-item>笔记正文</el-breadcrumb-item>
           </el-breadcrumb>
           </span>
@@ -27,17 +27,16 @@
               <el-skeleton :rows="20" animated/>
             </div>
             <div v-else>
-              <h1>{{ section.title }}</h1>
-              <h1>展开目录{{ expanded }},高亮文章id{{ current }}</h1>
+              <h1>{{ sectionData.title }}</h1>
               <div class="info">
-                <span><MyIcon type="icon-category"/>{{ section.note }}</span>
-                <span><MyIcon type="icon-time"/>{{ timeFull(section.created_time) }}</span>
-                <span><MyIcon type="icon-view"/>{{ section.view }}</span>
-                <span><MyIcon type="icon-like"/>{{ section.like }}</span>
-                <span><MyIcon type="icon-collect"/>{{ section.collect }}</span>
-                <span><MyIcon type="icon-comment"/>{{ section.comment }}</span>
+                <span><MyIcon type="icon-category"/>{{ sectionData.note }}</span>
+                <span><MyIcon type="icon-time"/>{{ timeFull(sectionData.created_time) }}</span>
+                <span><MyIcon type="icon-view"/>{{ sectionData.view }}</span>
+                <span><MyIcon type="icon-like"/>{{ sectionData.like }}</span>
+                <span><MyIcon type="icon-collect"/>{{ sectionData.collect }}</span>
+                <span><MyIcon type="icon-comment"/>{{ sectionData.comment }}</span>
               </div>
-              <MarkDown :text="section.body"></MarkDown>
+              <MarkDown :text="sectionData.body"></MarkDown>
             </div>
             <div class="context">
             <span :class="context.last?'detail-context-hover':''" @click="toDetail(context.last.id)">
@@ -55,7 +54,7 @@
           <div class="comments detail-card">
             <h2>📝 评论交流</h2>
             <div>
-              评论模块正在开发中，敬请期待！
+              <Editor></Editor>
             </div>
           </div>
         </div>
@@ -77,6 +76,7 @@ import BackTop from "@/components/common/BackTop.vue"
 import MarkDown from "@/components/detail/MarkDown.vue"
 import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
+import Editor from "@/components/common/Editor.vue"
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
@@ -99,151 +99,187 @@ let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
 const router = useRouter()
-// 当前笔记id
-const sectionID = ref()
-// 笔记详情数据
-const section = reactive({})
-// 当前笔记分类id
-const activeMenu = ref()
-// 笔记上下篇
-const context = reactive({})
-// 猜你喜欢
-const recommendList = ref([])
-// 是否开启加载中动画
-const loading = ref(false)
-// 笔记目录列表
-const catalogList = ref([])
-// 当前笔记展开的目录id
-const expanded = ref([])
-// 当前高亮的笔记目录id
-const current = ref()
-//跳转笔记列表
-const toNote = (noteId) => {
-  router.push({path: `/note/${noteId}`})
-}
-// 站点名称
-const sitename = ref('')
+// 引入公共模块
+let {sectionID, activeMenu, loading, toNote, sitename, toDetail} = publicFn()
+// 引入笔记内容模块
+let {sectionData, context, getSectionData, contextData} = section()
+// 引入文章目录模块
+let {catalogList, expanded, current, catalogueData, handleNodeClick, findCatalogId, treeRef} = catalog(sectionData)
+// 引入markdown模块
+let {rollTo, scrollTop, scroll} = markdown()
+// 引入侧边动作模块
+// let {} = action()
 
-// 获取站点名称
-async function siteConfigData() {
-  let siteConfig_data = await getSiteConfig()
-  console.log(siteConfig_data)
-  sitename.value = siteConfig_data.name
-}
-
-// 获取笔记目录数据
-async function catalogueData(catalogueID) {
-  let data = await getCatalogue(catalogueID)
-  catalogList.value = data.map((i, index) => {
-    return {
-      id: i['id'],
-      label: '第' + (index + 1) + '章：' + i['name'],
-      children: i['child'].map((j, index) => {
-        return {
-          id: j['id'],
-          section_id: j['section_id'],
-          label: (index + 1) + '. ' + j['name'],
-          children: NaN
-        }
-      })
-    }
-  })
-  return Promise.resolve('')
-}
-
-// 点击跳转指定笔记
-const handleNodeClick = (data) => {
-  if (!data.children) {
-    // console.log(sectionID.value)
-    sectionID.value = data.section_id
-    findCatalogId(sectionID.value)
-    router.push({path: `/detail/section/${data.section_id}`})
+// 公共模块
+function publicFn() {
+  // 当前笔记id
+  const sectionID = ref()
+  // 当前导航栏id
+  const activeMenu = ref()
+  // 是否开启加载中动画
+  const loading = ref(false)
+  //跳转笔记列表
+  const toNote = (noteId) => {
+    router.push({path: `/note/${noteId}`})
   }
+  // 站点名称
+  const sitename = ref('')
+
+  // 获取站点名称
+  async function siteConfigData() {
+    let siteConfig_data = await getSiteConfig()
+    // console.log(siteConfig_data)
+    sitename.value = siteConfig_data.name
+  }
+
+  // 点击跳转其他笔记事件
+  const toDetail = (detailID) => {
+    sectionID.value = detailID
+    findCatalogId(sectionID.value)
+    router.push({path: `/detail/section/${sectionID.value}`})
+  }
+  onMounted(() => {
+    siteConfigData()
+  })
+  return {sectionID, activeMenu, loading, toNote, sitename, toDetail}
 }
-// 查找笔记id对应的目录id
-const findCatalogId = (sectionId) => {
-  catalogList.value.forEach((i) => {
-    i.children.forEach((j) => {
-      if (j.section_id === parseInt(sectionId)) {
-        expanded.value = [i.id]
-        // current.value = j.id
-        return false
+
+// 文章目录模块
+function catalog(sectionData) {
+  // 树形组件对象
+  const treeRef = ref(null)
+  // 笔记目录列表
+  const catalogList = ref([])
+  // 当前笔记展开的目录id
+  const expanded = ref([])
+  // 当前高亮的笔记目录id
+  const current = ref()
+
+  // 获取笔记目录数据
+  async function catalogueData() {
+    let data = await getCatalogue(sectionData.note_id)
+    catalogList.value = data.map((i, index) => {
+      return {
+        id: i['id'],
+        label: '第' + (index + 1) + '章：' + i['name'],
+        children: i['child'].map((j, index) => {
+          return {
+            id: j['id'],
+            section_id: j['section_id'],
+            label: (index + 1) + '. ' + j['name'],
+            children: NaN
+          }
+        })
       }
     })
-  })
-}
+  }
 
-// 获取笔记详情
-async function sectionData(DetailID) {
-  const detail_data = await getSectionDetail(DetailID)
-  for (let i in detail_data) {
-    if (i === 'body') {
-      // 图片防盗链处理
-      section.body = detail_data.body
-      const pattern = /!\[(.*?)\]\((https:\/\/cdn.nlark.com.*?)\)/gm;
-      let matcher;
-      let imgArr = [];
-      while ((matcher = pattern.exec(section.body)) !== null) {
-        imgArr.push(matcher[2]);
-      }
-      for (let i = 0; i < imgArr.length; i++) {
-        section.body = section.body.replace(
-            imgArr[i],
-            getImgProxy(imgArr[i])
-        );
-      }
-    } else {
-      section[i] = detail_data[i]
+  // 点击跳转指定笔记
+  const handleNodeClick = (data) => {
+    if (!data.children) {
+      // console.log(sectionID.value)
+      sectionID.value = data.section_id
+      findCatalogId(sectionID.value)
+      router.push({path: `/detail/section/${data.section_id}`})
     }
   }
-  // console.log(section)
-  activeMenu.value = "3-" + section.note_id
-  loading.value = false
+  // 查找笔记id对应的目录id
+  const findCatalogId = (sectionId) => {
+    catalogList.value.forEach((i) => {
+      i.children.forEach((j) => {
+        if (j.section_id === parseInt(sectionId)) {
+          expanded.value = [i.id]
+          treeRef.value.setCurrentKey(j.id)
+          return false
+        }
+      })
+    })
+  }
+  return {catalogList, expanded, current, catalogueData, handleNodeClick, findCatalogId, treeRef}
 }
 
-// 获取笔记上下篇
-async function contextData(DetailID) {
-  Object.assign(context, await getContextSection(DetailID));
-  // console.log(context)
+// 笔记内容模块
+function section() {
+  // 笔记详情数据
+  const sectionData = reactive({})
+  // 笔记上下篇
+  const context = reactive({})
+
+  // 获取笔记详情
+  async function getSectionData(DetailID) {
+    const detail_data = await getSectionDetail(DetailID)
+    for (let i in detail_data) {
+      if (i === 'body') {
+        // 图片防盗链处理
+        sectionData.body = detail_data.body
+        const pattern = /!\[(.*?)\]\((https:\/\/cdn.nlark.com.*?)\)/gm;
+        let matcher;
+        let imgArr = [];
+        while ((matcher = pattern.exec(sectionData.body)) !== null) {
+          imgArr.push(matcher[2]);
+        }
+        for (let i = 0; i < imgArr.length; i++) {
+          sectionData.body = sectionData.body.replace(
+              imgArr[i],
+              getImgProxy(imgArr[i])
+          );
+        }
+      } else {
+        sectionData[i] = detail_data[i]
+      }
+    }
+    activeMenu.value = "3-" + sectionData.note_id
+    loading.value = false
+  }
+
+  // 获取笔记上下篇
+  async function contextData(DetailID) {
+    Object.assign(context, await getContextSection(DetailID));
+    // console.log(context)
+  }
+
+  return {sectionData, context, getSectionData, contextData}
 }
 
-// 点击跳转其他笔记事件
-const toDetail = (detailID) => {
-  sectionID.value = detailID
-  findCatalogId(sectionID.value)
-  router.push({path: `/detail/section/${sectionID.value}`})
-}
-// 点击大纲跳转事件
-const rollTo = (anchor) => {
-  const {lineIndex} = anchor;
-  const heading = document.querySelector(
-      `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
-  );
-  if (heading) {
-    heading.scrollIntoView({behavior: "smooth", block: "start"})
+// markdown模块
+function markdown() {
+  // 点击大纲跳转事件
+  const rollTo = (anchor) => {
+    const {lineIndex} = anchor;
+    const heading = document.querySelector(
+        `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
+    );
+    if (heading) {
+      heading.scrollIntoView({behavior: "smooth", block: "start"})
+    }
   }
-}
-// markdown-页面滚动高度
-const scrollTop = ref()
-// markdown-页面滚动
-const scroll = () => {
-  let timeOut = null; // 初始化空定时器
-  return () => {
-    clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
-    timeOut = setTimeout(() => {  // 只执行最后一次事件
-      scrollTop.value = window.pageYOffset
-    }, 500)
+  // markdown-页面滚动高度
+  const scrollTop = ref()
+  // markdown-页面滚动
+  const scroll = () => {
+    let timeOut = null; // 初始化空定时器
+    return () => {
+      clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
+      timeOut = setTimeout(() => {  // 只执行最后一次事件
+        scrollTop.value = window.pageYOffset
+      }, 500)
+    }
   }
+  return {rollTo, scrollTop, scroll}
 }
+
+// 侧边动作模块
+function action() {
+
+}
+
 onMounted(async () => {
   store.commit('setOutline', '')
   sectionID.value = router.currentRoute.value.params.id
-  await sectionData(sectionID.value)
-  await catalogueData(section.note_id)
-  current.value = 13
+  await getSectionData(sectionID.value)
+  await catalogueData(sectionData.note_id)
   await findCatalogId(sectionID.value)
   await contextData(sectionID.value)
-  await siteConfigData()
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
@@ -256,9 +292,8 @@ onBeforeRouteUpdate(async (to) => {
   for (let key in context) {
     delete context[key];
   }
-  // sectionID.value = to.params.id
   loading.value = true
-  await sectionData(sectionID.value)
+  await getSectionData(sectionID.value)
   await contextData(sectionID.value)
   window.scrollTo({top: 0})
 });

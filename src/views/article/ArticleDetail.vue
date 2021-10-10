@@ -1,5 +1,5 @@
 <template>
-  <div v-title="article.title+'-'+sitename">
+  <div v-title="articleData.title+'-'+sitename">
     <section class="detail" v-loading="loading"
              element-loading-text="拼命加载中"
              element-loading-spinner="el-icon-loading">
@@ -14,30 +14,30 @@
             <span>
             <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item><a @click="toCategory(article.category_id)">
-              {{ article.category }}</a></el-breadcrumb-item>
+            <el-breadcrumb-item><a @click="toCategory(articleData.category_id)">
+              {{ articleData.category }}</a></el-breadcrumb-item>
             <el-breadcrumb-item>文章正文</el-breadcrumb-item>
           </el-breadcrumb>
           </span>
           </div>
           <div class="main detail-card">
-            <div v-if="JSON.stringify(article) == '{}'">
+            <div v-if="JSON.stringify(articleData) == '{}'">
               <el-skeleton :rows="20" animated/>
             </div>
             <div v-else>
-              <h1>{{ article.title }}</h1>
+              <h1>{{ articleData.title }}</h1>
               <div class="info">
-                <span><MyIcon type="icon-category"/>{{ article.category }}</span>
+                <span><MyIcon type="icon-category"/>{{ articleData.category }}</span>
                 <span><MyIcon type="icon-tag"/>
-                  <span v-for="(tag,index) in article.tags" :key="index">{{ tag.name }}</span>
+                  <span v-for="(tag,index) in articleData.tags" :key="index">{{ tag.name }}</span>
                 </span>
-                <span><MyIcon type="icon-time"/>{{ timeFull(article.created_time) }}</span>
-                <span><MyIcon type="icon-view"/>{{ article.view }}</span>
-                <span><MyIcon type="icon-like"/>{{ article.like }}</span>
-                <span><MyIcon type="icon-collect"/>{{ article.collect }}</span>
-                <span><MyIcon type="icon-comment"/>{{ article.comment }}</span>
+                <span><MyIcon type="icon-time"/>{{ timeFull(articleData.created_time) }}</span>
+                <span><MyIcon type="icon-view"/>{{ articleData.view }}</span>
+                <span><MyIcon type="icon-like"/>{{ articleData.like }}</span>
+                <span><MyIcon type="icon-collect"/>{{ articleData.collect }}</span>
+                <span><MyIcon type="icon-comment"/>{{ articleData.comment }}</span>
               </div>
-              <MarkDown :text="article.body"></MarkDown>
+              <MarkDown :text="articleData.body"></MarkDown>
             </div>
             <div class="context">
             <span :class="context.last?'detail-context-hover':''" @click="toDetail(context.last.id)">
@@ -47,12 +47,12 @@
             </span>
               <span>
               <p>文章分类：
-                <span class="tag article-tag-hover" :style="'background-color: '+tagColor(article.category_id)">
-                  {{ article.category }}
+                <span class="tag article-tag-hover" :style="'background-color: '+tagColor(articleData.category_id)">
+                  {{ articleData.category }}
                 </span>
               </p>
               <p>文章标签：
-                <span v-for="item in article.tags" class="tag article-tag-hover"
+                <span v-for="item in articleData.tags" class="tag article-tag-hover"
                       :style="'background-color: '+tagColor(item.id)">
                   {{ item.name }}
                 </span>
@@ -129,105 +129,123 @@ let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
 const router = useRouter()
-//跳转文章列表
-const toCategory = (categoryId) => {
-  router.push({path: `/category/${categoryId}`})
+// 引入公共模块
+let {articleID,activeMenu,loading,sitename,toDetail,toCategory} = publicFn()
+// 引入文章内容模块
+let {articleData,context,recommendList,getArticleData,contextData,guessLikeData} = article()
+// 引入markdown模块
+let {rollTo, scrollTop, scroll} = markdown()
+// 引入侧边动作模块
+// let {} = action()
+// 公共模块
+function publicFn(){
+  // 当前文章id
+  const articleID = ref()
+  // 当前文章分类id
+  const activeMenu = ref()
+  // 是否开启加载中动画
+  const loading = ref(false)
+  // 站点名称
+  const sitename = ref('')
+  //跳转文章列表
+  const toCategory = (categoryId) => {
+    router.push({path: `/category/${categoryId}`})
+  }
+  // 获取站点名称
+  async function siteConfigData() {
+    let siteConfig_data = await getSiteConfig()
+    sitename.value = siteConfig_data.name
+  }
+  // 点击跳转其他文章事件
+  const toDetail = (detailID) => {
+    articleID.value = detailID
+    router.push({path: `/detail/article/${articleID.value}`})
+  }
+  onMounted(()=>{
+    siteConfigData()
+  })
+  return{articleID,activeMenu,loading,sitename,toDetail,toCategory}
 }
-// 当前文章id
-const articleID = ref()
-// 文章详情数据
-const article = reactive({})
-// 当前文章分类id
-const activeMenu = ref()
-// 文章上下篇
-const context = reactive({})
-// 猜你喜欢
-const recommendList = ref([])
-// 是否开启加载中动画
-const loading = ref(false)
-// 站点名称
-const sitename = ref('')
-
-// 获取站点名称
-async function siteConfigData() {
-  let siteConfig_data = await getSiteConfig()
-  sitename.value = siteConfig_data.name
+// 文章模块
+function article(){
+  // 文章详情数据
+  const articleData = reactive({})
+  // 文章上下篇
+  const context = reactive({})
+  // 猜你喜欢
+  const recommendList = ref([])
+  // 获取文章详情
+  async function getArticleData(DetailID) {
+    const detail_data = await getArticleDetail(DetailID)
+    for (let i in detail_data) {
+      if (i === 'body') {
+        // 图片防盗链处理
+        articleData.body = detail_data.body
+        const pattern = /!\[(.*?)\]\((https:\/\/cdn.nlark.com.*?)\)/gm;
+        let matcher;
+        let imgArr = [];
+        while ((matcher = pattern.exec(articleData.body)) !== null) {
+          imgArr.push(matcher[2]);
+        }
+        for (let i = 0; i < imgArr.length; i++) {
+          articleData.body = articleData.body.replace(
+              imgArr[i],
+              getImgProxy(imgArr[i])
+          );
+        }
+      } else {
+        articleData[i] = detail_data[i]
+      }
+    }
+    console.log(article)
+    activeMenu.value = "2-" + articleData.category_id
+    loading.value = false
+  }
+  // 获取文章上下篇
+  async function contextData(DetailID) {
+    Object.assign(context, await getContextArticle(DetailID));
+    console.log(context)
+  }
+  // 获取猜你喜欢
+  async function guessLikeData(DetailID) {
+    recommendList.value = await getGuessLike(DetailID)
+    console.log(recommendList.value)
+  }
+  return{articleData,context,recommendList,getArticleData,contextData,guessLikeData}
 }
-
-// 获取文章详情
-async function articleData(DetailID) {
-  const detail_data = await getArticleDetail(DetailID)
-  for (let i in detail_data) {
-    if (i === 'body') {
-      // 图片防盗链处理
-      article.body = detail_data.body
-      const pattern = /!\[(.*?)\]\((https:\/\/cdn.nlark.com.*?)\)/gm;
-      let matcher;
-      let imgArr = [];
-      while ((matcher = pattern.exec(article.body)) !== null) {
-        imgArr.push(matcher[2]);
-      }
-      for (let i = 0; i < imgArr.length; i++) {
-        article.body = article.body.replace(
-            imgArr[i],
-            getImgProxy(imgArr[i])
-        );
-      }
-    } else {
-      article[i] = detail_data[i]
+// markdown模块
+function markdown(){
+  // 点击大纲跳转事件
+  const rollTo = (anchor) => {
+    const {lineIndex} = anchor;
+    const heading = document.querySelector(
+        `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
+    );
+    if (heading) {
+      heading.scrollIntoView({behavior: "smooth", block: "start"})
     }
   }
-  console.log(article)
-  activeMenu.value = "2-" + article.category_id
-  loading.value = false
-}
-
-// 获取文章上下篇
-async function contextData(DetailID) {
-  Object.assign(context, await getContextArticle(DetailID));
-  console.log(context)
-}
-
-// 获取猜你喜欢
-async function guessLikeData(DetailID) {
-  recommendList.value = await getGuessLike(DetailID)
-  console.log(recommendList.value)
-}
-
-// 点击跳转其他文章事件
-const toDetail = (detailID) => {
-  articleID.value = detailID
-  router.push({path: `/detail/article/${articleID.value}`})
-}
-// 点击大纲跳转事件
-const rollTo = (anchor) => {
-  const {lineIndex} = anchor;
-  const heading = document.querySelector(
-      `.v-md-editor-preview [data-v-md-line="${lineIndex}"]`
-  );
-  if (heading) {
-    heading.scrollIntoView({behavior: "smooth", block: "start"})
+  // markdown-页面滚动高度
+  const scrollTop = ref()
+  // markdown-页面滚动
+  const scroll = () => {
+    let timeOut = null; // 初始化空定时器
+    return () => {
+      clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
+      timeOut = setTimeout(() => {  // 只执行最后一次事件
+        scrollTop.value = window.pageYOffset
+      }, 500)
+    }
   }
+  return{rollTo,scrollTop,scroll}
 }
-// markdown-页面滚动高度
-const scrollTop = ref()
-// markdown-页面滚动
-const scroll = () => {
-  let timeOut = null; // 初始化空定时器
-  return () => {
-    clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
-    timeOut = setTimeout(() => {  // 只执行最后一次事件
-      scrollTop.value = window.pageYOffset
-    }, 500)
-  }
-}
+
 onMounted(async () => {
   store.commit('setOutline', '')
   articleID.value = router.currentRoute.value.params.id
-  await articleData(articleID.value)
+  await getArticleData(articleID.value)
   await contextData(articleID.value)
   await guessLikeData(articleID.value)
-  await siteConfigData()
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
@@ -240,7 +258,7 @@ onBeforeRouteUpdate(async (to) => {
     delete context[key];
   }
   loading.value = true
-  await articleData(to.params.id)
+  await getArticleData(to.params.id)
   await contextData(to.params.id)
   await guessLikeData(to.params.id)
   window.scrollTo({top: 0})

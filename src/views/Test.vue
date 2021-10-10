@@ -5,7 +5,7 @@
     <el-button type="success" @click="next">下一节</el-button>
     <div class="catalog">
       <el-tree :data="catalogList" @node-click="handleNodeClick" :default-expanded-keys="expanded"
-               :current-node-key="current" node-key="id" :highlight-current="true"></el-tree>
+               :current-node-key="current" node-key="id" :highlight-current="true" ref="treeRef"></el-tree>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, nextTick} from "vue";
 import {getCatalogue} from "@/api/blog";
 
 const router = useRouter()
@@ -30,6 +30,8 @@ const handleNodeClick = (data) => {
     router.push({path: `/detail/section/${data.id}`})
   }
 }
+// 树形组件对象
+const treeRef = ref(null)
 // 上一节笔记
 const last = () => {
   sectionID.value = sectionID.value - 1
@@ -64,10 +66,13 @@ async function catalogueData(catalogueID) {
   })
 }
 
+const setValue = () => {
+  current.value = 3
+}
 onMounted(async () => {
   let catalogueID = 1
   await catalogueData(catalogueID)
-  current.value = 3
+  treeRef.value.setCurrentKey(3)
 })
 onBeforeRouteUpdate(async (to) => {
   console.log(to.params.id)
