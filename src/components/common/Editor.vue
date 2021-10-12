@@ -109,5 +109,7 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-
+.editor {
+  margin: 10px 30px;
+}
 </style>
