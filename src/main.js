@@ -8,11 +8,14 @@ import ElementPlus from '@/plugins/ElementPlus'
 import 'element-plus/dist/index.css'
 import animate from "animate.css";
 import 'nprogress/nprogress.css'
+import 'vue-loaders/dist/vue-loaders.css';
+import VueLoaders from 'vue-loaders';
 
 const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(ElementPlus)
+app.use(VueLoaders)
 app.mount('#app')
 // 自定义指令-动态title
 app.directive('title', {

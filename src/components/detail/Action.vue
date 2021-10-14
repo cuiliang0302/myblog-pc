@@ -1,5 +1,4 @@
 <template>
-
   <div class="action">
     <el-tooltip class="item" effect="dark" content="大纲" placement="left">
       <div @click="setOutline" :class="[outlineShow===true?'action-active':'']+' detail-action-hover'">

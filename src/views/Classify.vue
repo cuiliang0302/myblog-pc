@@ -1,3 +1,4 @@
+<!--归档页-->
 <template>
   <NavMenu :activeMenu="'4'"></NavMenu>
   <div class="page">
@@ -65,17 +66,15 @@ const articleList = ref([])
 // 获取指定月份文章列表
 async function classifyArticleData(month) {
   articleList.value = await getClassifyArticle(month)
+  console.log(articleList.value)
 }
 
 // 切换月份事件
 const handleChange = (val) => {
-  if (val) {
+  console.log("切换了", val)
+  if (val.length !== 0) {
     classifyArticleData(classifyList.value[val].month)
   }
-  // nextTick()
-  // elHeight('.el-collapse')
-  // const div = document.querySelector('.page')
-  // console.log(div.offsetHeight)   // 返回元素的总宽度
 };
 onMounted(async () => {
   await classifyData()

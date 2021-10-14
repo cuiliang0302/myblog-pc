@@ -17,6 +17,7 @@
     "unplugin-vue-components": "^0.15.6",
     "vite-plugin-style-import": "^1.2.1",
     "vue": "^3.2.9",
+    "vue-loaders": "^4.1.4",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2",
     "vuex-along": "^1.2.13",

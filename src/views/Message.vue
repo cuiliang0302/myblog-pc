@@ -13,39 +13,9 @@
         <span><Editor ref="messageEditor"></Editor></span>
         <span><el-button type="primary" round @click="sendMessage">发表留言</el-button></span>
       </div>
-      <el-tabs type="card">
-        <el-tab-pane label="全部留言">
-          <div class="comments" v-for="(item,index) in messageList" :key="index">
-            <ol>
-              <span><el-avatar :src="item.photo" :size="50"></el-avatar></span>
-              <span>
-                <div>
-                  <p>
-                    <span class="username">{{ item.username }}</span>
-                    <span class="time-ago">{{ timeAgo(item.time) }}</span>
-                  </p>
-                  <p class="content">{{ item.content }}</p>
-                  <p class="action">
-                    <span><MyIcon type="icon-like"/>赞{{ item.like }}</span>
-                    <span><MyIcon type="icon-comment"/>回复</span>
-                    <span>
-                      <el-popconfirm
-                          title="确定要删除吗？"
-                      >
-                        <template #reference>
-                          <span><MyIcon type="icon-delete"/>删除</span>
-                        </template>
-                      </el-popconfirm>
-                    </span>
-                  </p>
-                </div>
-              </span>
-            </ol>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="热门留言">热门留言</el-tab-pane>
-        <el-tab-pane label="我的留言">我的留言</el-tab-pane>
-      </el-tabs>
+      <div class="comment-list">
+        <Comments :comments-list="messageList"></Comments>
+      </div>
     </el-card>
   </div>
   <Footer></Footer>
@@ -65,6 +35,7 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import Editor from "@/components/common/Editor.vue"
+import Comments from "@/components/common/Comments.vue";
 import {onMounted, reactive, ref} from "vue";
 import {getLeaveMessage} from "@/api/record";
 import timeFormat from "@/utils/timeFormat";
@@ -124,58 +95,7 @@ onMounted(() => {
   }
 }
 
-ol {
-  display: flex;
-  margin: 10px;
-  color: $color-text-regular;
-
-  span:nth-child(2) {
-    position: relative;
-
-    div {
-      width: 1050px;
-      background-color: $color-background-base;
-      border-radius: 10px;
-      margin-left: 15px;
-      border: 1px solid $color-border-base;
-      padding: 15px;
-
-      p {
-        padding: 10px 0;
-      }
-
-      .username {
-        margin-right: 40px;
-        color: $color-secondary;
-        cursor: pointer;
-      }
-
-      .content {
-        color: $color-text-primary;
-      }
-
-      .action {
-        > span {
-          margin-right: 80px;
-          cursor: pointer;
-
-          .anticon {
-            margin-right: 10px;
-          }
-        }
-      }
-    }
-
-    div::before {
-      content: '';
-      display: inline-block;
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent;
-      border-right: 9px solid $color-border-base;
-      position: absolute;
-      top: 15px;
-      left: 6px;
-    }
-  }
+.comment-list {
+  margin-right: 25px;
 }
 </style>
