@@ -14,3 +14,8 @@ export function getImgProxy(url) {
 export function getEcharts(user, chart) {
     return index.get('public/echarts/?user=' + user + '&chart=' + chart)
 }
+
+// 获取背景图片地址
+export function getBgiUrl() {
+    return index.get('public/backgroundImage/')
+}

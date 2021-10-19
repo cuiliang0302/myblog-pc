@@ -70,6 +70,14 @@ const router = createRouter({
 				title: '关于',
 			}
 		},
+		{
+			path: '/login_register',
+			name: 'LoginRegister',
+			component: () => import('@/views/LoginRegister.vue'),
+			meta: {
+				title: '登录&注册',
+			}
+		},
 		{path: '/test', component: () => import('@/views/Test.vue')},
 		{
 			path: '/404',
