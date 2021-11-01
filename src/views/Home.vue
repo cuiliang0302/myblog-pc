@@ -7,11 +7,13 @@
           <el-carousel height="500px">
             <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
               <el-image
+                  class="carousel-img"
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
-                  :fit="'fill'">
+                  :fit="'fill'"
+                  @click="toCarousel(carousel.url)">
                 <template #placeholder>
-                  <Loading></Loading>
+                  <Loading type="'image"></Loading>
                 </template>
               </el-image>
             </el-carousel-item>
@@ -75,6 +77,11 @@ async function CarouselData() {
   console.log(carouselList.value)
 }
 
+// 点击轮播图跳转
+const toCarousel = (url) => {
+  console.log(url)
+  window.location.href = url
+}
 //最新文章列表
 const article = reactive({
   list: [],
@@ -103,6 +110,7 @@ const load = () => {
     loading.value = false;
   })
 };
+
 onMounted(() => {
   CarouselData()
   articleData(page.value, '-created_time')
@@ -113,6 +121,10 @@ onMounted(() => {
 article {
   .carousel {
     background-color: $color-background-white;
+
+    .carousel-img {
+      cursor: pointer;
+    }
   }
 
   .new {

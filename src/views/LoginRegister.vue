@@ -1,16 +1,10 @@
 <template>
   <div class="login-register">
-    <div class="container" id="container">
+    <div :class="(component==='login'?'':'right-panel-active') + ' container'">
       <div class="form-container sign-up-container">
         <form>
           <h1>第三方按钮注册</h1>
-          <div class="social-container"><a href="#" class="social">
-
-          </a> <a href="#" class="social">
-
-          </a> <a href="#" class="social">
-
-          </a></div>
+          <div class="social-container"></div>
           <span>或使用您的电子邮箱注册</span>
           <input type="text" placeholder="姓名">
           <input type="email" placeholder="邮箱">
@@ -19,19 +13,13 @@
         </form>
       </div>
       <div class="form-container sign-in-container">
-        <form action="#">
+        <form>
           <h1>第三方登录</h1>
-          <div class="social-container"><a href="#" class="social">
-
-          </a> <a href="#" class="social">
-
-          </a> <a href="#" class="social">
-
-          </a></div>
+          <div class="social-container"></div>
           <span>或用邮箱登录</span>
           <input type="email" placeholder="邮箱">
           <input type="password" placeholder="密码">
-          <button>登录</button>
+          <button>立即登录</button>
         </form>
       </div>
       <div class="overlay-container">
@@ -39,49 +27,41 @@
           <div class="overlay-panel overlay-left">
             <h1>欢迎回来</h1>
             <p>与我们保持联系请登录您的个人信息</p>
-            <button class="ghost" @click="toLogin">登录</button>
+            <button class="ghost" id="signIn" @click="toLogin">切换登录页</button>
           </div>
           <div class="overlay-panel overlay-right">
             <h1>欢迎光临</h1>
             <p>输入您的个人资料，并与我们一起开始旅程</p>
-            <button class="ghost" @click="toRegister">注册</button>
+            <button class="ghost" id="signUp" @click="toRegister">切换注册页</button>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
 import {onBeforeMount, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
-
+// 背景图片地址
 const bgiURL = ref('')
+// 当前组件名称
+const component = ref('login')
+// 切换登录页事件
 const toLogin = () => {
   console.log("切换登录")
+  component.value = 'login'
 }
+// 切换注册页事件
 const toRegister = () => {
   console.log("切换注册")
+  component.value = 'register'
 }
-// const signUpButton = document.getElementById('signUp');
-// const signInButton = document.getElementById('signIn');
-// const container = document.getElementById('container');
 
-
-// signUpButton.addEventListener('click', () => {
-//   container.classList.add("right-panel-active");
-// });
-//
-//
-// signInButton.addEventListener('click', () => {
-//   container.classList.remove("right-panel-active");
-// });
 // 获取背景图片
 async function getBgiURLData() {
   const {url} = await getBgiUrl()
   bgiURL.value = 'url(' + url + ')'
-  console.log(bgiURL.value)
 }
 
 onBeforeMount(() => {
@@ -108,6 +88,7 @@ onBeforeMount(() => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    display: flex;
   }
 }
 
@@ -122,33 +103,6 @@ onBeforeMount(() => {
   position: absolute;
   z-index: -1;
 }
-
-h1 {
-  font-weight: bold;
-  margin: 0;
-  color: beige;
-}
-
-p {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 20px;
-  letter-spacing: 0.5px;
-  margin: 20px 0 30px;
-}
-
-span {
-  font-size: 12px;
-  color: beige;
-}
-
-a {
-  color: #fff;
-  font-size: 14px;
-  text-decoration: none;
-  margin: 15px 0;
-}
-
 
 .form-container form {
   background: rgba(45, 52, 54, 1.0);
@@ -206,7 +160,6 @@ input[type=text] {
   border-bottom: 1px solid #fff;
   font-family: 'PLay', sans-serif;
   font-size: 16px;
-  //font-weight: 200px;
   padding: 10px 0;
   transition: border 0.5s;
   outline: none;
@@ -237,7 +190,6 @@ input[type=email] {
   border-bottom: 1px solid #fff;
   font-family: 'PLay', sans-serif;
   font-size: 16px;
-  //font-weight: 200px;
   padding: 10px 0;
   transition: border 0.5s;
   outline: none;
@@ -256,7 +208,6 @@ button:focus {
 button.ghost {
   background: transparent;
   border-color: #ff4b2b;
-  //background-color: #ff4b2b
 }
 
 .form-container {
