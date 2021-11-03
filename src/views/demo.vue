@@ -33,7 +33,7 @@
 import {onBeforeMount, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
 // 背景图片地址
-const bgiURL = ref('')
+const bgiURL = ref('https://cn.bing.com//th?id=OHR.CinnamonFernNS_ZH-CN3822051382_1920x1080.jpg&rf=LaDigue_1920x1080.jpg')
 // 当前组件名称
 const component = ref('login')
 // 切换登录页事件
@@ -46,16 +46,6 @@ const toRegister = () => {
   console.log("切换注册")
   component.value = 'register'
 }
-
-// 获取背景图片
-async function getBgiURLData() {
-  const {url} = await getBgiUrl()
-  bgiURL.value = 'url(' + url + ')'
-}
-
-onBeforeMount(() => {
-  getBgiURLData()
-})
 </script>
 
 <style scoped lang="scss">
@@ -125,7 +115,7 @@ onBeforeMount(() => {
 .login-register::after {
   content: "";
   background-image: v-bind('bgiURL');
-  opacity: 0.9;
+  opacity: 0.75;
   top: 0;
   left: 0;
   bottom: 0;
@@ -198,7 +188,7 @@ onBeforeMount(() => {
 }
 
 .container.right-panel-active .overlay-right {
-  transform: translateX(0);
+  transform: translateX(20%);
 }
 
 </style>

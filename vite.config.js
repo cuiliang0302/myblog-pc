@@ -15,9 +15,9 @@ export default defineConfig(({mode}) => {
 		},
 		plugins: [
 			vue(),
-			Components({
-				resolvers: [ElementPlusResolver()],
-			}),
+			// Components({
+			// 	resolvers: [ElementPlusResolver()],
+			// }),
 		],
 		css: {
 			preprocessorOptions: {
