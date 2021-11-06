@@ -55,19 +55,23 @@
         </span>
       </el-tooltip>
       <span class="user">
-        <el-dropdown @visible-change="dropdownChange">
-          <span class="no-choose">
-            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-            <p>逆飞的流星<i
-                :class="isDropdown?' el-icon-arrow-up'+' el-icon--right':' el-icon-arrow-down'+' el-icon--right'"></i></p>
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <div class="toLoginRegister">
+          <span @click="toLogin">登录</span>
+          <span @click="toRegister">注册</span>
+        </div>
+<!--        <el-dropdown @visible-change="dropdownChange">-->
+<!--          <span class="no-choose">-->
+<!--            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
+<!--            <p>逆飞的流星<i-->
+<!--                :class="isDropdown?' el-icon-arrow-up'+' el-icon&#45;&#45;right':' el-icon-arrow-down'+' el-icon&#45;&#45;right'"></i></p>-->
+<!--          </span>-->
+<!--          <template #dropdown>-->
+<!--            <el-dropdown-menu>-->
+<!--              <el-dropdown-item>个人中心</el-dropdown-item>-->
+<!--              <el-dropdown-item>退出登录</el-dropdown-item>-->
+<!--            </el-dropdown-menu>-->
+<!--          </template>-->
+<!--        </el-dropdown>-->
       </span>
     </span>
     <el-drawer
@@ -184,7 +188,14 @@ async function NoteData() {
   noteList.value = await getNote()
   // console.log(noteList.value)
 }
-
+// 跳转至登录页
+const toLogin = () => {
+  router.push({path: '/login_register', query: {component: 'Login'}})
+}
+// 跳转至注册页
+const toRegister = () => {
+  router.push({path: '/login_register', query: {component: 'Register'}})
+}
 // 个人中心-是否下拉状态
 const isDropdown = ref(false)
 
@@ -265,7 +276,11 @@ header {
     .user {
       display: flex;
       align-items: center;
-
+      .toLoginRegister{
+        span{
+          margin: 0 10px;
+        }
+      }
       span {
         color: $color-text-regular;
         font-size: 14px;

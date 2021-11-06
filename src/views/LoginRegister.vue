@@ -1,18 +1,53 @@
 <template>
   <div class="login-register">
-    <div :class="(component==='login'?'':'right-panel-active') + ' container'">
+    <div :class="(component==='Login'?'':'right-panel-active') + ' container'">
       <div class="form-container sign-up-container">
         <div>
           <h1>用户注册</h1>
-          <el-button type="primary" round>立即注册</el-button>
+          <el-form class="registerForm" :model="registerForm" label-width="0">
+            <el-form-item>
+              <el-input v-model="loginForm.username" placeholder="请输入用户名">
+                <template #prefix>
+                  <MyIcon type="icon-my"/>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="loginForm.contact" placeholder="请输入邮箱号/手机号">
+                <template #prefix>
+                  <MyIcon type="icon-my"/>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="loginForm.code" placeholder="请输入验证码">
+                <template #prefix>
+                  <MyIcon type="icon-code"/>
+                </template>
+                <template #suffix>
+                  <el-button size="small">获取验证码</el-button>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
+                <template #prefix>
+                  <MyIcon type="icon-password"/>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="loginSubmit" round>立即注册</el-button>
+            </el-form-item>
+          </el-form>
         </div>
       </div>
       <div class="form-container sign-in-container">
         <div>
           <h1>用户登录</h1>
-          <el-form ref="form" class="loginForm" :model="loginForm" label-width="0">
+          <el-form class="loginForm" :model="loginForm" label-width="0">
             <el-form-item>
-              <el-input v-model="loginForm.name" placeholder="请输入用户名/手机号/邮箱号">
+              <el-input v-model="loginForm.username" placeholder="请输入用户名/手机号/邮箱号">
                 <template #prefix>
                   <MyIcon type="icon-my"/>
                 </template>
@@ -26,7 +61,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="loginForm.name" placeholder="请点击右侧按钮验证">
+              <el-input v-model="loginForm.username" placeholder="请点击右侧按钮验证">
                 <template #prefix>
                   <MyIcon type="icon-code"/>
                 </template>
@@ -58,14 +93,17 @@
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
-            <h1>登录欢迎页</h1>
-            <el-button @click="toLogin" type="danger">切换登录</el-button>
+            <div class="point">
+              <h1>欢迎回来</h1>
+              <p>欢迎登录，与我们保持联系。<br>若您已有账号，请立即登录</p>
+              <el-button @click="switchLogin" type="danger">切换登录</el-button>
+            </div>
           </div>
           <div class="overlay-panel overlay-right">
-            <div class="login-point">
+            <div class="point">
               <h1>注册光临</h1>
               <p>欢迎访问崔亮的博客，并与我们一起开始旅程<br>若您还没有账号，请立即注册</p>
-              <el-button @click="toRegister" type="danger">切换注册</el-button>
+              <el-button @click="switchRegister" type="danger">切换注册</el-button>
             </div>
           </div>
         </div>
@@ -76,27 +114,36 @@
 
 <script setup>
 import icon from '@/utils/icon'
-import {onBeforeMount, reactive, ref} from "vue";
+import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 let {MyIcon} = icon()
 // 背景图片地址
 const bgiURL = ref('')
 // 当前组件名称
 const component = ref('login')
 // 切换登录页事件
-const toLogin = () => {
+const switchLogin = () => {
   console.log("切换登录")
-  component.value = 'login'
+  component.value = 'Login'
 }
 // 切换注册页事件
-const toRegister = () => {
+const switchRegister = () => {
   console.log("切换注册")
-  component.value = 'register'
+  component.value = 'Register'
 }
 // 登录表单
 const loginForm = reactive({
-  name: '',
+  username: '',
+  password: ''
+})
+// 注册表单
+const registerForm = reactive({
+  username: '',
+  contact: '',
+  code: '',
   password: ''
 })
 // 是否记住密码
@@ -114,6 +161,12 @@ async function getBgiURLData() {
 
 onBeforeMount(() => {
   getBgiURLData()
+})
+// 其他页面调用，默认跳转
+onMounted(() => {
+  if (router.currentRoute.value.query.component) {
+    component.value = router.currentRoute.value.query.component
+  }
 })
 </script>
 
@@ -184,13 +237,18 @@ onBeforeMount(() => {
           .el-divider {
             background-color: $color-border-base;
           }
-          .other-logo{
-            span{
+
+          .other-logo {
+            span {
               font-size: 35px;
-              margin:0 10px;
+              margin: 0 10px;
               opacity: 1;
             }
           }
+        }
+
+        .registerForm {
+          width: 300px;
         }
       }
 
@@ -218,19 +276,21 @@ onBeforeMount(() => {
       overflow: hidden;
       transition: transform 0.6s ease-in-out;
       z-index: 100;
-      .login-point{
-        h1{
-          margin-bottom: 30px;
-          color: white;
-          opacity: 1;
-        }
-        p{
-          margin-bottom: 50px;
-          line-height: 30px;
-          padding: 10px;
-          font-weight: bolder;
-          font-size: 18px;
-        }
+    }
+
+    .point {
+      h1 {
+        margin-bottom: 30px;
+        color: white;
+        opacity: 1;
+      }
+
+      p {
+        margin-bottom: 50px;
+        line-height: 30px;
+        padding: 10px;
+        font-weight: bolder;
+        font-size: 18px;
       }
     }
   }
