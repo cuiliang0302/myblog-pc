@@ -61,7 +61,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <VerifyImgBtn></VerifyImgBtn>
+              <VerifyImgBtn :isPassing="isPassing" @verifyPass="verifyPass"></VerifyImgBtn>
             </el-form-item>
             <el-form-item class="login-setting">
               <span class="remember"><el-checkbox v-model="remember" label="记住密码"></el-checkbox></span>
@@ -111,6 +111,7 @@ import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
 import {useRouter} from "vue-router";
 import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
+
 const router = useRouter();
 let {MyIcon} = icon()
 // 背景图片地址
@@ -147,12 +148,12 @@ const loginSubmit = () => {
 }
 // 验证码通过验证状态
 const isPassing = ref(false)
-// 验证码按钮样式
-const btnType = ref('default')
 // 验证码通过验证
-const pass = () => {
+const verifyPass = () => {
+  console.log("验证通过了")
   isPassing.value = true
 }
+
 // 获取背景图片
 async function getBgiURLData() {
   const {url} = await getBgiUrl()

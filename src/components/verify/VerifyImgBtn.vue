@@ -9,9 +9,13 @@
           trigger="manual"
       >
         <template #reference>
-          <el-button class="verify-btn" @click="showPopup">
-            <span class="verify-icon"><MyIcon type="icon-verify"/></span>
-            <span>请点击按钮进行安全验证</span>
+          <el-button v-if="!isPassing" class="verify-btn" @click="showPopup">
+            <MyIcon type="icon-verify"/>
+            <span class="btn-text">请点击按钮进行安全验证</span>
+          </el-button>
+          <el-button v-else class="verify-btn verify-success" @click="showPopup" disabled>
+            <MyIcon type="icon-success"/>
+            <span class="btn-text">验证成功</span>
           </el-button>
         </template>
         <div class="verify">
@@ -24,8 +28,9 @@
               successText="验证通过"
               handlerIcon="el-icon-d-arrow-right"
               successIcon="el-icon-circle-check"
-              @refresh="reimg"
+              @refresh="refresh"
               @passcallback="pass"
+              @close="close"
           />
         </div>
       </el-popover>
@@ -37,6 +42,8 @@
 import dragVerifyImgChip from "@/components/verify/dragVerifyImgChip.vue";
 import {onMounted, ref} from "vue";
 import icon from "@/utils/icon";
+import {ElMessage} from 'element-plus'
+
 let {MyIcon} = icon()
 const props = defineProps({
   // 是否通过验证
@@ -45,7 +52,7 @@ const props = defineProps({
     default: false
   },
 })
-const emit = defineEmits(['pass'])
+const emit = defineEmits(['verifyPass'])
 // 滑块验证对象
 const dragVerify = ref(null)
 // 验证弹窗状态
@@ -61,39 +68,50 @@ const imgId = ref()
 const getImgId = () => {
   imgId.value = parseInt(Math.random() * imgList.value.length, 10);
 }
-const reimg = () => {
+// 刷新图片
+const refresh = () => {
   console.log('刷新图片')
   getImgId()
 }
+// 关闭验证
+const close = () => {
+  console.log("关闭验证")
+  show.value = false
+}
 const pass = () => {
-  emit('pass')
-  // props.isPassing.value = true
+  console.log("过了")
+  emit('verifyPass')
+  ElMessage({
+    message: '滑块验证成功！',
+    type: 'success',
+  })
   setTimeout(() => {
     show.value = false
     dragVerify.value.reset()
-    reimg()
+    refresh()
   }, 1000);
 }
 const showPopup = () => {
   show.value = true;
 };
 onMounted(() => {
-  reimg()
+  refresh()
 })
 </script>
 
 <style lang="scss">
 @import "src/assets/style/index";
+
 .verify-btn {
   width: 100%;
   color: $color-text-placeholder;
 
-  span:first-child {
-    position: relative;
-    .verify-icon{
-      position: absolute;
-      left: -68px;
-    }
+  .btn-text {
+    margin-left: 10px;
   }
+}
+
+.verify-success {
+  color: $color-other-turquoise!important;
 }
 </style>

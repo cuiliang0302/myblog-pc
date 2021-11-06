@@ -2,76 +2,80 @@
   <div class="drag-verify-container">
     <div :style="dragVerifyImgStyle">
       <img
-        ref="checkImg"
-        crossOrigin="anonymous"
-        :src="imgsrc"
-        @load="checkimgLoaded"
-        style="width:100%"
-        alt=""
+          ref="checkImg"
+          crossOrigin="anonymous"
+          :src="imgsrc"
+          @load="checkimgLoaded"
+          style="width:100%"
+          alt=""
       >
       <canvas
-        ref="maincanvas"
-        class="main-canvas"
+          ref="maincanvas"
+          class="main-canvas"
       ></canvas>
       <canvas
-        ref="movecanvas"
-        :class="{goFirst:isOk, goKeep:isKeep}"
-        class="move-canvas"
+          ref="movecanvas"
+          :class="{goFirst:isOk, goKeep:isKeep}"
+          class="move-canvas"
       ></canvas>
       <div
-        class="refresh"
-        v-if="showRefresh && !isPassing"
+          class="refresh"
+          v-if="showRefresh && !isPassing"
       >
-        <i
-          :class="refreshIcon"
-          @click="refreshimg"
-        >
-<!--          <van-icon name="replay"/>-->
+        <i :class="refreshIcon"
+           @click="refreshimg">
+          <MyIcon type="icon-refresh"/>
+        </i>
+        <i class="closeIcon"
+           @click="closeimg">
+          <MyIcon type="icon-fail"/>
         </i>
       </div>
       <div
-        class="tips success"
-        v-if="showTips && isPassing"
-      >{{successTip}}</div>
+          class="tips success"
+          v-if="showTips && isPassing"
+      >{{ successTip }}
+      </div>
       <div
-        class="tips danger"
-        v-if="showTips && !isPassing && showErrorTip"
-      >{{failTip}}</div>
+          class="tips danger"
+          v-if="showTips && !isPassing && showErrorTip"
+      >{{ failTip }}
+      </div>
     </div>
     <div
-      ref="dragVerify"
-      class="drag_verify"
-      :style="dragVerifyStyle"
-      @mousemove="dragMoving"
-      @mouseup="dragFinish"
-      @mouseleave="dragFinish"
-      @touchmove="dragMoving"
-      @touchend="dragFinish"
+        ref="dragVerify"
+        class="drag_verify"
+        :style="dragVerifyStyle"
+        @mousemove="dragMoving"
+        @mouseup="dragFinish"
+        @mouseleave="dragFinish"
+        @touchmove="dragMoving"
+        @touchend="dragFinish"
     >
 
       <div
-        class="dv_progress_bar"
-        :class="{goFirst2:isOk}"
-        ref="progressBar"
-        :style="progressBarStyle"
+          class="dv_progress_bar"
+          :class="{goFirst2:isOk}"
+          ref="progressBar"
+          :style="progressBarStyle"
       >
-        {{successMessage}}
+        {{ successMessage }}
       </div>
       <div
-        class="dv_text"
-        :style="textStyle"
-        ref="message"
+          class="dv_text"
+          :style="textStyle"
+          ref="message"
       >
-        {{message}}
+        {{ message }}
       </div>
 
       <div
-        class="dv_handler dv_handler_bg"
-        :class="{goFirst:isOk}"
-        @mousedown="dragStart"
-        @touchstart="dragStart"
-        ref="handler"
-        :style="handlerStyle"
+          class="dv_handler dv_handler_bg"
+          :class="{goFirst:isOk}"
+          @mousedown="dragStart"
+          @touchstart="dragStart"
+          ref="handler"
+          :style="handlerStyle"
       >
         <i :class="handlerIcon"></i>
       </div>
@@ -80,9 +84,13 @@
 </template>
 <script>
 import icon from "@/utils/icon";
+
 let {MyIcon} = icon()
 export default {
   name: "dragVerifyImgChip",
+  components: {
+    MyIcon
+  },
   props: {
     isPassing: {
       type: Boolean,
@@ -177,27 +185,27 @@ export default {
       default: 20
     }
   },
-  mounted: function() {
+  mounted: function () {
     const dragEl = this.$refs.dragVerify;
     dragEl.style.setProperty("--textColor", this.textColor);
     dragEl.style.setProperty("--width", Math.floor(this.width / 2) + "px");
     dragEl.style.setProperty("--pwidth", -Math.floor(this.width / 2) + "px");
   },
   computed: {
-    handlerStyle: function() {
+    handlerStyle: function () {
       return {
         width: this.height + "px",
         height: this.height + "px",
         background: this.handlerBg
       };
     },
-    message: function() {
+    message: function () {
       return this.isPassing ? "" : this.text;
     },
-    successMessage: function() {
+    successMessage: function () {
       return this.isPassing ? this.successText : "";
     },
-    dragVerifyStyle: function() {
+    dragVerifyStyle: function () {
       return {
         width: this.width + "px",
         height: this.height + "px",
@@ -206,23 +214,23 @@ export default {
         borderRadius: this.circle ? this.height / 2 + "px" : this.radius
       };
     },
-    dragVerifyImgStyle: function() {
+    dragVerifyImgStyle: function () {
       return {
         width: this.width + "px",
         position: "relative",
         overflow: "hidden"
       };
     },
-    progressBarStyle: function() {
+    progressBarStyle: function () {
       return {
         background: this.progressBarBg,
         height: this.height + "px",
         borderRadius: this.circle
-          ? this.height / 2 + "px 0 0 " + this.height / 2 + "px"
-          : this.radius
+            ? this.height / 2 + "px 0 0 " + this.height / 2 + "px"
+            : this.radius
       };
     },
-    textStyle: function() {
+    textStyle: function () {
       return {
         height: this.height + "px",
         width: this.width + "px",
@@ -241,7 +249,7 @@ export default {
     };
   },
   methods: {
-    draw: function(ctx, x, y, operation) {
+    draw: function (ctx, x, y, operation) {
       var l = this.barWidth;
       var r = this.barRadius;
       const PI = Math.PI;
@@ -261,7 +269,7 @@ export default {
       ctx[operation]();
       ctx.globalCompositeOperation = "destination-over";
     },
-    checkimgLoaded: function() {
+    checkimgLoaded: function () {
       // 生成图片缺失位置
       var barWidth = this.barWidth;
       var imgHeight = this.$refs.checkImg.height;
@@ -271,10 +279,10 @@ export default {
       var tipHeight = 20;
       var x = halfWidth + Math.ceil(Math.random() * (halfWidth - barWidth - this.barRadius - 5));
       var y =
-        refreshHeigth +
-        Math.floor(
-          Math.random() * (imgHeight - barWidth - refreshHeigth - tipHeight)
-        );
+          refreshHeigth +
+          Math.floor(
+              Math.random() * (imgHeight - barWidth - refreshHeigth - tipHeight)
+          );
       this.$refs.maincanvas.setAttribute("width", imgWidth);
       this.$refs.maincanvas.setAttribute("height", imgHeight);
       this.$refs.maincanvas.style.display = "block";
@@ -297,17 +305,17 @@ export default {
       moveCanvas.setAttribute("height", imgHeight);
       moveCtx.putImageData(ImageData, 0, y);
     },
-    dragStart: function(e) {
+    dragStart: function (e) {
       if (!this.isPassing) {
         this.isMoving = true;
         this.x =
-          (e.pageX || e.touches[0].pageX)
+            (e.pageX || e.touches[0].pageX)
       }
       this.showBar = true;
       this.showErrorTip = false;
       this.$emit("handlerMove");
     },
-    dragMoving: function(e) {
+    dragMoving: function (e) {
       if (this.isMoving && !this.isPassing) {
         var _x = (e.pageX || e.touches[0].pageX) - this.x;
         var handler = this.$refs.handler;
@@ -317,13 +325,13 @@ export default {
       }
       e.preventDefault();
     },
-    dragFinish: function(e) {
+    dragFinish: function (e) {
       if (this.isMoving && !this.isPassing) {
         var _x = (e.pageX || e.changedTouches[0].pageX) - this.x;
         if (Math.abs(_x - this.clipBarx) > this.diffWidth) {
           this.isOk = true;
           var that = this;
-          setTimeout(function() {
+          setTimeout(function () {
             that.$refs.handler.style.left = "0";
             that.$refs.progressBar.style.width = "0";
             that.$refs.movecanvas.style.left = "0";
@@ -337,7 +345,7 @@ export default {
         this.isMoving = false;
       }
     },
-    passVerify: function() {
+    passVerify: function () {
       this.$emit("update:isPassing", true);
       this.isMoving = false;
       var handler = this.$refs.handler;
@@ -358,11 +366,11 @@ export default {
       }, 100);
       this.$emit("passcallback");
     },
-    reset: function() {
+    reset: function () {
       this.reImg();
       this.checkimgLoaded();
     },
-    reImg: function() {
+    reImg: function () {
       this.$emit("update:isPassing", false);
       const oriData = this.$options.data();
       for (const key in oriData) {
@@ -380,14 +388,17 @@ export default {
       message.style.color = this.background;
       this.$refs.movecanvas.style.left = "0px";
     },
-    refreshimg: function() {
+    refreshimg: function () {
       this.$emit("refresh");
+    },
+    closeimg: function () {
+      this.$emit("close");
     }
   },
   watch: {
     imgsrc: {
       immediate: false,
-      handler: function() {
+      handler: function () {
         this.reImg();
       }
     }
@@ -401,26 +412,31 @@ export default {
   text-align: center;
   overflow: hidden;
 }
+
 .drag_verify .dv_handler {
   position: absolute;
   top: 0px;
   left: 0px;
   cursor: move;
 }
+
 .drag_verify .dv_handler i {
   color: #666;
   padding-left: 0;
   font-size: 16px;
 }
+
 .drag_verify .dv_handler .el-icon-circle-check {
   color: #6c6;
   margin-top: 9px;
 }
+
 .drag_verify .dv_progress_bar {
   position: absolute;
   height: 34px;
   width: 0px;
 }
+
 .drag_verify .dv_text {
   position: absolute;
   top: 0px;
@@ -431,38 +447,44 @@ export default {
   -o-user-select: none;
   -ms-user-select: none;
   background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0, var(--textColor)),
-    color-stop(0.4, var(--textColor)),
-    color-stop(0.5, #fff),
-    color-stop(0.6, var(--textColor)),
-    color-stop(1, var(--textColor))
+      linear,
+      left top,
+      right top,
+      color-stop(0, var(--textColor)),
+      color-stop(0.4, var(--textColor)),
+      color-stop(0.5, #fff),
+      color-stop(0.6, var(--textColor)),
+      color-stop(1, var(--textColor))
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-text-size-adjust: none;
   animation: slidetounlock 3s infinite;
 }
+
 .drag_verify .dv_text * {
   -webkit-text-fill-color: var(--textColor);
 }
+
 .goFirst {
   left: 0px !important;
   transition: left 0.5s;
 }
+
 .goKeep {
   transition: left 0.2s;
 }
+
 .goFirst2 {
   width: 0px !important;
   transition: width 0.5s;
 }
+
 .drag-verify-container {
   position: relative;
   line-height: 0;
 }
+
 .refresh {
   position: absolute;
   right: 5px;
@@ -472,6 +494,11 @@ export default {
   z-index: 200;
   color: white;
 }
+
+.closeIcon {
+  margin-left: 10px;
+}
+
 .tips {
   position: absolute;
   bottom: 0;
@@ -482,14 +509,17 @@ export default {
   font-size: 12px;
   z-index: 200;
 }
+
 .tips.success {
   background: rgba(255, 255, 255, 0.6);
   color: green;
 }
+
 .tips.danger {
   background: rgba(0, 0, 0, 0.6);
   color: yellow;
 }
+
 .main-canvas {
   width: 100%;
   height: 100%;
@@ -497,6 +527,7 @@ export default {
   top: 0;
   left: 0;
 }
+
 .move-canvas {
   position: absolute;
   top: 0;
@@ -512,6 +543,7 @@ export default {
     background-position: var(--width) 0;
   }
 }
+
 @-webkit-keyframes slidetounlock2 {
   0% {
     background-position: var(--pwidth) 0;
