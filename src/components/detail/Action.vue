@@ -1,5 +1,10 @@
 <template>
   <div class="action">
+    <el-tooltip v-if="detailType==='section'" class="item" effect="dark" content="目录" placement="left">
+      <div @click="setCatalog" :class="[catalogShow===true?'action-active':'']+' detail-action-hover'">
+        <MyIcon type="icon-catalog"/>
+      </div>
+    </el-tooltip>
     <el-tooltip class="item" effect="dark" content="大纲" placement="left">
       <div @click="setOutline" :class="[outlineShow===true?'action-active':'']+' detail-action-hover'">
         <MyIcon type="icon-outline"/>
@@ -64,13 +69,32 @@ import {
   ElImage,
 } from 'element-plus'
 import icon from "@/utils/icon";
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive} from "vue";
 import store from "@/store";
 import {getInfo} from "@/api/management";
 
 let {MyIcon} = icon()
+const props = defineProps({
+  // 组件类型
+  detailType: {
+    type: String,
+    required: true,
+    default: 'article'
+  },
+  // 目录是否显示
+  catalogShow: {
+    type: Boolean,
+    required: false,
+    default: true
+  },
+})
+const emit = defineEmits(['setCatalog']);
 // 大纲是否显示
 const outlineShow = computed(() => store.state.outlineShow)
+// 设置目录是否显示
+const setCatalog = () => {
+  emit('setCatalog');
+}
 // 设置大纲是否显示
 const setOutline = () => {
   store.commit('setOutlineShow')

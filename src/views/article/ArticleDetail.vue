@@ -90,7 +90,7 @@
         </div>
         <div class="detail-right">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
-          <Action></Action>
+          <Action :detailType="'article'"></Action>
           <BackTop></BackTop>
         </div>
       </div>
@@ -135,8 +135,6 @@ let {articleID,activeMenu,loading,sitename,toDetail,toCategory} = publicFn()
 let {articleData,context,recommendList,getArticleData,contextData,guessLikeData} = article()
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
-// 引入侧边动作模块
-// let {} = action()
 // 公共模块
 function publicFn(){
   // 当前文章id

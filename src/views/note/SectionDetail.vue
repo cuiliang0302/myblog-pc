@@ -5,8 +5,8 @@
              element-loading-spinner="el-icon-loading">
       <NavMenu :activeMenu="activeMenu"></NavMenu>
       <div class="detail-page">
-        <div class="detail-left">
-          <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
+        <div :class="'detail-left animate__animated animate__'+ (catalogShow===true?'fadeIn':'fadeOut')">
+          <el-tree v-if="catalogShow" accordion :data="catalogList" @node-click="handleNodeClick"
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
                    :current-node-key="current" ref="treeRef"></el-tree>
         </div>
@@ -23,7 +23,7 @@
           </span>
           </div>
           <div class="main detail-card">
-            <div v-if="JSON.stringify(section) == '{}'">
+            <div v-if="JSON.stringify(section) === '{}'">
               <el-skeleton :rows="20" animated/>
             </div>
             <div v-else>
@@ -60,7 +60,7 @@
         </div>
         <div class="detail-right">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
-          <Action></Action>
+          <Action :detailType="'section'" @setCatalog="catalogShow=!catalogShow" :catalogShow="catalogShow"></Action>
           <BackTop></BackTop>
         </div>
       </div>
@@ -104,11 +104,18 @@ let {sectionID, activeMenu, loading, toNote, sitename, toDetail} = publicFn()
 // 引入笔记内容模块
 let {sectionData, context, getSectionData, contextData} = section()
 // 引入文章目录模块
-let {catalogList, expanded, current, catalogueData, handleNodeClick, findCatalogId, treeRef} = catalog(sectionData)
+let {
+  catalogShow,
+  catalogList,
+  expanded,
+  current,
+  catalogueData,
+  handleNodeClick,
+  findCatalogId,
+  treeRef
+} = catalog(sectionData)
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
-// 引入侧边动作模块
-// let {} = action()
 
 // 公共模块
 function publicFn() {
@@ -146,6 +153,8 @@ function publicFn() {
 
 // 文章目录模块
 function catalog(sectionData) {
+  // 文章目录是否显示
+  const catalogShow = ref(true)
   // 树形组件对象
   const treeRef = ref(null)
   // 笔记目录列表
@@ -195,7 +204,7 @@ function catalog(sectionData) {
       })
     })
   }
-  return {catalogList, expanded, current, catalogueData, handleNodeClick, findCatalogId, treeRef}
+  return {catalogShow, catalogList, expanded, current, catalogueData, handleNodeClick, findCatalogId, treeRef}
 }
 
 // 笔记内容模块
