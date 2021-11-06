@@ -1,5 +1,10 @@
 <template>
   <div class="text">这是测试页1</div>
+  <div class="other-login">
+    <el-divider>
+      <span>12345</span>
+    </el-divider>
+  </div>
 </template>
 
 <script>
@@ -13,7 +18,9 @@ export default {
 </script>
 
 <style lang="scss">
-.text {
-  color: v-bind(color);
+.other-login {
+  .el-divider {
+    background-color: yellow!important;
+  }
 }
 </style>
