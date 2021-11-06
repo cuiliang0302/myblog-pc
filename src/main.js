@@ -7,6 +7,8 @@ import ElementPlus from '@/plugins/ElementPlus'
 // import 'element-plus/theme-chalk/src/index.scss'
 import 'element-plus/dist/index.css'
 import animate from "animate.css";
+import "@/assets/style/normalize.css";
+import "@/assets/style/hover-min.css";
 import 'nprogress/nprogress.css'
 import 'vue-loaders/dist/vue-loaders.css';
 import VueLoaders from 'vue-loaders';

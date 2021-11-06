@@ -1,10 +1,8 @@
-@import "./normalize.css";
-@import "./hover-min.css";
-@import "./element-ui.scss";
-@import "./transition.scss";
-@import "./variable.scss";
-@import "./theme.scss";
-@import "./hover.scss";
+@import "src/assets/style/element-ui.scss";
+@import "src/assets/style/transition.scss";
+@import "src/assets/style/variable.scss";
+@import "src/assets/style/theme.scss";
+@import "src/assets/style/hover.scss";
 
 body {
   margin: 0;

@@ -61,14 +61,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="loginForm.username" placeholder="请点击右侧按钮验证">
-                <template #prefix>
-                  <MyIcon type="icon-code"/>
-                </template>
-                <template #suffix>
-                  <el-button>验证</el-button>
-                </template>
-              </el-input>
+              <VerifyImgBtn></VerifyImgBtn>
             </el-form-item>
             <el-form-item class="login-setting">
               <span class="remember"><el-checkbox v-model="remember" label="记住密码"></el-checkbox></span>
@@ -101,7 +94,7 @@
           </div>
           <div class="overlay-panel overlay-right">
             <div class="point">
-              <h1>注册光临</h1>
+              <h1>欢迎光临</h1>
               <p>欢迎访问崔亮的博客，并与我们一起开始旅程<br>若您还没有账号，请立即注册</p>
               <el-button @click="switchRegister" type="danger">切换注册</el-button>
             </div>
@@ -117,13 +110,13 @@ import icon from '@/utils/icon'
 import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
 import {useRouter} from "vue-router";
-
+import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
 const router = useRouter();
 let {MyIcon} = icon()
 // 背景图片地址
 const bgiURL = ref('')
 // 当前组件名称
-const component = ref('login')
+const component = ref('Login')
 // 切换登录页事件
 const switchLogin = () => {
   console.log("切换登录")
@@ -152,7 +145,14 @@ const remember = ref(false)
 const loginSubmit = () => {
   console.log("登上了")
 }
-
+// 验证码通过验证状态
+const isPassing = ref(false)
+// 验证码按钮样式
+const btnType = ref('default')
+// 验证码通过验证
+const pass = () => {
+  isPassing.value = true
+}
 // 获取背景图片
 async function getBgiURLData() {
   const {url} = await getBgiUrl()
