@@ -9,10 +9,10 @@ export default createStore({
 	plugins: [
 		createVuexAlong({
 			local: {
-				list: [],
+				list: ["userLocal", "keepLogin"],
 			},
 			session: {
-				list: ["outline","outlineShow"],
+				list: ["outline", "outlineShow", "userSession", "nextPath"],
 			}
 		})
 	]

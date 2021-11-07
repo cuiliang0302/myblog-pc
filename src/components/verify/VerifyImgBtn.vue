@@ -4,12 +4,12 @@
     <div>
       <el-popover
           :visible="show"
-          placement="top-start"
+          placement="top"
           :width="275"
           trigger="manual"
       >
         <template #reference>
-          <el-button v-if="!isPassing" class="verify-btn" @click="showPopup">
+          <el-button v-if="!isPassing" :type="btnType" class="verify-btn" @click="showPopup">
             <MyIcon type="icon-verify"/>
             <span class="btn-text">请点击按钮进行安全验证</span>
           </el-button>
@@ -55,8 +55,15 @@ const props = defineProps({
   // 是否通过验证
   isPassing: {
     type: Boolean,
+    required: true,
     default: false
   },
+  // 滑块验证样式
+  btnType: {
+    type: String,
+    required: false,
+    default: ''
+  }
 })
 const emit = defineEmits(['verifyPass'])
 // 滑块验证对象

@@ -55,23 +55,23 @@
         </span>
       </el-tooltip>
       <span class="user">
-        <div class="toLoginRegister">
+        <el-dropdown v-if="isLogin" @visible-change="dropdownChange">
+          <span class="no-choose">
+            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            <p>{{ userName }}<i
+                :class="isDropdown?' el-icon-arrow-up'+' el-icon--right':' el-icon-arrow-down'+' el-icon--right'"></i></p>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <div v-else class="toLoginRegister">
           <span @click="toLogin">登录</span>
           <span @click="toRegister">注册</span>
         </div>
-<!--        <el-dropdown @visible-change="dropdownChange">-->
-<!--          <span class="no-choose">-->
-<!--            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
-<!--            <p>逆飞的流星<i-->
-<!--                :class="isDropdown?' el-icon-arrow-up'+' el-icon&#45;&#45;right':' el-icon-arrow-down'+' el-icon&#45;&#45;right'"></i></p>-->
-<!--          </span>-->
-<!--          <template #dropdown>-->
-<!--            <el-dropdown-menu>-->
-<!--              <el-dropdown-item>个人中心</el-dropdown-item>-->
-<!--              <el-dropdown-item>退出登录</el-dropdown-item>-->
-<!--            </el-dropdown-menu>-->
-<!--          </template>-->
-<!--        </el-dropdown>-->
       </span>
     </span>
     <el-drawer
@@ -124,30 +124,18 @@
 </template>
 
 <script setup>
-import {
-  ElMenuItem,
-  ElMenu,
-  ElSubMenu,
-  ElIcon,
-  ElImage,
-  ElAvatar,
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElDrawer,
-  ElSwitch,
-  ElTooltip,
-  ElOption,
-  ElSelect,
-} from 'element-plus'
+import {ElMessageBox, ElMessage} from 'element-plus'
 import {onMounted, reactive, ref} from "vue";
 import icon from '@/utils/icon'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
 import {useRouter} from "vue-router";
+import user from "@/utils/user";
 
 const router = useRouter()
 let {MyIcon} = icon()
+// 引入用户信息模块
+let {isLogin, userId, userName} = user();
 const props = defineProps({
   // 导航菜单-当前选中的菜单
   activeMenu: {
@@ -188,6 +176,7 @@ async function NoteData() {
   noteList.value = await getNote()
   // console.log(noteList.value)
 }
+
 // 跳转至登录页
 const toLogin = () => {
   router.push({path: '/login_register', query: {component: 'Login'}})
@@ -202,6 +191,30 @@ const isDropdown = ref(false)
 // 个人中心-下拉事件
 const dropdownChange = (value) => {
   isDropdown.value = value
+}
+// 个人中心-退出登录
+const logout = () => {
+  ElMessageBox.confirm(
+      '真的要退出登录吗?',
+      '退出登录',
+      {
+        confirmButtonText: '确认',
+        cancelButtonText: '再想想',
+        type: 'warning',
+      }
+  )
+      .then(() => {
+        ElMessage({
+          type: 'success',
+          message: '账号已成功退出，即将跳转至登录页',
+        })
+        window.sessionStorage.clear()
+        window.localStorage.clear()
+        router.push('/login_register')
+      })
+      .catch(() => {
+        console.log("算了，没退出")
+      })
 }
 //设置-菜单默认关闭
 let drawer = ref(false);
@@ -276,11 +289,13 @@ header {
     .user {
       display: flex;
       align-items: center;
-      .toLoginRegister{
-        span{
+
+      .toLoginRegister {
+        span {
           margin: 0 10px;
         }
       }
+
       span {
         color: $color-text-regular;
         font-size: 14px;

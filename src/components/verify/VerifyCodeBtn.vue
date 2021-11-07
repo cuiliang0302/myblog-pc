@@ -1,13 +1,18 @@
 <!--图片验证按钮-->
 <template>
   <div class="main">
-    <div>
-      <van-button type="primary" @click="showPopup" block plain size="small"
-                  :class="[btnDisabled ? 'btn-disabled' :'']"
-                  :text="codeBtn.btnText"
-                  :disabled="codeBtn.disabled"/>
-    </div>
-    <van-popup v-model:show="show">
+    <el-popover
+        :visible="show"
+        placement="top-end"
+        :width="275"
+        trigger="manual"
+        content="this is content, this is content, this is content"
+    >
+      <template #reference>
+        <el-button @click="show=true" type="primary" plain size="small" :disabled="codeBtn.disabled">
+          {{ codeBtn.btnText }}
+        </el-button>
+      </template>
       <div class="verify">
         <drag-verify-img-chip
             ref="dragVerify"
@@ -18,23 +23,26 @@
             successText="验证通过"
             handlerIcon="el-icon-d-arrow-right"
             successIcon="el-icon-circle-check"
-            @refresh="reimg"
+            @refresh="refresh"
             @passcallback="pass"
+            @close="close"
         />
       </div>
-    </van-popup>
+    </el-popover>
+
   </div>
 </template>
 <script setup>
 // 图片滑块组件(拼图)
 import dragVerifyImgChip from "@/components/verify/dragVerifyImgChip.vue";
-import {onMounted, reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import verify1 from '@/assets/verify/verify-1.jpg'
 import verify2 from '@/assets/verify/verify-2.jpg'
 import verify3 from '@/assets/verify/verify-3.jpg'
 import verify4 from '@/assets/verify/verify-4.jpg'
 import verify5 from '@/assets/verify/verify-5.jpg'
 import verify6 from '@/assets/verify/verify-6.jpg'
+import {ElMessage} from "element-plus";
 
 const props = defineProps({
   // 滑动验证按钮是否禁用
@@ -72,33 +80,38 @@ const imgId = ref()
 const getImgId = () => {
   imgId.value = parseInt(Math.random() * imgList.value.length, 10);
 }
-const reimg = () => {
+// 刷新验证图片
+const refresh = () => {
   getImgId()
 }
+// 关闭验证图片
+const close = () => {
+  show.value = false
+}
+// 通过滑块验证事件
 const pass = () => {
-  Toast.success('滑动验证成功！');
+  ElMessage({
+    message: '滑块验证成功！',
+    type: 'success',
+  })
   getCode()
   emit('pass')
   setTimeout(() => {
     show.value = false
     dragVerify.value.reset()
-    reimg()
+    refresh()
   }, 1000);
 }
 const showPopup = () => {
   show.value = true;
 };
 onMounted(() => {
-  reimg()
+  refresh()
 })
 
 </script>
 
 <style lang="scss">
-
-.verify {
-  padding: 20px
-}
 
 .btn-disabled {
   opacity: 0.4;

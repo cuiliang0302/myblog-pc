@@ -4,7 +4,7 @@
       <div class="form-container sign-up-container">
         <div>
           <h1>用户注册</h1>
-          <el-form class="registerForm" :model="registerForm" label-width="0">
+          <el-form class="registerForm" :model="registerForm" label-width="0" :rules="loginRules">
             <el-form-item>
               <el-input v-model="loginForm.username" placeholder="请输入用户名">
                 <template #prefix>
@@ -25,7 +25,7 @@
                   <MyIcon type="icon-code"/>
                 </template>
                 <template #suffix>
-                  <el-button size="small">获取验证码</el-button>
+                  <VerifyCodeBtn :btnDisabled="btnDisabled"></VerifyCodeBtn>
                 </template>
               </el-input>
             </el-form-item>
@@ -45,15 +45,15 @@
       <div class="form-container sign-in-container">
         <div>
           <h1>用户登录</h1>
-          <el-form class="loginForm" :model="loginForm" label-width="0">
-            <el-form-item>
+          <el-form class="loginForm" :model="loginForm" ref="loginRef" label-width="0" :rules="loginRules">
+            <el-form-item prop="username">
               <el-input v-model="loginForm.username" placeholder="请输入用户名/手机号/邮箱号">
                 <template #prefix>
                   <MyIcon type="icon-my"/>
                 </template>
               </el-input>
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="password">
               <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
                 <template #prefix>
                   <MyIcon type="icon-password"/>
@@ -61,7 +61,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <VerifyImgBtn :isPassing="isPassing" @verifyPass="verifyPass"></VerifyImgBtn>
+              <VerifyImgBtn :isPassing="isPassing" @verifyPass="verifyPass" :btnType="btnType"></VerifyImgBtn>
             </el-form-item>
             <el-form-item class="login-setting">
               <span class="remember"><el-checkbox v-model="remember" label="记住密码"></el-checkbox></span>
@@ -76,9 +76,9 @@
               <span>第三方账号登录</span>
             </el-divider>
             <div class="other-logo">
-              <span><MyIcon type="icon-qq-logo"/></span>
-              <span><MyIcon type="icon-weibo-logo"/></span>
-              <span><MyIcon type="icon-github-logo"/></span>
+              <span @click="otherLogin"><MyIcon type="icon-qq-logo"/></span>
+              <span @click="otherLogin"><MyIcon type="icon-weibo-logo"/></span>
+              <span @click="otherLogin"><MyIcon type="icon-github-logo"/></span>
             </div>
           </div>
         </div>
@@ -111,64 +111,146 @@ import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
 import {useRouter} from "vue-router";
 import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
+import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
+import {ElMessage} from 'element-plus'
+import {postLogin} from "@/api/account";
+import store from "@/store/index";
 
 const router = useRouter();
 let {MyIcon} = icon()
-// 背景图片地址
-const bgiURL = ref('')
-// 当前组件名称
-const component = ref('Login')
-// 切换登录页事件
-const switchLogin = () => {
-  console.log("切换登录")
-  component.value = 'Login'
-}
-// 切换注册页事件
-const switchRegister = () => {
-  console.log("切换注册")
-  component.value = 'Register'
-}
-// 登录表单
-const loginForm = reactive({
-  username: '',
-  password: ''
-})
-// 注册表单
-const registerForm = reactive({
-  username: '',
-  contact: '',
-  code: '',
-  password: ''
-})
-// 是否记住密码
-const remember = ref(false)
+// 引入公共模块
+let {switchLogin, switchRegister, bgiURL, component} = publicFn()
+// 引入登录模块
+let {loginForm, loginRules, remember, isPassing, verifyPass, btnType, otherLogin} = loginFn()
+// 引入注册模块
+let {registerForm, btnDisabled} = registerFn()
+// 登录表单对象
+const loginRef = ref(null)
 // 登录表单提交事件
 const loginSubmit = () => {
-  console.log("登上了")
+  loginRef.value.validate((valid) => {
+    if (valid && isPassing.value) {
+      postLogin(loginForm).then((response) => {
+        console.log(response)
+        ElMessage({
+          message: '登录成功！',
+          type: 'success',
+        })
+        if (remember.value) {
+          console.log('记住了')
+          store.commit('setKeepLogin', true)
+          store.commit('setUserLocal', response)
+        } else {
+          console.log('记不住')
+          store.commit('setKeepLogin', false)
+          store.commit('setUserSession', response)
+        }
+        router.push(store.state.nextPath)
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('账号或密码错误！')
+        loginForm.username = ''
+        loginForm.password = ''
+        isPassing.value = false
+      });
+    } else {
+      console.log("滑块验证了吗")
+      btnType.value = 'danger'
+      ElMessage.error('请检查表单内容后再登录')
+      return false
+    }
+  })
 }
-// 验证码通过验证状态
-const isPassing = ref(false)
-// 验证码通过验证
-const verifyPass = () => {
-  console.log("验证通过了")
-  isPassing.value = true
-}
+// 注册表单对象
+const registerRef = ref(null)
 
-// 获取背景图片
-async function getBgiURLData() {
-  const {url} = await getBgiUrl()
-  bgiURL.value = 'url(' + url + ')'
-}
+// 公共模块
+function publicFn() {
+  // 背景图片地址
+  const bgiURL = ref('')
+  // 当前组件名称
+  const component = ref('Login')
 
-onBeforeMount(() => {
-  getBgiURLData()
-})
-// 其他页面调用，默认跳转
-onMounted(() => {
-  if (router.currentRoute.value.query.component) {
-    component.value = router.currentRoute.value.query.component
+  // 获取背景图片
+  async function getBgiURLData() {
+    const {url} = await getBgiUrl()
+    bgiURL.value = 'url(' + url + ')'
   }
-})
+
+  // 切换登录页事件
+  const switchLogin = () => {
+    console.log("切换登录")
+    component.value = 'Login'
+  }
+  // 切换注册页事件
+  const switchRegister = () => {
+    console.log("切换注册")
+    component.value = 'Register'
+  }
+  onBeforeMount(() => {
+    getBgiURLData()
+  })
+  // 其他页面调用，默认跳转
+  onMounted(() => {
+    if (router.currentRoute.value.query.component) {
+      component.value = router.currentRoute.value.query.component
+    }
+  })
+  return {switchLogin, switchRegister, bgiURL, component}
+}
+
+// 登录模块
+function loginFn() {
+  // 登录表单
+  const loginForm = reactive({
+    username: '',
+    password: ''
+  })
+  // 登录表单验证规则
+  const loginRules = {
+    username: [{
+      required: true,
+      message: '请输入用户名/邮箱号/手机号',
+      trigger: 'blur',
+    }],
+    password: [{
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur',
+    }]
+  }
+  // 是否记住密码
+  const remember = ref(false)
+  // 滑块验证是否通过
+  const isPassing = ref(false)
+  // 滑块验证按钮样式
+  const btnType = ref('default')
+  // 滑块验证通过事件
+  const verifyPass = () => {
+    console.log("验证通过了")
+    isPassing.value = true
+  }
+  // 第三方登录
+  const otherLogin = () => {
+    ElMessage('第三方登录正在开发中！')
+  }
+  return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
+}
+
+// 注册模块
+function registerFn() {
+  // 注册表单
+  const registerForm = reactive({
+    username: '',
+    contact: '',
+    code: '',
+    password: ''
+  })
+  // 获取验证码按钮默认状态
+  const btnDisabled = ref(true)
+  return {registerForm, btnDisabled}
+}
 </script>
 
 <style scoped lang="scss">
@@ -228,6 +310,7 @@ onMounted(() => {
 
             .forget {
               float: right;
+              cursor: pointer;
             }
           }
         }
@@ -244,6 +327,7 @@ onMounted(() => {
               font-size: 35px;
               margin: 0 10px;
               opacity: 1;
+              cursor: pointer;
             }
           }
         }
