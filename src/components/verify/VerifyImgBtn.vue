@@ -43,6 +43,12 @@ import dragVerifyImgChip from "@/components/verify/dragVerifyImgChip.vue";
 import {onMounted, ref} from "vue";
 import icon from "@/utils/icon";
 import {ElMessage} from 'element-plus'
+import verify1 from '@/assets/verify/verify-1.jpg'
+import verify2 from '@/assets/verify/verify-2.jpg'
+import verify3 from '@/assets/verify/verify-3.jpg'
+import verify4 from '@/assets/verify/verify-4.jpg'
+import verify5 from '@/assets/verify/verify-5.jpg'
+import verify6 from '@/assets/verify/verify-6.jpg'
 
 let {MyIcon} = icon()
 const props = defineProps({
@@ -57,13 +63,7 @@ const emit = defineEmits(['verifyPass'])
 const dragVerify = ref(null)
 // 验证弹窗状态
 const show = ref(false)
-const imgList = ref([
-  'src/assets/verify/verify-1.jpg',
-  'src/assets/verify/verify-2.jpg',
-  'src/assets/verify/verify-3.jpg',
-  'src/assets/verify/verify-4.jpg',
-  'src/assets/verify/verify-5.jpg',
-  'src/assets/verify/verify-6.jpg'])
+const imgList = ref([verify1, verify2, verify3, verify4, verify5, verify6])
 const imgId = ref()
 const getImgId = () => {
   imgId.value = parseInt(Math.random() * imgList.value.length, 10);
@@ -112,6 +112,6 @@ onMounted(() => {
 }
 
 .verify-success {
-  color: $color-other-turquoise!important;
+  color: $color-other-turquoise !important;
 }
 </style>
