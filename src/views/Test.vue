@@ -1,18 +1,19 @@
 <template>
   <div class="text">这是测试页1</div>
   <el-form
+      ref="ruleRef"
       :model="ruleForm"
-      ref="formRef"
+      status-icon
       :rules="rules"
       label-width="120px"
       class="demo-ruleForm"
   >
-    <el-form-item label="Activity name" prop="name">
-      <el-input v-model="ruleForm.name"></el-input>
+    <el-form-item label="Age" prop="age">
+      <el-input v-model.number="ruleForm.age"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')"
-      >Create
+      >Submit
       </el-button
       >
       <el-button @click="resetForm('ruleForm')">Reset</el-button>
@@ -22,22 +23,32 @@
 
 <script setup>
 import {reactive, ref} from "vue";
-// 表单对象
-const formRef = ref(null)
+
+const ruleRef = ref(null)
+const checkAge = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('Please input the age'))
+  }
+  setTimeout(() => {
+    if (!Number.isInteger(value)) {
+      callback(new Error('Please input digits'))
+    } else {
+      if (value < 18) {
+        callback(new Error('Age must be greater than 18'))
+      } else {
+        callback()
+      }
+    }
+  }, 1000)
+}
 const ruleForm = reactive({
-  name: '',
+  age: '',
 })
 const rules = {
-  name: [
-    {
-      required: true,
-      message: 'Please input Activity name',
-      trigger: 'blur',
-    }]
+  age: [{validator: checkAge, trigger: 'blur'}],
 }
 const submitForm = (formName) => {
-  console.log("点击提交")
-  formRef.value.validate((valid) => {
+  ruleRef.value.validate((valid) => {
     if (valid) {
       alert('submit!')
     } else {
@@ -47,7 +58,7 @@ const submitForm = (formName) => {
   })
 }
 const resetForm = (formName) => {
-  this.$refs[formName].resetFields()
+  ruleRef.value.resetFields()
 }
 </script>
 

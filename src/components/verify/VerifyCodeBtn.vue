@@ -9,7 +9,8 @@
         content="this is content, this is content, this is content"
     >
       <template #reference>
-        <el-button @click="show=true" type="primary" plain size="small" :disabled="codeBtn.disabled">
+        <el-button @click="show=true" type="primary" plain size="small" :disabled="codeBtn.disabled"
+                   :class="[btnDisabled ? 'btn-disabled' :'']">
           {{ codeBtn.btnText }}
         </el-button>
       </template>

@@ -4,40 +4,47 @@
       <div class="form-container sign-up-container">
         <div>
           <h1>用户注册</h1>
-          <el-form class="registerForm" :model="registerForm" label-width="0" :rules="loginRules">
-            <el-form-item>
-              <el-input v-model="loginForm.username" placeholder="请输入用户名">
+          <el-form class="registerForm" ref="registerRef" :model="registerForm" label-width="0" :rules="registerRules">
+            <el-form-item prop="username">
+              <el-input v-model="registerForm.username" placeholder="请输入用户名">
                 <template #prefix>
                   <MyIcon type="icon-my"/>
                 </template>
               </el-input>
             </el-form-item>
-            <el-form-item>
-              <el-input v-model="loginForm.contact" placeholder="请输入邮箱号/手机号">
+            <el-form-item prop="contact">
+              <el-input v-model="registerForm.contact" placeholder="请输入邮箱号/手机号">
                 <template #prefix>
-                  <MyIcon type="icon-my"/>
+                  <MyIcon type="icon-email"/>
                 </template>
               </el-input>
             </el-form-item>
-            <el-form-item>
-              <el-input v-model="loginForm.code" placeholder="请输入验证码">
+            <el-form-item prop="code">
+              <el-input v-model="registerForm.code" placeholder="请输入验证码">
                 <template #prefix>
                   <MyIcon type="icon-code"/>
                 </template>
                 <template #suffix>
-                  <VerifyCodeBtn :btnDisabled="btnDisabled"></VerifyCodeBtn>
+                  <VerifyCodeBtn :btnDisabled="codeBtnDisabled" @pass="registerPass"></VerifyCodeBtn>
                 </template>
               </el-input>
             </el-form-item>
-            <el-form-item>
-              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
+            <el-form-item prop="password1">
+              <el-input v-model="registerForm.password1" type="password" placeholder="请输入密码(数字+字符,8-16位)" show-password>
+                <template #prefix>
+                  <MyIcon type="icon-password"/>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="password2">
+              <el-input v-model="registerForm.password2" type="password" placeholder="请再次输入密码" show-password>
                 <template #prefix>
                   <MyIcon type="icon-password"/>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="loginSubmit" round>立即注册</el-button>
+              <el-button type="primary" @click="registerSubmit" round>立即注册</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -54,7 +61,7 @@
               </el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码">
+              <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password>
                 <template #prefix>
                   <MyIcon type="icon-password"/>
                 </template>
@@ -113,7 +120,7 @@ import {useRouter} from "vue-router";
 import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {ElMessage} from 'element-plus'
-import {postLogin} from "@/api/account";
+import {getRegister, postCode, postLogin, postRegister} from "@/api/account";
 import store from "@/store/index";
 
 const router = useRouter();
@@ -123,7 +130,7 @@ let {switchLogin, switchRegister, bgiURL, component} = publicFn()
 // 引入登录模块
 let {loginForm, loginRules, remember, isPassing, verifyPass, btnType, otherLogin} = loginFn()
 // 引入注册模块
-let {registerForm, btnDisabled} = registerFn()
+let {registerForm, registerRules, codeBtnDisabled, registerPass} = registerFn()
 // 登录表单对象
 const loginRef = ref(null)
 // 登录表单提交事件
@@ -164,6 +171,42 @@ const loginSubmit = () => {
 }
 // 注册表单对象
 const registerRef = ref(null)
+// 注册表单提交事件
+const registerSubmit = () => {
+  console.log("注册了啊")
+  registerRef.value.validate((valid) => {
+    if (valid) {
+      console.log("表单校验通过了")
+      registerForm.password = registerForm.password1
+      postRegister(registerForm).then((response) => {
+        console.log(response)
+        ElMessage({
+          message: '注册成功,即将自动登录',
+          type: 'success',
+        })
+        loginForm.username = registerForm.username
+        loginForm.password = registerForm.password
+        postLogin(loginForm).then((response) => {
+          console.log(response)
+          store.commit('setKeepLogin', false)
+          store.commit('setUserSession', response)
+          router.push(store.state.nextPath)
+        }).catch(response => {
+          //发生错误时执行的代码
+          console.log(response)
+          ElMessage.error('自动登录出现异常，请重试！')
+        });
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('账号注册失败！')
+      });
+    } else {
+      ElMessage.error('请检查表单内容后再登录')
+      return false
+    }
+  })
+}
 
 // 公共模块
 function publicFn() {
@@ -245,11 +288,124 @@ function registerFn() {
     username: '',
     contact: '',
     code: '',
-    password: ''
+    password: '',
+    password1: '',
+    password2: ''
+  })
+  // 用户名验证
+  const checkUsername = (rule, value, callback) => {
+    console.log(value)
+    if (!value) {
+      return callback(new Error('请输入用户名'))
+    }
+    setTimeout(() => {
+      getRegister(value, NaN).then((response) => {
+        console.log(response)
+        console.log("用户名可以使用")
+        callback()
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage({
+          message: '用户名已存在，请更换用户名或找回密码',
+          type: 'warning',
+        })
+        callback(new Error('用户名已存在'))
+      });
+    }, 500)
+  }
+  // 联系方式验证
+  const checkContact = (rule, value, callback) => {
+    if (!value) {
+      return callback(new Error('请输入邮箱号/手机号'))
+    }
+    setTimeout(() => {
+      getRegister(NaN, value).then((response) => {
+        console.log(response)
+        console.log("联系方式可以使用")
+        codeBtnDisabled.value = false
+        callback()
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage({
+          message: response.msg + ',请更换联系方式',
+          type: 'warning',
+        })
+        callback(new Error(response.msg))
+      });
+    }, 500)
+  }
+  // 用户密码验证
+  const checkPassword1 = (rule, value, callback) => {
+    if (!value) {
+      return callback(new Error('请输入密码'))
+    }
+    setTimeout(() => {
+      registerForm.password1 = value
+      const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+      if (!pattern.test(value)) {
+        console.log("没通过")
+        callback(new Error('密码不符合安全要求！'))
+      } else {
+        console.log("通过了")
+        callback()
+      }
+    }, 500)
+  }
+  // 用户确认密码验证
+  const checkPassword2 = (rule, value, callback) => {
+    if (!value) {
+      return callback(new Error('请再次输入密码'))
+    }
+    setTimeout(() => {
+      registerForm.password2 = value
+      const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+      if (!pattern.test(value)) {
+        console.log("没通过")
+        callback(new Error('密码不符合安全要求！'))
+      } else {
+        if (registerForm.password1 !== registerForm.password2) {
+          callback(new Error('两次密码不一致'))
+        } else {
+          callback()
+        }
+      }
+    }, 500)
+  }
+  // 注册表单验证规则
+  const registerRules = {
+    username: [{validator: checkUsername, trigger: 'blur'}],
+    contact: [{validator: checkContact, trigger: 'blur'}],
+    code: [{required: true, message: '请输入验证码', trigger: 'blur',}],
+    password1: [{validator: checkPassword1, trigger: 'blur'}],
+    password2: [{validator: checkPassword2, trigger: 'blur'}]
+  }
+  // 获取验证码表单
+  const codeForm = reactive({
+    contact: '',
+    action: '用户注册',
+    username: '新用户',
   })
   // 获取验证码按钮默认状态
-  const btnDisabled = ref(true)
-  return {registerForm, btnDisabled}
+  const codeBtnDisabled = ref(true)
+  // 获取注册验证码通过事件
+  const registerPass = () => {
+    console.log("通过验证了,开始获取验证码")
+    codeForm.contact = registerForm.contact
+    postCode(codeForm).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '验证码发送成功！',
+        type: 'success',
+      })
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  }
+  return {registerForm, codeBtnDisabled, registerRules, registerPass}
 }
 </script>
 
