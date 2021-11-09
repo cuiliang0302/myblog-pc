@@ -72,7 +72,7 @@
             </el-form-item>
             <el-form-item class="login-setting">
               <span class="remember"><el-checkbox v-model="remember" label="记住密码"></el-checkbox></span>
-              <span class="forget">忘记密码</span>
+              <span class="forget" @click="router.push('/setPassword')">忘记密码</span>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="loginSubmit" round>立即登录</el-button>

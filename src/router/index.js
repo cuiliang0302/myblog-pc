@@ -71,11 +71,19 @@ const router = createRouter({
 			}
 		},
 		{
-			path: '/login_register',
+			path: '/loginRegister',
 			name: 'LoginRegister',
 			component: () => import('@/views/LoginRegister.vue'),
 			meta: {
 				title: '登录&注册',
+			}
+		},
+		{
+			path: '/setPassword',
+			name: 'SetPassword',
+			component: () => import('@/views/SetPassword.vue'),
+			meta: {
+				title: '重置密码',
 			}
 		},
 		{path: '/test', component: () => import('@/views/Test.vue')},
@@ -105,7 +113,7 @@ router.beforeEach((to, from, next) => {
 	}
 	// if (to.meta.isAuth === true && JSON.stringify(store.state.userSession) === '{}') {
 	// 	Toast.fail('还未登录，即将跳转至登录页')
-	// 	return next('/login_register')
+	// 	return next('/loginRegister')
 	// } else {
 	// 	next()
 	// }
