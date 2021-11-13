@@ -4,7 +4,7 @@
     <div class="page">
       <article>
         <div class="carousel">
-          <el-carousel height="500px">
+          <el-carousel height="500px" :interval="5000">
             <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
               <el-image
                   class="carousel-img"

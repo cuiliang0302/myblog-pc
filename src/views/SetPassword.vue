@@ -26,8 +26,8 @@
             enter-active-class="animated animate__animated animate__fadeInRight"
             leave-active-class="animated animate__animated animate__fadeOutLeft"
         >
-          <div v-show="step === 1" class="verify">
-            <el-form class="loginForm" :model="verifyForm" ref="loginRef" label-width="0" :rules="rules">
+          <div v-show="step === 1" class="main-form">
+            <el-form :model="verifyForm" ref="verifyRef" label-width="0" :rules="rules">
               <el-form-item prop="contact">
                 <el-input v-model="verifyForm.contact" placeholder="请输入手机号/邮箱号">
                   <template #prefix>
@@ -42,13 +42,13 @@
                   </template>
                   <template #suffix>
                     <div class="verify-btn">
-                      <VerifyCodeBtn :btnDisabled="codeBtnDisabled" @pass="registerPass"></VerifyCodeBtn>
+                      <VerifyCodeBtn :btnDisabled="codeBtnDisabled" @pass="verifyPass"></VerifyCodeBtn>
                     </div>
                   </template>
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button @click="next" type="primary" round class="next-btn">下一步</el-button>
+                <el-button @click="verifyNext" type="primary" round class="next-btn">下一步</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -57,18 +57,40 @@
             enter-active-class="animated animate__animated animate__fadeInRight"
             leave-active-class="animated animate__animated animate__fadeOutLeft"
         >
-          <div v-show="step === 2" class="password">
-            <h1>这是设置密码表单</h1>
-            <el-button @click="next" type="primary" round class="next-btn">下一步</el-button>
+          <div v-show="step === 2" class="main-form">
+            <el-form :model="verifyForm" ref="passwordRef" label-width="0" :rules="rules">
+              <el-form-item prop="password1">
+                <el-input v-model="verifyForm.password1" type="password" placeholder="请输入密码(数字+字符,8-16位)" show-password>
+                  <template #prefix>
+                    <MyIcon type="icon-password"/>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="password2">
+                <el-input v-model="verifyForm.password2" type="password" placeholder="请再次输入密码" show-password>
+                  <template #prefix>
+                    <MyIcon type="icon-password"/>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="passwordLast" type="info" round class="next-btn">上一步</el-button>
+                <el-button @click="passwordNext" type="primary" round class="next-btn">下一步</el-button>
+              </el-form-item>
+            </el-form>
           </div>
         </transition>
         <transition
             enter-active-class="animated animate__animated animate__fadeInRight"
             leave-active-class="animated animate__animated animate__fadeOutLeft"
         >
-          <div v-show="step === 3" class="success">
-            <h1>这是完成了</h1>
-            <el-button type="success" round class="next-btn">立即登录</el-button>
+          <div v-show="step === 3" class="main-form">
+            <div class="success-icon">
+              <MyIcon type="icon-success"/>
+            </div>
+            <p>恭喜，密码重置成功</p>
+            <br>
+            <el-button type="success" round class="next-btn" @click="$router.push('/loginRegister')">立即登录</el-button>
           </div>
         </transition>
       </div>
@@ -81,7 +103,7 @@ import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import icon from "@/utils/icon";
 import {onMounted, reactive, ref} from "vue";
 import {getBgiUrl} from "@/api/public";
-import {getRegister, postCode} from "@/api/account";
+import {getRegister, postCode, postSetPassword} from "@/api/account";
 import {ElMessage} from "element-plus";
 
 let {MyIcon} = icon();
@@ -94,17 +116,19 @@ async function getBgiURLData() {
   bgiURL.value = "url(" + url + ")";
 }
 
+// 身份验证表单对象
+const verifyRef = ref(null)
+// 密码验证表单对象
+const passwordRef = ref(null)
 // 当前步骤id
 const step = ref(1);
-// 点击下一步事件
-const next = () => {
-  step.value = step.value + 1;
-  console.log(step, "step");
-};
 // 验证表单
 const verifyForm = reactive({
   contact: '',
   code: '',
+  password: '',
+  password1: '',
+  password2: ''
 })
 // 联系方式验证
 const checkContact = (rule, value, callback) => {
@@ -114,14 +138,9 @@ const checkContact = (rule, value, callback) => {
   }
   const phone = /^1[0-9]\d{9}$/;
   const email = /^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$/
-  if (!phone.test(value)) {
+  if (!phone.test(value) && !email.test(value)) {
     console.log(value)
-    console.log("手机验证没通过")
-    return callback(new Error('手机号/邮箱号格式错误！'))
-  }
-  if (!email.test(value)) {
-    console.log(value)
-    console.log("邮箱验证没通过")
+    console.log("格式验证没通过")
     return callback(new Error('手机号/邮箱号格式错误！'))
   }
   setTimeout(() => {
@@ -140,23 +159,63 @@ const checkContact = (rule, value, callback) => {
     });
   }, 500)
 }
+// 用户密码验证
+const checkPassword1 = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('请输入密码'))
+  }
+  setTimeout(() => {
+    verifyForm.password1 = value
+    const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+    if (!pattern.test(value)) {
+      console.log("没通过")
+      callback(new Error('密码不符合安全要求！'))
+    } else {
+      console.log("通过了")
+      callback()
+    }
+  }, 500)
+}
+// 用户确认密码验证
+const checkPassword2 = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('请再次输入密码'))
+  }
+  setTimeout(() => {
+    verifyForm.password2 = value
+    const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+    if (!pattern.test(value)) {
+      console.log("没通过")
+      callback(new Error('密码不符合安全要求！'))
+    } else {
+      if (verifyForm.password1 !== verifyForm.password2) {
+        callback(new Error('两次密码不一致'))
+      } else {
+        callback()
+      }
+    }
+  }, 500)
+}
+
 // 表单验证规则
 const rules = {
   contact: [{validator: checkContact, trigger: 'blur'}],
-  code: [{required: true, message: '请输入验证码', trigger: 'blur',}]
+  code: [{required: true, message: '请输入验证码', trigger: 'blur',}],
+  password1: [{validator: checkPassword1, trigger: 'blur'}],
+  password2: [{validator: checkPassword2, trigger: 'blur'}]
 }
 // 获取验证码表单
 const codeForm = reactive({
   contact: '',
-  action: '用户注册',
-  username: '新用户',
+  action: '重置密码',
+  username: '用户',
 })
 // 获取验证码按钮默认状态
 const codeBtnDisabled = ref(true)
 // 获取注册验证码通过事件
-const registerPass = () => {
+const verifyPass = () => {
   console.log("通过验证了,开始获取验证码")
-  codeForm.contact = registerForm.contact
+  codeForm.contact = verifyForm.contact
   postCode(codeForm).then((response) => {
     console.log(response)
     ElMessage({
@@ -168,6 +227,40 @@ const registerPass = () => {
     console.log(response)
     ElMessage.error(response.msg)
   });
+}
+// 身份验证完成后点击下一步事件
+const verifyNext = () => {
+  verifyRef.value.validate((valid) => {
+    if (valid) {
+      step.value = step.value + 1;
+    } else {
+      ElMessage.error('请检查表单内容后再提交！')
+      return false
+    }
+  })
+}
+// 设置密码后点击下一步事件
+const passwordNext = () => {
+  passwordRef.value.validate((valid) => {
+    verifyForm.password = verifyForm.password1
+    if (valid) {
+      postSetPassword(verifyForm).then((response) => {
+        console.log(response)
+        step.value = step.value + 1;
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error(response.msg)
+      });
+    } else {
+      ElMessage.error('请检查表单内容后再提交！')
+      return false
+    }
+  })
+}
+// 设置密码上一步
+const passwordLast = () => {
+  step.value = step.value - 1;
 }
 onMounted(() => {
   getBgiURLData();
@@ -211,12 +304,22 @@ onMounted(() => {
       display: flex;
       justify-content: center;
 
-      .verify {
-        width: 250px;
+      .main-form {
+        width: 260px;
         margin-top: 40px;
 
         .verify-btn {
           margin-top: 4px;
+        }
+
+        .success-icon {
+          font-size: 60px;
+          color: $color-success;
+        }
+
+        p {
+          font-size: 18px;
+          margin-top: 15px;
         }
       }
 
