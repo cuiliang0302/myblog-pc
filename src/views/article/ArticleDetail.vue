@@ -81,16 +81,21 @@
           </span>
             </div>
           </div>
-          <div class="comments detail-card">
+          <div class="comments detail-card" id="comment">
             <h2>📝 评论交流</h2>
             <div>
               <Editor></Editor>
+            </div>
+            <div class="comment-list">
+              <div class="comment-list">
+                <Comments :comments-list="commentsList"></Comments>
+              </div>
             </div>
           </div>
         </div>
         <div class="detail-right">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
-          <Action :detailType="'article'"></Action>
+          <Action :detailType="'article'" @likeClick="likeClick" :isCollect="isCollect"></Action>
           <BackTop></BackTop>
         </div>
       </div>
@@ -108,15 +113,16 @@ import MarkDown from "@/components/detail/MarkDown.vue"
 import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
+import Comments from "@/components/common/Comments.vue"
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
   ElCard,
   ElSkeleton,
-  ElImage,
+  ElImage, ElMessage,
 } from 'element-plus'
-import {getArticleDetail, getContextArticle, getGuessLike} from "@/api/blog";
-import {onMounted, reactive, ref, onBeforeUnmount} from "vue";
+import {getArticleDetail, getContextArticle, getGuessLike, putArticleDetail} from "@/api/blog";
+import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -124,19 +130,50 @@ import icon from "@/utils/icon";
 import setColor from "@/utils/setColor";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
+import {getArticleComment, getArticleHistory} from "@/api/record";
+import user from "@/utils/user";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
 const router = useRouter()
 // 引入公共模块
-let {articleID,activeMenu,loading,sitename,toDetail,toCategory} = publicFn()
+let {articleID, activeMenu, loading, sitename, toDetail, toCategory} = publicFn()
 // 引入文章内容模块
-let {articleData,context,recommendList,getArticleData,contextData,guessLikeData} = article()
+let {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData} = article()
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
+// 调用评论回复点赞模块
+let {commentsList, getArticleCommentData} = comment(articleID, getArticleData)
+// 调用动作菜单模块
+let {likeClick, isCollect} = action(articleID, articleData)
+onMounted(async () => {
+  store.commit('setOutline', '')
+  articleID.value = router.currentRoute.value.params.id
+  await getArticleData(articleID.value)
+  await getContextData(articleID.value)
+  await getGuessLikeData(articleID.value)
+  window.addEventListener('scroll', scroll())
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', scroll())
+})
+onBeforeRouteUpdate(async (to) => {
+  console.log(to)
+  store.commit('setOutline', '')
+  for (let key in context) {
+    delete context[key];
+  }
+  loading.value = true
+  await getArticleData(to.params.id)
+  await getContextData(to.params.id)
+  await getGuessLikeData(to.params.id)
+  await getArticleCommentData(to.params.id)
+  window.scrollTo({top: 0})
+});
+
 // 公共模块
-function publicFn(){
+function publicFn() {
   // 当前文章id
   const articleID = ref()
   // 当前文章分类id
@@ -149,29 +186,33 @@ function publicFn(){
   const toCategory = (categoryId) => {
     router.push({path: `/category/${categoryId}`})
   }
+
   // 获取站点名称
   async function siteConfigData() {
     let siteConfig_data = await getSiteConfig()
     sitename.value = siteConfig_data.name
   }
+
   // 点击跳转其他文章事件
   const toDetail = (detailID) => {
     articleID.value = detailID
     router.push({path: `/detail/article/${articleID.value}`})
   }
-  onMounted(()=>{
+  onMounted(() => {
     siteConfigData()
   })
-  return{articleID,activeMenu,loading,sitename,toDetail,toCategory}
+  return {articleID, activeMenu, loading, sitename, toDetail, toCategory}
 }
+
 // 文章模块
-function article(){
+function article() {
   // 文章详情数据
   const articleData = reactive({})
   // 文章上下篇
   const context = reactive({})
   // 猜你喜欢
   const recommendList = ref([])
+
   // 获取文章详情
   async function getArticleData(DetailID) {
     const detail_data = await getArticleDetail(DetailID)
@@ -195,24 +236,27 @@ function article(){
         articleData[i] = detail_data[i]
       }
     }
-    console.log(article)
     activeMenu.value = "2-" + articleData.category_id
     loading.value = false
   }
+
   // 获取文章上下篇
-  async function contextData(DetailID) {
+  async function getContextData(DetailID) {
     Object.assign(context, await getContextArticle(DetailID));
-    console.log(context)
+    console.log("context", context)
   }
+
   // 获取猜你喜欢
-  async function guessLikeData(DetailID) {
+  async function getGuessLikeData(DetailID) {
     recommendList.value = await getGuessLike(DetailID)
-    console.log(recommendList.value)
+    console.log("recommendList", recommendList.value)
   }
-  return{articleData,context,recommendList,getArticleData,contextData,guessLikeData}
+
+  return {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData}
 }
+
 // markdown模块
-function markdown(){
+function markdown() {
   // 点击大纲跳转事件
   const rollTo = (anchor) => {
     const {lineIndex} = anchor;
@@ -235,32 +279,70 @@ function markdown(){
       }, 500)
     }
   }
-  return{rollTo,scrollTop,scroll}
+  return {rollTo, scrollTop, scroll}
 }
 
-onMounted(async () => {
-  store.commit('setOutline', '')
-  articleID.value = router.currentRoute.value.params.id
-  await getArticleData(articleID.value)
-  await contextData(articleID.value)
-  await guessLikeData(articleID.value)
-  window.addEventListener('scroll', scroll())
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', scroll())
-})
-onBeforeRouteUpdate(async (to) => {
-  console.log(to)
-  store.commit('setOutline', '')
-  for (let key in context) {
-    delete context[key];
+// 评论回复模块
+function comment(articleID) {
+  // 留言评论列表
+  const commentsList = ref([])
+
+  // 获取文章评论数据
+  async function getArticleCommentData() {
+    await nextTick()
+    commentsList.value = await getArticleComment(articleID.value)
+    console.log("commentsList", commentsList.value)
   }
-  loading.value = true
-  await getArticleData(to.params.id)
-  await contextData(to.params.id)
-  await guessLikeData(to.params.id)
-  window.scrollTo({top: 0})
-});
+
+  onMounted(() => {
+    getArticleCommentData()
+  })
+  return {
+    commentsList, getArticleCommentData
+  }
+}
+
+// 侧边栏动作模块
+function action(articleID, articleData) {
+  // 引入用户信息模块
+  let {userId, isLogin} = user();
+  // 文章点赞事件
+  const likeClick = () => {
+    console.log("爹收到点赞事件了")
+    articleData.like = articleData.like + 1
+    putArticleDetail(articleID.value, articleData).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '文章点赞成功！',
+        type: 'success',
+      })
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  }
+  // 文章收藏状态
+  const isCollect = ref(false)
+
+  // 获取文章浏览记录（是否已收藏）
+  async function getArticleHistoryData() {
+    await nextTick()
+    if (isLogin.value === true) {
+      let res = await getArticleHistory(articleID.value, userId.value)
+      console.log(res)
+      isCollect.value = res.is_collect
+      console.log(isCollect.value)
+    }
+  }
+
+  onMounted(() => {
+    getArticleHistoryData()
+  })
+  return {
+    likeClick, isCollect
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -376,6 +458,10 @@ onBeforeRouteUpdate(async (to) => {
 
       .comments {
         margin-bottom: 15px;
+
+        .comment-list {
+          padding: 0px 15px 0px 5px;
+        }
       }
 
       h2 {

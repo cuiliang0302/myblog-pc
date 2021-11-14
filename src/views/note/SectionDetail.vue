@@ -51,16 +51,20 @@
             </span>
             </div>
           </div>
-          <div class="comments detail-card">
+          <div class="comments detail-card" id="comment">
             <h2>📝 评论交流</h2>
             <div>
               <Editor></Editor>
+            </div>
+            <div class="comment-list">
+              <Comments :comments-list="commentsList"></Comments>
             </div>
           </div>
         </div>
         <div class="detail-right">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
-          <Action :detailType="'section'" @setCatalog="catalogShow=!catalogShow" :catalogShow="catalogShow"></Action>
+          <Action :detailType="'section'" @setCatalog="catalogShow=!catalogShow" :catalogShow="catalogShow"
+                  @likeClick="likeClick" :isCollect="isCollect"></Action>
           <BackTop></BackTop>
         </div>
       </div>
@@ -77,33 +81,34 @@ import MarkDown from "@/components/detail/MarkDown.vue"
 import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
+import Comments from "@/components/common/Comments.vue"
 import {
   ElBreadcrumb,
   ElBreadcrumbItem,
   ElCard,
   ElSkeleton,
   ElImage,
-  ElTree,
+  ElTree, ElMessage,
 } from 'element-plus'
-import {getSectionDetail, getContextSection, getCatalogue} from "@/api/blog";
-import {onMounted, reactive, ref, onBeforeUnmount} from "vue";
+import {getSectionDetail, getContextSection, getCatalogue, putArticleDetail, putSectionDetail} from "@/api/blog";
+import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
-import setColor from "@/utils/setColor";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
+import {getArticleHistory, getSectionComment, getSectionHistory} from "@/api/record";
+import user from "@/utils/user";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
-let {tagColor} = setColor()
 const router = useRouter()
 // 引入公共模块
 let {sectionID, activeMenu, loading, toNote, sitename, toDetail} = publicFn()
 // 引入笔记内容模块
 let {sectionData, context, getSectionData, contextData} = section()
-// 引入文章目录模块
+// 引入笔记目录模块
 let {
   catalogShow,
   catalogList,
@@ -116,6 +121,35 @@ let {
 } = catalog(sectionData)
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
+// 调用评论回复模块
+let {commentsList, getArticleCommentData} = comment(sectionID)
+// 调用动作菜单模块
+let {likeClick, isCollect} = action(sectionID, sectionData)
+onMounted(async () => {
+  store.commit('setOutline', '')
+  sectionID.value = router.currentRoute.value.params.id
+  await getSectionData(sectionID.value)
+  await catalogueData(sectionData.note_id)
+  await findCatalogId(sectionID.value)
+  await contextData(sectionID.value)
+  window.addEventListener('scroll', scroll())
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', scroll())
+  store.commit('setOutline', '')
+})
+onBeforeRouteUpdate(async (to) => {
+  // console.log(to)
+  store.commit('setOutline', '')
+  for (let key in context) {
+    delete context[key];
+  }
+  loading.value = true
+  await getSectionData(to.params.id)
+  await contextData(to.params.id)
+  await getArticleCommentData(to.params.id)
+  window.scrollTo({top: 0})
+});
 
 // 公共模块
 function publicFn() {
@@ -151,9 +185,9 @@ function publicFn() {
   return {sectionID, activeMenu, loading, toNote, sitename, toDetail}
 }
 
-// 文章目录模块
+// 笔记目录模块
 function catalog(sectionData) {
-  // 文章目录是否显示
+  // 笔记目录是否显示
   const catalogShow = ref(true)
   // 树形组件对象
   const treeRef = ref(null)
@@ -277,35 +311,67 @@ function markdown() {
   return {rollTo, scrollTop, scroll}
 }
 
-// 侧边动作模块
-function action() {
+// 评论回复点赞模块
+function comment(sectionID) {
+  // 留言评论列表
+  const commentsList = ref([])
 
+  // 获取笔记评论数据
+  async function getArticleCommentData() {
+    await nextTick()
+    commentsList.value = await getSectionComment(sectionID.value)
+    console.log("commentsList", commentsList.value)
+  }
+
+  onMounted(() => {
+    getArticleCommentData()
+  })
+  return {
+    commentsList, getArticleCommentData
+  }
 }
 
-onMounted(async () => {
-  store.commit('setOutline', '')
-  sectionID.value = router.currentRoute.value.params.id
-  await getSectionData(sectionID.value)
-  await catalogueData(sectionData.note_id)
-  await findCatalogId(sectionID.value)
-  await contextData(sectionID.value)
-  window.addEventListener('scroll', scroll())
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', scroll())
-  store.commit('setOutline', '')
-})
-onBeforeRouteUpdate(async (to) => {
-  // console.log(to)
-  store.commit('setOutline', '')
-  for (let key in context) {
-    delete context[key];
+// 动作菜单模块
+function action(sectionID, sectionData) {
+  // 引入用户信息模块
+  let {userId, isLogin} = user();
+  // 笔记点赞事件
+  const likeClick = () => {
+    console.log("爹收到点赞事件了")
+    sectionData.like = sectionData.like + 1
+    putSectionDetail(sectionID.value, sectionData).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '笔记点赞成功！',
+        type: 'success',
+      })
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
   }
-  loading.value = true
-  await getSectionData(sectionID.value)
-  await contextData(sectionID.value)
-  window.scrollTo({top: 0})
-});
+  // 笔记收藏状态
+  const isCollect = ref(false)
+
+  // 获取笔记浏览记录（是否已收藏）
+  async function getSectionHistoryData() {
+    await nextTick()
+    if (isLogin.value === true) {
+      let res = await getSectionHistory(sectionID.value, userId.value)
+      console.log(res)
+      isCollect.value = res.is_collect
+      console.log(isCollect.value)
+    }
+  }
+
+  onMounted(() => {
+    getSectionHistoryData()
+  })
+  return {
+    likeClick, isCollect
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -396,6 +462,10 @@ onBeforeRouteUpdate(async (to) => {
 
       .comments {
         margin-bottom: 15px;
+
+        .comment-list {
+          padding: 0px 25px 0px 5px;
+        }
       }
 
       h2 {

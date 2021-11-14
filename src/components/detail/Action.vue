@@ -11,12 +11,12 @@
       </div>
     </el-tooltip>
     <el-tooltip class="item" effect="dark" content="点赞" placement="left">
-      <div @click="lickAction" class="detail-action-hover">
+      <div @click="lickAction" :class="[isLike===true?'action-active':'']+' detail-action-hover'">
         <MyIcon type="icon-like"/>
       </div>
     </el-tooltip>
     <el-tooltip class="item" effect="dark" content="收藏" placement="left">
-      <div @click="collectAction" class="detail-action-hover">
+      <div @click="collectAction" :class="[isCollect===true?'action-active':'']+' detail-action-hover'">
         <MyIcon type="icon-collect"/>
       </div>
     </el-tooltip>
@@ -68,8 +68,9 @@ import {
   ElPopover,
   ElImage,
 } from 'element-plus'
+import {ElMessage} from 'element-plus'
 import icon from "@/utils/icon";
-import {computed, onMounted, reactive} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import store from "@/store";
 import {getInfo} from "@/api/management";
 
@@ -87,8 +88,14 @@ const props = defineProps({
     required: false,
     default: true
   },
+  // 文章是否已收藏
+  isCollect: {
+    type: Boolean,
+    required: false,
+    default: false
+  }
 })
-const emit = defineEmits(['setCatalog']);
+const emit = defineEmits(['setCatalog', 'likeClick']);
 // 大纲是否显示
 const outlineShow = computed(() => store.state.outlineShow)
 // 设置目录是否显示
@@ -112,9 +119,15 @@ async function payData() {
   pay.ali_pay = data.ali_pay
 }
 
+// 文章是否已点赞
+const isLike = ref(false)
 // 点赞事件
 const lickAction = () => {
-  console.log("点赞文章了")
+  if (isLike.value === false) {
+    console.log(isLike.value)
+    isLike.value = true
+    emit('likeClick')
+  }
 }
 // 收藏事件
 const collectAction = () => {
@@ -122,7 +135,10 @@ const collectAction = () => {
 }
 // 跳转评论事件
 const commentAction = () => {
-  console.log("跳转评论了")
+  const returnEle = document.querySelector("#comment");  //productId是将要跳转区域的id
+  if (!!returnEle) {
+    returnEle.scrollIntoView({behavior: 'smooth'}); // true 是默认的
+  }
 }
 onMounted(() => {
   payData()

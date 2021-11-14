@@ -193,6 +193,10 @@ ol {
 
   .reply {
     margin-left: 40px;
+
+    div {
+      background-color: $color-background-input !important;
+    }
   }
 }
 </style>
