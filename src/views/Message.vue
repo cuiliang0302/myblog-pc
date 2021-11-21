@@ -9,9 +9,10 @@
       </template>
       <div class="input-field">
         <span><el-avatar :size="50"
-                         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar></span>
+                         :src="logo"></el-avatar></span>
         <span><Editor ref="messageEditor"></Editor></span>
-        <span><el-button type="primary" round @click="sendMessage">发表留言</el-button></span>
+        <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">发表留言</el-button></span>
+        <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
       </div>
       <div class="comment-list">
         <Comments :comments-list="messageList"></Comments>
@@ -20,6 +21,7 @@
   </div>
   <Footer></Footer>
   <BackTop></BackTop>
+  <LoginPopup ref="loginPopupRef"></LoginPopup>
 </template>
 
 <script setup>
@@ -36,14 +38,30 @@ import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue";
+import LoginPopup from "@/components/common/LoginPopup.vue"
 import {onMounted, reactive, ref} from "vue";
 import {getLeaveMessage} from "@/api/record";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
-
+import user from "@/utils/user";
+import {getSiteConfig} from "@/api/management";
+// 引入用户信息模块
+let {userId, isLogin} = user();
 let {MyIcon} = icon()
+// 登录弹窗对象
+const loginPopupRef = ref(null)
 // 时间显示几天前
 let {timeAgo} = timeFormat()
+// logo
+const logo = ref()
+
+// 获取网站logo
+async function getLogoData() {
+  let data = await getSiteConfig()
+  logo.value = data.logo
+  console.log("logo:", logo.value)
+}
+
 // 留言列表
 const messageList = ref([])
 // 留言表单
@@ -58,6 +76,10 @@ const sendMessage = () => {
   messageEditor.value.syncHTML()
   console.log(messageEditor.value.content)
 }
+// 弹出登录框
+const showLogin = () => {
+  loginPopupRef.value.showPopup()
+}
 
 // 获取留言列表
 async function leaveMessageData() {
@@ -65,6 +87,7 @@ async function leaveMessageData() {
 }
 
 onMounted(() => {
+  getLogoData()
   leaveMessageData()
 })
 </script>

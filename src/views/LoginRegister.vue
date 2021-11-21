@@ -102,7 +102,7 @@
           <div class="overlay-panel overlay-right">
             <div class="point">
               <h1>欢迎光临</h1>
-              <p>欢迎访问崔亮的博客，并与我们一起开始旅程<br>若您还没有账号，请立即注册</p>
+              <p>欢迎访问{{ sitename }}，并与我们一起开始旅程<br>若您还没有账号，请立即注册</p>
               <el-button @click="switchRegister" type="danger">切换注册</el-button>
             </div>
           </div>
@@ -122,11 +122,12 @@ import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {ElMessage} from 'element-plus'
 import {getRegister, postCode, postLogin, postRegister} from "@/api/account";
 import store from "@/store/index";
+import {getSiteConfig} from "@/api/management";
 
 const router = useRouter();
 let {MyIcon} = icon()
 // 引入公共模块
-let {switchLogin, switchRegister, bgiURL, component} = publicFn()
+let {switchLogin, switchRegister, bgiURL, component, sitename} = publicFn()
 // 引入登录模块
 let {loginForm, loginRules, remember, isPassing, verifyPass, btnType, otherLogin} = loginFn()
 // 引入注册模块
@@ -221,6 +222,15 @@ function publicFn() {
     bgiURL.value = 'url(' + url + ')'
   }
 
+  // 站点名称
+  const sitename = ref('')
+
+  // 获取站点名称
+  async function getSiteConfigData() {
+    let siteConfig_data = await getSiteConfig()
+    sitename.value = siteConfig_data.name
+  }
+
   // 切换登录页事件
   const switchLogin = () => {
     console.log("切换登录")
@@ -233,6 +243,7 @@ function publicFn() {
   }
   onBeforeMount(() => {
     getBgiURLData()
+    getSiteConfigData()
   })
   // 其他页面调用，默认跳转
   onMounted(() => {
@@ -240,7 +251,7 @@ function publicFn() {
       component.value = router.currentRoute.value.query.component
     }
   })
-  return {switchLogin, switchRegister, bgiURL, component}
+  return {switchLogin, switchRegister, bgiURL, component, sitename}
 }
 
 // 登录模块

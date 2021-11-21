@@ -90,7 +90,7 @@ import {
   ElImage,
   ElTree, ElMessage,
 } from 'element-plus'
-import {getSectionDetail, getContextSection, getCatalogue, putArticleDetail, putSectionDetail} from "@/api/blog";
+import {getSectionDetail, getContextSection, getCatalogue, putSectionDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -98,7 +98,7 @@ import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
-import {getArticleHistory, getSectionComment, getSectionHistory} from "@/api/record";
+import {getSectionComment, getSectionHistory} from "@/api/record";
 import user from "@/utils/user";
 
 let {MyIcon} = icon()

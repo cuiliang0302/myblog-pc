@@ -14,14 +14,16 @@
             <span><MyIcon type="icon-like"/>赞 {{ item.like }}</span>
             <span><MyIcon type="icon-comment"/>回复</span>
             <span>
-              <el-popconfirm
-                  title="确定要删除吗？"
-              >
+              <span v-if="isDelete===true">
+                <el-popconfirm
+                    title="确定要删除吗？"
+                >
                 <template #reference>
                   <span><MyIcon type="icon-delete"/>删除</span>
                 </template>
-              </el-popconfirm>
-            </span>
+                </el-popconfirm>
+              </span>
+              <span v-else class="no-choose"><MyIcon type="icon-delete"/>删除</span></span>
           </p>
         </div>
       </span>
@@ -36,6 +38,7 @@
 import {reactive, ref, getCurrentInstance} from "vue";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
+import user from "@/utils/user";
 
 let {MyIcon} = icon()
 const props = defineProps({
@@ -51,7 +54,7 @@ const emit = defineEmits(['likeMessage', 'delMessage', 'replySend'])
 const internalInstance = getCurrentInstance();
 const $bus = internalInstance.appContext.config.globalProperties.$bus;
 // 引入用户信息模块
-// let {userId, isLogin} = user();
+let {userId, isLogin} = user();
 // 时间显示几天前
 let {timeAgo} = timeFormat()
 // 已点赞列表
@@ -72,6 +75,9 @@ const likeMessage = (messageId) => {
 }
 // 判断评论留言能否删除
 const isDelete = (messageUser) => {
+  if (isLogin.value === false) {
+    return false
+  }
   // if (!isLogin.value) {
   //   return false
   // }
@@ -82,6 +88,7 @@ const isDelete = (messageUser) => {
 }
 // 评论留言删除
 const delMessage = (messageId) => {
+
   // Dialog.confirm({
   //   title: '删除确认',
   //   message: '当真要删除这条宝贵的记录吗？',
@@ -127,6 +134,9 @@ const isReply = (user) => {
 </script>
 
 <style lang="scss" scoped>
+.no-choose:hover {
+  cursor: not-allowed;
+}
 
 ol {
   margin: 20px 0 20px 20px;
@@ -166,6 +176,7 @@ ol {
             margin-right: 80px;
             cursor: pointer;
             font-size: 12px;
+            color: $color-text-secondary;
 
             .anticon {
               margin-right: 10px;
@@ -194,7 +205,7 @@ ol {
   .reply {
     margin-left: 40px;
 
-    div {
+    span > div {
       background-color: $color-background-input !important;
     }
   }
