@@ -52,14 +52,6 @@
 </template>
 
 <script setup>
-import {
-  ElCarousel,
-  ElCarouselItem,
-  ElImage,
-  ElCard,
-  ElDivider,
-  ElInfiniteScroll
-} from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import ArticleItem from "@/components/common/ArticleItem.vue";

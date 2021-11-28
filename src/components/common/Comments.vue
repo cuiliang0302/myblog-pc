@@ -12,9 +12,20 @@
           <p class="content">{{ item.content }}</p>
           <p class="action">
             <span><MyIcon type="icon-like"/>赞 {{ item.like }}</span>
-            <span><MyIcon type="icon-comment"/>回复</span>
             <span>
-              <span v-if="isDelete===true">
+              <span v-if="isReply(item.user)===true">
+                <el-popconfirm
+                    title="确定要删除吗？"
+                >
+                <template #reference>
+                  <span><MyIcon type="icon-comment"/>回复</span>
+                </template>
+                </el-popconfirm>
+              </span>
+              <span v-else class="no-choose"><MyIcon type="icon-comment"/>回复</span>
+            </span>
+            <span>
+              <span v-if="isDelete(item.user)===true">
                 <el-popconfirm
                     title="确定要删除吗？"
                 >
@@ -73,29 +84,6 @@ const likeMessage = (messageId) => {
   likeList.value.push(messageId)
   $bus.emit("likeMessage", messageId);
 }
-// 判断评论留言能否删除
-const isDelete = (messageUser) => {
-  if (isLogin.value === false) {
-    return false
-  }
-  // if (!isLogin.value) {
-  //   return false
-  // }
-  // if (messageUser !== userId.value) {
-  //   return false
-  // }
-  return true
-}
-// 评论留言删除
-const delMessage = (messageId) => {
-
-  // Dialog.confirm({
-  //   title: '删除确认',
-  //   message: '当真要删除这条宝贵的记录吗？',
-  // }).then(() => {
-  //   $bus.emit("delMessage", messageId);
-  // })
-}
 // 回复输入框默认状态
 const textareaShow = ref(false)
 // 回复输入框内容
@@ -123,13 +111,29 @@ const replySend = () => {
   // }
 }
 // 判断是否可回复留言
-const isReply = (user) => {
-  // if (isLogin.value === true && userId.value !== user) {
-  //   return true
-  // } else {
-  //   return false
-  // }
-  return true
+const isReply = (userID) => {
+  if (isLogin.value === true && userId.value !== userID) {
+    return true
+  } else {
+    return false
+  }
+}
+// 判断评论留言能否删除
+const isDelete = (userID) => {
+  if (isLogin.value === false || userID !== userId.value) {
+    return false
+  } else {
+    return true
+  }
+}
+// 评论留言删除
+const delMessage = (messageId) => {
+  // Dialog.confirm({
+  //   title: '删除确认',
+  //   message: '当真要删除这条宝贵的记录吗？',
+  // }).then(() => {
+  //   $bus.emit("delMessage", messageId);
+  // })
 }
 </script>
 
