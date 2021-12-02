@@ -11,7 +11,7 @@
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
                   :fit="'fill'"
-                  @click="toCarousel(carousel.url)">
+                  @click="toCarousel(carousel.url)" lazy>
                 <template #placeholder>
                   <Loading type="'image"></Loading>
                 </template>
@@ -31,12 +31,6 @@
                 <ArticleItem :article="item"></ArticleItem>
               </li>
             </ul>
-            <!--            <ul v-infinite-scroll="load"-->
-            <!--                infinite-scroll-disabled="disabled">-->
-            <!--              <li v-for="item in article.list" :key="item.id">-->
-            <!--                <ArticleItem :article="item"></ArticleItem>-->
-            <!--              </li>-->
-            <!--            </ul>-->
             <p class="isLoading" v-if="loading" v-loading="loading"
                element-loading-text="玩命加载中"
                element-loading-spinner="el-icon-loading"
