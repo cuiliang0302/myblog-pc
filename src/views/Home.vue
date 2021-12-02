@@ -26,17 +26,22 @@
                 <span class="card-title">🆕 最新文章</span>
               </div>
             </template>
-            <ul v-infinite-scroll="load"
-                infinite-scroll-disabled="disabled">
+            <ul>
               <li v-for="item in article.list" :key="item.id">
                 <ArticleItem :article="item"></ArticleItem>
               </li>
             </ul>
+            <!--            <ul v-infinite-scroll="load"-->
+            <!--                infinite-scroll-disabled="disabled">-->
+            <!--              <li v-for="item in article.list" :key="item.id">-->
+            <!--                <ArticleItem :article="item"></ArticleItem>-->
+            <!--              </li>-->
+            <!--            </ul>-->
             <p class="isLoading" v-if="loading" v-loading="loading"
                element-loading-text="玩命加载中"
                element-loading-spinner="el-icon-loading"
                element-loading-background="#ffffff"></p>
-            <p v-if="noMore">
+            <p v-if="!noMore && article.count">
               <el-divider>我是有底线的</el-divider>
             </p>
           </el-card>
@@ -58,7 +63,7 @@ import ArticleItem from "@/components/common/ArticleItem.vue";
 import Aside from "@/components/common/Aside.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onMounted, onUnmounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
 import {getArticle} from "@/api/blog";
 //轮播图
@@ -79,33 +84,51 @@ const article = reactive({
   list: [],
   count: '',
 })
-
-async function articleData(page, order) {
-  let data = await getArticle(page, order)
-  article.list = data.results
-  article.count = data.count
-  console.log(article.list, article.count)
-}
-
-// 无限滚动
-const count = ref(0)
-const page = ref(1)
-const loading = ref(false);
-const noMore = computed(() => count.value >= article.count);
-const disabled = computed(() => loading.value || noMore.value);
+// 是否还有更多需要加载
+const noMore = computed(() => article.list.length < article.count);
+// 当前页码数
+const page = ref(0)
+// 是否可以执行加载中动画
+const loading = ref(true)
+// 加载下一页
 const load = () => {
+  console.log("加载下一页了")
   page.value++
-  loading.value = true;
-  getArticle(page.value, '-created_time').then((response) => {
+  getArticle(page.value, 5, '-created_time').then((response) => {
     article.list.push(...response.results)
-    count.value = article.list.length;
+    article.count = response.count
+    console.log(response.results)
     loading.value = false;
   })
-};
-
+}
+// 页面滚动事件
+const scrollHandle = () => {
+  const scrollHeight = document.body.scrollHeight
+  const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+  const clientHeight = document.documentElement.clientHeight
+  const distance = scrollHeight - scrollTop - clientHeight
+  console.log(noMore.value, article.list.length, article.count)
+  console.log(distance)
+  if (distance <= 400 && noMore.value) {
+    console.log("满足加载下一页了")
+    if (!loading.value) {
+      console.log("执行加载下一页")
+      loading.value = true;
+      setTimeout(() => {
+        load()
+      }, 500);
+    }
+  }
+}
 onMounted(() => {
   CarouselData()
-  articleData(page.value, '-created_time')
+  load()
+  // 监听滚动事件
+  window.addEventListener("scroll", scrollHandle, false)
+})
+onUnmounted(() => {
+  // 组件卸载时，停止监听
+  window.removeEventListener("scroll", scrollHandle, false)
 })
 </script>
 
