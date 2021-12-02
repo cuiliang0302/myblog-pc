@@ -11,7 +11,7 @@
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
                   :fit="'fill'"
-                  @click="toCarousel(carousel.url)" lazy>
+                  @click="toCarousel(carousel.url)">
                 <template #placeholder>
                   <Loading type="'image"></Loading>
                 </template>

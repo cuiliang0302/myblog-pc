@@ -28,10 +28,6 @@
 </template>
 
 <script setup>
-import {
-  ElImage,
-  ElDivider,
-} from 'element-plus'
 import Loading from "@/components/common/Loading.vue"
 import icon from "@/utils/icon";
 import timeFormat from "@/utils/timeFormat";
