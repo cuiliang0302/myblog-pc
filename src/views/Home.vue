@@ -11,6 +11,7 @@
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
                   :fit="'fill'"
+                  :key="carousel.id"
                   @click="toCarousel(carousel.url)">
                 <template #placeholder>
                   <Loading type="'image"></Loading>
@@ -101,8 +102,6 @@ const scrollHandle = () => {
   const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
   const clientHeight = document.documentElement.clientHeight
   const distance = scrollHeight - scrollTop - clientHeight
-  console.log(noMore.value, article.list.length, article.count)
-  console.log(distance)
   if (distance <= 400 && noMore.value) {
     console.log("满足加载下一页了")
     if (!loading.value) {
@@ -110,7 +109,7 @@ const scrollHandle = () => {
       loading.value = true;
       setTimeout(() => {
         load()
-      }, 500);
+      }, 300);
     }
   }
 }

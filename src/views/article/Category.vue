@@ -85,6 +85,7 @@ async function articleData(page, size, categoryID) {
 
 // 分页-页面跳转
 const changePage = (pageSize, pageNumber) => {
+  console.log(categoryID)
   articleData(pageNumber, pageSize, categoryID.value)
 }
 
@@ -94,8 +95,9 @@ onMounted(() => {
   articleData(1, 10, categoryID.value)
 })
 onBeforeRouteUpdate(async (to) => {
-  await categoryNameData(to.params.id)
-  await articleData(1, 10, to.params.id)
+  categoryID.value = to.params.id
+  await categoryNameData(categoryID.value)
+  await articleData(1, 10, categoryID.value)
 });
 </script>
 
