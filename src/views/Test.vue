@@ -1,65 +1,33 @@
 <template>
-  <div class="text">这是测试页1</div>
-  <el-form
-      ref="ruleRef"
-      :model="ruleForm"
-      status-icon
-      :rules="rules"
-      label-width="120px"
-      class="demo-ruleForm"
-  >
-    <el-form-item label="Age" prop="age">
-      <el-input v-model.number="ruleForm.age"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')"
-      >Submit
-      </el-button
-      >
-      <el-button @click="resetForm('ruleForm')">Reset</el-button>
-    </el-form-item>
-  </el-form>
+  <h1 class="text" @click="test">这是测试页1</h1>
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
+import {getSearchHot} from "@/api/record";
+import Fuse from 'fuse.js'
 
-const ruleRef = ref(null)
-const checkAge = (rule, value, callback) => {
-  if (!value) {
-    return callback(new Error('Please input the age'))
-  }
-  setTimeout(() => {
-    if (!Number.isInteger(value)) {
-      callback(new Error('Please input digits'))
-    } else {
-      if (value < 18) {
-        callback(new Error('Age must be greater than 18'))
-      } else {
-        callback()
-      }
-    }
-  }, 1000)
+const options = {
+  includeScore: false
 }
-const ruleForm = reactive({
-  age: '',
+// 热门搜索列表
+let hotList = ref([])
+
+// 获取搜索热词
+async function searchKeyHotData() {
+  hotList.value = await getSearchHot()
+}
+
+const test = () => {
+  console.log(hotList.value)
+  let a = '1'
+  const fuse = new Fuse(hotList.value, options)
+  const result = fuse.search(a)
+  console.log(result)
+}
+onMounted(() => {
+  searchKeyHotData()
 })
-const rules = {
-  age: [{validator: checkAge, trigger: 'blur'}],
-}
-const submitForm = (formName) => {
-  ruleRef.value.validate((valid) => {
-    if (valid) {
-      alert('submit!')
-    } else {
-      console.log('error submit!!')
-      return false
-    }
-  })
-}
-const resetForm = (formName) => {
-  ruleRef.value.resetFields()
-}
 </script>
 
 <style lang="scss">

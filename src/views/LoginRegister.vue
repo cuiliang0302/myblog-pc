@@ -72,7 +72,7 @@
             </el-form-item>
             <el-form-item class="login-setting">
               <span class="remember"><el-checkbox v-model="remember" label="记住密码"></el-checkbox></span>
-              <span class="forget" @click="router.push('/setPassword')">忘记密码</span>
+              <span class="forget pointer" @click="router.push('/setPassword')">忘记密码</span>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="loginSubmit" round>立即登录</el-button>
@@ -83,9 +83,9 @@
               <span>第三方账号登录</span>
             </el-divider>
             <div class="other-logo">
-              <span @click="otherLogin"><MyIcon type="icon-qq-logo"/></span>
-              <span @click="otherLogin"><MyIcon type="icon-weibo-logo"/></span>
-              <span @click="otherLogin"><MyIcon type="icon-github-logo"/></span>
+              <span @click="otherLogin" class="pointer"><MyIcon type="icon-qq-logo"/></span>
+              <span @click="otherLogin" class="pointer"><MyIcon type="icon-weibo-logo"/></span>
+              <span @click="otherLogin" class="pointer"><MyIcon type="icon-github-logo"/></span>
             </div>
           </div>
         </div>
@@ -477,7 +477,6 @@ function registerFn() {
 
             .forget {
               float: right;
-              cursor: pointer;
             }
           }
         }
@@ -494,7 +493,6 @@ function registerFn() {
               font-size: 35px;
               margin: 0 10px;
               opacity: 1;
-              cursor: pointer;
             }
           }
         }

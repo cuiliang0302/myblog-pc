@@ -11,11 +11,11 @@ export function getSearchHistory(user_id) {
 }
 
 // 搜索文章
-export function getSearch(key, kind, order, user_id) {
+export function getSearch(key, kind, user_id) {
 	if (user_id) {
-		return index.get('record/search/?key=' + key + '&kind=' + kind + '&order=' + order + '&user_id=' + user_id)
+		return index.get('record/search/?key=' + key + '&kind=' + kind + '&order=' + 'default' + '&user_id=' + user_id)
 	} else {
-		return index.get('record/search/?key=' + key + '&kind=' + kind + '&order=' + order)
+		return index.get('record/search/?key=' + key + '&kind=' + kind + '&order=' + 'default')
 	}
 }
 

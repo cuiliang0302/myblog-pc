@@ -268,6 +268,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+:deep(.is-text) {
+  border: none;
+}
+:deep(.el-step__line){
+  display: none;
+}
 .background-img {
   width: 100vw;
   height: 100vh;

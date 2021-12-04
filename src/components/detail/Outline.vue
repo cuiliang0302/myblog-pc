@@ -2,7 +2,7 @@
   <div
       :class="'outline  animate__animated animate__'+ (outlineShow===true?'fadeInRight':'fadeOutRight')">
     <div v-if="titleList.length !== 0">
-      <p v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
+      <p class="pointer" v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
          :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
          @click="rollTo(anchor,index)" :class="index===heightTitle?'title-active':''"
       >
@@ -75,7 +75,6 @@ watch(
   overflow: auto;
 
   p {
-    cursor: pointer;
     margin-left: 5px;
     transition: all 0.5s;
   }

@@ -15,6 +15,26 @@ const router = createRouter({
 			}
 		},
 		{
+			path: '/search',
+			name: 'Search',
+			component: () => import('@/views/Search.vue'),
+			meta: {
+				title: '搜索',
+			}
+		},
+		// {
+		// 	path: '/result',
+		// 	name: 'Result',
+		// 	component: () => import('@/views/public/Result.vue'),
+		// 	meta: {
+		// 		title: '搜索结果',
+		// 		keepAlive: true,
+		// 		transitionClass: 'gradually',//渐入
+		// 		index: 1,
+		// 		isAuth: false
+		// 	}
+		// },
+		{
 			path: '/category/:id',
 			name: 'Category',
 			component: () => import('@/views/article/Category.vue'),

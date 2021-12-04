@@ -1,5 +1,4 @@
 // 配置颜色
-
 function setColor() {
 	const tagColor = (tagId) => {
 		let color = ''

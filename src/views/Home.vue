@@ -7,7 +7,7 @@
           <el-carousel height="500px" :interval="5000">
             <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
               <el-image
-                  class="carousel-img"
+                  class="pointer"
                   style="width: 900px; height: 500px"
                   :src="carousel.img"
                   :fit="'fill'"
@@ -129,10 +129,6 @@ onUnmounted(() => {
 article {
   .carousel {
     background-color: $color-background-white;
-
-    .carousel-img {
-      cursor: pointer;
-    }
   }
 
   .new {

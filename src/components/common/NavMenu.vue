@@ -50,7 +50,8 @@
         </span>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="搜索" placement="bottom">
-        <span class="search hvr-grow">
+        <span class="search hvr-grow" :style="{'color': (activeMenu=='7' ? '#409EFF':'')}"
+              @click="router.push('/search')">
           <MyIcon type="icon-search"/>
         </span>
       </el-tooltip>
