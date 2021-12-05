@@ -4,7 +4,6 @@
       <component :is="Component"/>
     </router-view>
   </el-config-provider>
-
 </template>
 
 <script setup>
