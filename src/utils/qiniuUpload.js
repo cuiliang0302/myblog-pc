@@ -1,7 +1,6 @@
 // 七牛文件上传
 import * as qiniu from "qiniu-js";
 import {getQiNiuToken} from "@/api/public";
-import {Toast} from "vant";
 
 function qiniuUpload() {   //file是选择的文件对象
   const upload = (dir, file) => {

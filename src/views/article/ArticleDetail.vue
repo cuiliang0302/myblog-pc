@@ -148,6 +148,7 @@ let {commentsList, getArticleCommentData} = comment(articleID, getArticleData)
 // 调用动作菜单模块
 let {likeClick, isCollect} = action(articleID, articleData)
 onMounted(async () => {
+  window.scrollTo({top: 0})
   store.commit('setOutline', '')
   articleID.value = router.currentRoute.value.params.id
   await getArticleData(articleID.value)
@@ -159,6 +160,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
 })
 onBeforeRouteUpdate(async (to) => {
+  window.scrollTo({top: 0})
   console.log(to)
   store.commit('setOutline', '')
   for (let key in context) {
@@ -169,7 +171,6 @@ onBeforeRouteUpdate(async (to) => {
   await getContextData(to.params.id)
   await getGuessLikeData(to.params.id)
   await getArticleCommentData(to.params.id)
-  window.scrollTo({top: 0})
 });
 
 // 公共模块

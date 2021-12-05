@@ -119,6 +119,7 @@ let {commentsList, getArticleCommentData} = comment(sectionID)
 // 调用动作菜单模块
 let {likeClick, isCollect} = action(sectionID, sectionData)
 onMounted(async () => {
+  window.scrollTo({top: 0})
   store.commit('setOutline', '')
   sectionID.value = router.currentRoute.value.params.id
   await getSectionData(sectionID.value)
@@ -132,6 +133,7 @@ onBeforeUnmount(() => {
   store.commit('setOutline', '')
 })
 onBeforeRouteUpdate(async (to) => {
+  window.scrollTo({top: 0})
   // console.log(to)
   store.commit('setOutline', '')
   for (let key in context) {
@@ -141,7 +143,6 @@ onBeforeRouteUpdate(async (to) => {
   await getSectionData(to.params.id)
   await contextData(to.params.id)
   await getArticleCommentData(to.params.id)
-  window.scrollTo({top: 0})
 });
 
 // 公共模块
