@@ -2,7 +2,7 @@
   <section class="category">
     <NavMenu :activeMenu="'2-'+router.currentRoute.value.params.id"></NavMenu>
     <div class="page">
-      <article>
+      <article class="animate__animated animate__fadeInLeft">
         <div class="current-position">
           <span>您的位置：</span>
           <span>

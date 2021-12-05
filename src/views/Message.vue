@@ -1,7 +1,7 @@
 <template>
   <NavMenu :activeMenu="'5'"></NavMenu>
   <div class="page">
-    <el-card class="box-card">
+    <el-card class="box-card animate__animated animate__zoomIn">
       <template #header>
         <div class="card-header">
           <span class="card-title">📝 我要留言</span>

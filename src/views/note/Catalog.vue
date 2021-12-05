@@ -1,7 +1,7 @@
 <template>
   <NavMenu :activeMenu="'3-'+router.currentRoute.value.params.id"></NavMenu>
   <div class="page">
-    <div class="catalog">
+    <div class="catalog animate__animated animate__zoomIn">
       <el-tree :data="catalogList" @node-click="handleNodeClick"></el-tree>
     </div>
   </div>

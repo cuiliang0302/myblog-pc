@@ -5,28 +5,15 @@
 <script setup>
 import {onMounted, reactive, ref} from "vue";
 import {getSearchHot} from "@/api/record";
-import Fuse from 'fuse.js'
 
-const options = {
-  includeScore: false
-}
-// 热门搜索列表
-let hotList = ref([])
 
-// 获取搜索热词
-async function searchKeyHotData() {
-  hotList.value = await getSearchHot()
-}
-
-const test = () => {
-  console.log(hotList.value)
-  let a = '1'
-  const fuse = new Fuse(hotList.value, options)
-  const result = fuse.search(a)
-  console.log(result)
-}
 onMounted(() => {
-  searchKeyHotData()
+  const date = new Date();
+  console.log(dayjs(date).format('YYYY-MM-DD HH:mm:ss'))
+  console.log(dayjs(date).format('YYYY-MM-DD'))
+  const a = '2021-11-12'
+  // dayjs().toNow() // in 2 years
+  // dayjs().toNow(true) // 2 years
 })
 </script>
 

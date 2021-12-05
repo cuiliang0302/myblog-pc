@@ -1,5 +1,5 @@
 <template>
-  <section class="aside">
+  <section class="aside animate__animated animate__fadeInRight">
     <el-card class="card-hover">
       <template #header>
         <span class="card-title no-choose">👍 推荐阅读</span>

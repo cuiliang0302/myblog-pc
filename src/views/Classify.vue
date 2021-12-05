@@ -2,22 +2,24 @@
 <template>
   <NavMenu :activeMenu="'4'"></NavMenu>
   <div class="page">
-    <el-collapse v-model="activeNames" @change="handleChange" accordion>
-      <el-collapse-item v-for="(item,index) in classifyList" :key="index"
-                        :title="formatMonth(item.month)+' ('+item.count+'篇)'"
-                        :name="index">
-        <div class="timeline">
-          <el-timeline>
-            <el-timeline-item v-for="(item,index) in articleList" :key="index" :timestamp="timeFull(item.created_time)"
-                              placement="top">
-              <div class="title">
-                <p class="article-title-hover" @click="router.push(`/detail/article/${item.id}`)">{{ item.title }}</p>
-              </div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </el-collapse-item>
-    </el-collapse>
+    <div class="animate__animated animate__zoomIn">
+      <el-collapse v-model="activeNames" @change="handleChange" accordion>
+        <el-collapse-item v-for="(item,index) in classifyList" :key="index"
+                          :title="formatMonth(item.month)+' ('+item.count+'篇)'"
+                          :name="index">
+          <div class="timeline">
+            <el-timeline>
+              <el-timeline-item v-for="(item,index) in articleList" :key="index" :timestamp="timeFull(item.created_time)"
+                                placement="top">
+                <div class="title">
+                  <p class="article-title-hover" @click="router.push(`/detail/article/${item.id}`)">{{ item.title }}</p>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
   </div>
   <Footer></Footer>
   <BackTop></BackTop>
@@ -46,6 +48,7 @@ const router = useRouter()
 let {timeFull} = timeFormat()
 // 格式化显示年月
 const formatMonth = (value) => {
+  console.log(value)
   return value.replace("-", "年") + '月'
 }
 // 文章日期完整显示

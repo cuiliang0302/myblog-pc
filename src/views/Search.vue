@@ -1,10 +1,10 @@
 <template>
   <NavMenu :activeMenu="'7'"></NavMenu>
   <section class="page">
-    <div class="search-main">
+    <div class="search-main animate__animated animate__zoomIn">
       <div class="search-title">
         <span><MyIcon type="icon-search-logo"/></span>
-        <p v-if="searchKind=='article'">文章搜索</p>
+        <p v-if="searchKind==='article'">文章搜索</p>
         <p v-else>笔记搜索</p>
       </div>
       <div class="search-input">
@@ -34,7 +34,7 @@
       </span>
       </div>
     </div>
-    <div v-show="searchList.length!==0" class="search-list">
+    <div v-show="searchList.length!==0" class="search-list animate__animated animate__fadeInUp">
       <el-card class="box-card">
         <ul>
           <li v-for="item in searchList" :key="item.id">
@@ -216,7 +216,7 @@ onMounted(() => {
 }
 
 .search-list {
-  margin-top: 30px;
+  margin-top: 40px;
   ul {
     list-style: none;
   }

@@ -2,7 +2,7 @@
   <section class="home">
     <NavMenu :activeMenu="'1'"></NavMenu>
     <div class="page">
-      <article>
+      <article class="animate__animated animate__fadeInLeft">
         <div class="carousel">
           <el-carousel height="500px" :interval="5000">
             <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">

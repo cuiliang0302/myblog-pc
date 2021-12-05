@@ -1,6 +1,6 @@
 <template>
   <div class="login-register">
-    <div :class="(component==='Login'?'':'right-panel-active') + ' container'">
+    <div :class="(component==='Login'?'':'right-panel-active') + ' container animate__animated animate__zoomIn'">
       <div class="form-container sign-up-container">
         <div>
           <h1>用户注册</h1>

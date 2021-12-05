@@ -1,5 +1,5 @@
 <template>
-  <div class="figure">
+  <div class="figure animate__animated animate__zoomIn">
     <div class="mj">
       <div class="head">
         <div class="nose"></div>

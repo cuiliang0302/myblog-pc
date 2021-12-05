@@ -10,7 +10,7 @@
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
                    :current-node-key="current" ref="treeRef"></el-tree>
         </div>
-        <div class="detail-center">
+        <div class="detail-center animate__animated animate__zoomIn">
           <div class="current-position">
             <span>您的位置：</span>
             <span>
@@ -82,14 +82,7 @@ import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
-import {
-  ElBreadcrumb,
-  ElBreadcrumbItem,
-  ElCard,
-  ElSkeleton,
-  ElImage,
-  ElTree, ElMessage,
-} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import {getSectionDetail, getContextSection, getCatalogue, putSectionDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";

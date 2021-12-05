@@ -92,7 +92,7 @@ const toDetail = (detailID) => {
       color: $color-text-placeholder;
 
       span {
-        margin: 0 5px 0 20px;
+        margin: 0 5px 0 15px;
       }
     }
   }

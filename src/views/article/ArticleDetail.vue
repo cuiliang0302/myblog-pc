@@ -8,7 +8,7 @@
         <div class="detail-left">
           <!--        这是左边部分-->
         </div>
-        <div class="detail-center">
+        <div class="detail-center  animate__animated animate__fadeInLeft">
           <div class="current-position">
             <span>您的位置：</span>
             <span>

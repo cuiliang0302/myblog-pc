@@ -1,6 +1,6 @@
 <template>
   <div class="background-img">
-    <div class="container">
+    <div class="container animate__animated animate__zoomIn">
       <h1>重置密码</h1>
       <div class="step">
         <el-steps :active="step" :space="200" simple>

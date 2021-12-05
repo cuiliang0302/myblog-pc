@@ -1,11 +1,13 @@
 <template>
   <NavMenu :activeMenu="'6'"></NavMenu>
   <div class="page">
-    <el-collapse v-model="activeNames">
-      <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id">
-        <MarkDown :text="item.body"></MarkDown>
-      </el-collapse-item>
-    </el-collapse>
+    <div class="animate__animated animate__zoomIn">
+      <el-collapse v-model="activeNames">
+        <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id">
+          <MarkDown :text="item.body"></MarkDown>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
   </div>
   <Footer></Footer>
   <BackTop></BackTop>
