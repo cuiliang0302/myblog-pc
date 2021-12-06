@@ -2,8 +2,8 @@
 <template>
   <section class="section-item section-item-hover">
     <span class="describe no-choose">
-      <h2 class="section-title-hover" @click="toDetail(section.id)">{{ section.title }}</h2>
-      <p class="section-abstract-hover" @click="toDetail(section.id)">{{ section.abstract }}</p>
+      <h2 class="article-title-hover pointer" @click="toDetail(section.id)">{{ section.title }}</h2>
+      <p class="article-abstract-hover pointer" @click="toDetail(section.id)">{{ section.abstract }}</p>
       <div class="info">
         <span class="tag section-tag-hover"
               :style="'background-color: '+tagColor(section.note_id)">{{ section.note }}</span>
