@@ -21,7 +21,7 @@
           </span>
           </div>
           <div class="main detail-card">
-            <div v-if="JSON.stringify(articleData) == '{}'">
+            <div v-if="JSON.stringify(articleData) === '{}'">
               <el-skeleton :rows="20" animated/>
             </div>
             <div v-else>
@@ -114,13 +114,7 @@ import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
-import {
-  ElBreadcrumb,
-  ElBreadcrumbItem,
-  ElCard,
-  ElSkeleton,
-  ElImage, ElMessage,
-} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import {getArticleDetail, getContextArticle, getGuessLike, putArticleDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";

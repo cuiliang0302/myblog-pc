@@ -1,3 +1,4 @@
+<!--分页组件-->
 <template>
   <section class="pagination">
     <el-pagination

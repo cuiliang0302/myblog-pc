@@ -17,9 +17,10 @@
             @select="handleSelect"
             clearable
             style="width: 600px"
+            highlight-first-item
         >
         <template #prepend>
-          <el-select v-model="searchKind" placeholder="Select" style="width: 100px">
+          <el-select v-model="searchKind" placeholder="Select" style="width: 100px" @change="changeKind">
             <el-option v-for="item in kind" :label="item.text" :value="item.value"></el-option>
           </el-select>
         </template>
@@ -36,9 +37,14 @@
     </div>
     <div v-show="searchList.length!==0" class="search-list animate__animated animate__fadeInUp">
       <el-card class="box-card">
-        <ul>
+        <ul v-if="searchKind==='article'">
           <li v-for="item in searchList" :key="item.id">
             <ArticleItem :article="item"></ArticleItem>
+          </li>
+        </ul>
+        <ul v-else>
+          <li v-for="item in searchList" :key="item.id">
+            <SectionItem :section="item"></SectionItem>
           </li>
         </ul>
       </el-card>
@@ -52,6 +58,7 @@
 import {onMounted, ref} from "vue";
 import NavMenu from "@/components/common/NavMenu.vue";
 import ArticleItem from "@/components/common/ArticleItem.vue";
+import SectionItem from "@/components/common/SectionItem.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import icon from '@/utils/icon'
@@ -59,7 +66,7 @@ import Fuse from 'fuse.js'
 import {getSearch, getSearchHot} from "@/api/record";
 import user from "@/utils/user";
 import store from "@/store";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 // 引入用户信息模块
 let {userId, isLogin} = user();
 let {MyIcon} = icon()
@@ -142,30 +149,51 @@ const querySearch = (queryString, cb) => {
 // 选择热门搜索词
 const handleSelect = (item) => {
   key.value = item.value
+  searchFn()
 }
-// 搜索结果列表
-const searchList = ref([])
-// 点击执行搜索事件
-const search = () => {
-  console.log("点了")
+// 提交搜索请求
+const searchFn = () => {
   let userId
   if (isLogin.value) {
     userId = userId.value
   } else {
     userId = NaN
   }
+  // 加载中动画
+  const loading = ElLoading.service({
+    lock: true,
+    text: '玩命加载中……',
+  })
+  searchList.value = []
   getSearch(key.value, searchKind.value, userId).then((response) => {
     console.log(response)
     searchList.value = response
+    setTimeout(() => {
+      loading.close()
+    }, 500)
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)
     ElMessage.error(response.msg)
+    setTimeout(() => {
+      loading.close()
+    }, 500)
   });
-  // console.log(article_data)
-  // for (let i in article_data) {
-  //   articleList[i] = article_data[i]
-  // }
+}
+//切换搜索类型
+const changeKind = () => {
+  console.log("切换了")
+  console.log(searchKind.value)
+  if (key.value) {
+    searchFn()
+  }
+}
+// 搜索结果列表
+const searchList = ref([])
+// 点击执行搜索事件
+const search = () => {
+  console.log("点了")
+  searchFn()
 }
 onMounted(() => {
   searchKeyHotData()
@@ -217,6 +245,7 @@ onMounted(() => {
 
 .search-list {
   margin-top: 40px;
+
   ul {
     list-style: none;
   }

@@ -12,6 +12,7 @@ const router = createRouter({
 			component: () => import('@/views/Home.vue'),
 			meta: {
 				title: '崔亮的博客-专注devops自动化运维，传播优秀it运维技术文章',
+				keepAlive: true
 			}
 		},
 		{
@@ -20,6 +21,7 @@ const router = createRouter({
 			component: () => import('@/views/Search.vue'),
 			meta: {
 				title: '搜索',
+				keepAlive: true
 			}
 		},
 		// {
@@ -40,6 +42,7 @@ const router = createRouter({
 			component: () => import('@/views/article/Category.vue'),
 			meta: {
 				title: '文章分类',
+				keepAlive: true
 			}
 		},
 		{
@@ -48,6 +51,7 @@ const router = createRouter({
 			component: () => import('@/views/article/ArticleDetail.vue'),
 			meta: {
 				title: '文章正文',
+				keepAlive: false
 			}
 		},
 		{
@@ -56,6 +60,7 @@ const router = createRouter({
 			component: () => import('@/views/note/Catalog.vue'),
 			meta: {
 				title: '笔记目录',
+				keepAlive: true
 			}
 		},
 		{
@@ -64,6 +69,7 @@ const router = createRouter({
 			component: () => import('@/views/note/SectionDetail.vue'),
 			meta: {
 				title: '笔记正文',
+				keepAlive: false
 			}
 		},
 		{
@@ -72,6 +78,7 @@ const router = createRouter({
 			component: () => import('@/views/Classify.vue'),
 			meta: {
 				title: '归档',
+				keepAlive: true
 			}
 		},
 		{
@@ -80,6 +87,7 @@ const router = createRouter({
 			component: () => import('@/views/Message.vue'),
 			meta: {
 				title: '留言板',
+				keepAlive: false
 			}
 		},
 		{
@@ -88,6 +96,7 @@ const router = createRouter({
 			component: () => import('@/views/About.vue'),
 			meta: {
 				title: '关于',
+				keepAlive: true
 			}
 		},
 		{
@@ -96,6 +105,7 @@ const router = createRouter({
 			component: () => import('@/views/LoginRegister.vue'),
 			meta: {
 				title: '登录&注册',
+				keepAlive: false
 			}
 		},
 		{
@@ -104,6 +114,7 @@ const router = createRouter({
 			component: () => import('@/views/SetPassword.vue'),
 			meta: {
 				title: '重置密码',
+				keepAlive: false
 			}
 		},
 		{path: '/test', component: () => import('@/views/Test.vue')},
@@ -113,6 +124,7 @@ const router = createRouter({
 			component: () => import('@/views/404.vue'),
 			meta: {
 				title: '404-页面找不到',
+				keepAlive: true
 			}
 		},
 		{

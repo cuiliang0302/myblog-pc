@@ -30,20 +30,11 @@ export default defineConfig(({mode}) => {
 			include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],
 		},
 		build: {
-			// rollupOptions: {
-			// 	output: {
-			// 		manualChunks(id) {
-			// 			if (id.includes('node_modules')) {
-			// 				return id.toString().split('node_modules/')[1].split('/')[0].toString();
-			// 			}
-			// 		}
-			// 	}
-			// },
 			terserOptions: {
 				compress: {
 					//生产环境时移除console
-					drop_console: process.env.VITE_DROP_CONSOLE,
-					drop_debugger: process.env.VITE_DROP_DEBUGGER
+					drop_console: true,
+					drop_debugger: false
 				},
 			},
 		}

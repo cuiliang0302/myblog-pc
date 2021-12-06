@@ -23,7 +23,7 @@
           </span>
           </div>
           <div class="main detail-card">
-            <div v-if="JSON.stringify(section) === '{}'">
+            <div v-if="JSON.stringify(sectionData) === '{}'">
               <el-skeleton :rows="20" animated/>
             </div>
             <div v-else>
@@ -82,7 +82,7 @@ import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElLoading} from 'element-plus'
 import {getSectionDetail, getContextSection, getCatalogue, putSectionDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
