@@ -9,7 +9,7 @@ const router = createRouter({
 		{
 			path: '/',
 			name: 'Home',
-			component: () => import('@/views/Home.vue'),
+			component: () => import('@/views/home/Home.vue'),
 			meta: {
 				title: '崔亮的博客-专注devops自动化运维，传播优秀it运维技术文章',
 				keepAlive: true
@@ -18,24 +18,30 @@ const router = createRouter({
 		{
 			path: '/search',
 			name: 'Search',
-			component: () => import('@/views/Search.vue'),
+			component: () => import('@/views/public/Search.vue'),
 			meta: {
 				title: '搜索',
 				keepAlive: true
 			}
 		},
-		// {
-		// 	path: '/result',
-		// 	name: 'Result',
-		// 	component: () => import('@/views/public/Result.vue'),
-		// 	meta: {
-		// 		title: '搜索结果',
-		// 		keepAlive: true,
-		// 		transitionClass: 'gradually',//渐入
-		// 		index: 1,
-		// 		isAuth: false
-		// 	}
-		// },
+		{
+			path: '/link',
+			name: 'Link',
+			component: () => import('@/views/public/Link.vue'),
+			meta: {
+				title: '友情链接',
+				keepAlive: true,
+			}
+		},
+		{
+			path: '/applyLink',
+			name: 'ApplyLink',
+			component: () => import('@/views/public/ApplyLink.vue'),
+			meta: {
+				title: '申请友链',
+				keepAlive: true,
+			},
+		},
 		{
 			path: '/category/:id',
 			name: 'Category',
@@ -75,7 +81,7 @@ const router = createRouter({
 		{
 			path: '/classify',
 			name: 'Classify',
-			component: () => import('@/views/Classify.vue'),
+			component: () => import('@/views/public/Classify.vue'),
 			meta: {
 				title: '归档',
 				keepAlive: true
@@ -84,7 +90,7 @@ const router = createRouter({
 		{
 			path: '/message',
 			name: 'Message',
-			component: () => import('@/views/Message.vue'),
+			component: () => import('@/views/public/Message.vue'),
 			meta: {
 				title: '留言板',
 				keepAlive: false
@@ -93,7 +99,7 @@ const router = createRouter({
 		{
 			path: '/about',
 			name: 'About',
-			component: () => import('@/views/About.vue'),
+			component: () => import('@/views/public/About.vue'),
 			meta: {
 				title: '关于',
 				keepAlive: true
@@ -102,7 +108,7 @@ const router = createRouter({
 		{
 			path: '/loginRegister',
 			name: 'LoginRegister',
-			component: () => import('@/views/LoginRegister.vue'),
+			component: () => import('@/views/personal/LoginRegister.vue'),
 			meta: {
 				title: '登录&注册',
 				keepAlive: false
@@ -111,7 +117,7 @@ const router = createRouter({
 		{
 			path: '/setPassword',
 			name: 'SetPassword',
-			component: () => import('@/views/SetPassword.vue'),
+			component: () => import('@/views/personal/SetPassword.vue'),
 			meta: {
 				title: '重置密码',
 				keepAlive: false

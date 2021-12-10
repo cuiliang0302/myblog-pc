@@ -4,7 +4,7 @@
       <el-breadcrumb-item>{{ footerData.copyright }}</el-breadcrumb-item>
       <el-breadcrumb-item><a :href="footerData.icp_url">{{ footerData.icp_num }}</a></el-breadcrumb-item>
       <el-breadcrumb-item><a :href="footerData.police_url">{{ footerData.police_num }}</a></el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/' }">友情链接</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/link' }">友情链接</el-breadcrumb-item>
       <el-breadcrumb-item>Powered By Django REST Framework + Vue</el-breadcrumb-item>
     </el-breadcrumb>
   </footer>

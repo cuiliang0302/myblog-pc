@@ -121,7 +121,7 @@ import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {ElMessage} from 'element-plus'
 import {getRegister, postCode, postLogin, postRegister} from "@/api/account";
-import store from "@/store/index";
+import store from "@/store";
 import {getSiteConfig} from "@/api/management";
 
 const router = useRouter();
