@@ -117,53 +117,49 @@
         </div>
       </div>
     </el-card>
-    <el-affix :offset="20">
-      <el-card class="card-hover">
-        <template #header>
-          <span class="card-title no-choose">📊 网站信息</span>
-        </template>
-        <div class="statistics">
-          <div>
-            <MyIcon type="icon-uptime"/>
-            运行时间：{{ statistics.uptime }}天
-          </div>
-          <div>
-            <MyIcon type="icon-pv"/>
-            总访问量：{{ statistics.pv }}次
-          </div>
-          <div>
-            <MyIcon type="icon-uv"/>
-            访问人数：{{ statistics.uv }}次
-          </div>
-          <div>
-            <MyIcon type="icon-ip"/>
-            访问IP数：{{ statistics.ip }}个
-          </div>
-          <div>
-            <MyIcon type="icon-article"/>
-            文章篇数：{{ statistics.article }}篇
-          </div>
-          <div>
-            <MyIcon type="icon-section"/>
-            笔记篇数：{{ statistics.section }}篇
-          </div>
-          <div>
-            <MyIcon type="icon-category"/>
-            文章分类数：{{ statistics.category }}个
-          </div>
-          <div>
-            <MyIcon type="icon-tag"/>
-            文章标签数：{{ statistics.tag }}个
-          </div>
-          <div>
-            <MyIcon type="icon-note"/>
-            笔记分类数：{{ statistics.note }}个
-          </div>
+    <el-card class="card-hover">
+      <template #header>
+        <span class="card-title no-choose">📊 网站信息</span>
+      </template>
+      <div class="statistics">
+        <div>
+          <MyIcon type="icon-uptime"/>
+          运行时间：{{ statistics.uptime }}天
         </div>
-      </el-card>
-    </el-affix>
-
-
+        <div>
+          <MyIcon type="icon-pv"/>
+          总访问量：{{ statistics.pv }}次
+        </div>
+        <div>
+          <MyIcon type="icon-uv"/>
+          访问人数：{{ statistics.uv }}次
+        </div>
+        <div>
+          <MyIcon type="icon-ip"/>
+          访问IP数：{{ statistics.ip }}个
+        </div>
+        <div>
+          <MyIcon type="icon-article"/>
+          文章篇数：{{ statistics.article }}篇
+        </div>
+        <div>
+          <MyIcon type="icon-section"/>
+          笔记篇数：{{ statistics.section }}篇
+        </div>
+        <div>
+          <MyIcon type="icon-category"/>
+          文章分类数：{{ statistics.category }}个
+        </div>
+        <div>
+          <MyIcon type="icon-tag"/>
+          文章标签数：{{ statistics.tag }}个
+        </div>
+        <div>
+          <MyIcon type="icon-note"/>
+          笔记分类数：{{ statistics.note }}个
+        </div>
+      </div>
+    </el-card>
   </section>
 </template>
 
@@ -272,9 +268,11 @@ onMounted(() => {
 
     span {
       width: 113px;
+
       &:hover {
         opacity: 1;
       }
+
       p {
         text-align: center;
         color: $color-text-regular;

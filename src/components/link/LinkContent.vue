@@ -7,7 +7,7 @@
       <el-card shadow="hover">
         <span @click="toLink(item.url)" class="pointer">
           <div class="link-title">
-            <span><el-avatar :src="item.logo" size="number"></el-avatar></span>
+            <span><el-avatar :src="item.logo" :size="50"></el-avatar></span>
             <span class="name">{{ item.name }}</span>
           </div>
           <p>{{ item.describe }}</p>

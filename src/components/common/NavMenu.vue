@@ -141,8 +141,8 @@ const props = defineProps({
   // 导航菜单-当前选中的菜单
   activeMenu: {
     type: String,
-    required: true,
-    default: '1'
+    required: false,
+    default: ''
   },
 })
 //导航菜单-logo和name

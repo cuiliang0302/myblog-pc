@@ -6,7 +6,7 @@
 
 <script setup>
 import {ElMessage} from 'element-plus'
-import {onBeforeUnmount, onMounted, reactive, ref} from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import WangEditor from 'wangeditor';
 import hljs from 'highlight.js'
 import 'highlight.js/styles/monokai-sublime.css'
