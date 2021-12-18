@@ -1,5 +1,5 @@
 <template>
-  <header class="animate__animated animate__fadeInDown">
+  <header>
     <span class="left">
       <el-image
           style="width: 40px; height: 40px"
