@@ -83,9 +83,9 @@
               <span>第三方账号登录</span>
             </el-divider>
             <div class="other-logo">
-              <span @click="otherLogin" class="pointer"><MyIcon type="icon-qq-logo"/></span>
-              <span @click="otherLogin" class="pointer"><MyIcon type="icon-weibo-logo"/></span>
-              <span @click="otherLogin" class="pointer"><MyIcon type="icon-github-logo"/></span>
+              <span @click="otherLogin('qq')" class="pointer"><MyIcon type="icon-qq-logo"/></span>
+              <span @click="otherLogin('微博')" class="pointer"><MyIcon type="icon-weibo-logo"/></span>
+              <span @click="otherLogin('github')" class="pointer"><MyIcon type="icon-github-logo"/></span>
             </div>
           </div>
         </div>
@@ -120,7 +120,7 @@ import {useRouter} from "vue-router";
 import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {ElMessage} from 'element-plus'
-import {getRegister, postCode, postLogin, postRegister} from "@/api/account";
+import {getOAuthUrl, getRegister, postCode, postLogin, postRegister} from "@/api/account";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
 
@@ -285,10 +285,25 @@ function loginFn() {
     console.log("验证通过了")
     isPassing.value = true
   }
+  // 第三方登录链接
+  let otherLoginUrl = {}
   // 第三方登录
-  const otherLogin = () => {
+  const otherLogin = (kind) => {
     ElMessage('第三方登录正在开发中！')
+    // console.log(otherLoginUrl)
+    console.log(kind)
+    console.log(otherLoginUrl[kind])
+    window.location.href=otherLoginUrl[kind];
   }
+
+  // 获取第三方登录链接
+  async function getOAuthUrlData() {
+    Object.assign(otherLoginUrl, await getOAuthUrl())
+  }
+
+  onMounted(() => {
+    getOAuthUrlData()
+  })
   return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
 }
 

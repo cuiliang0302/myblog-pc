@@ -10,7 +10,7 @@
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
                    :current-node-key="current" ref="treeRef"></el-tree>
         </div>
-        <div class="detail-center animate__animated animate__zoomIn">
+        <div class="detail-center">
           <div class="current-position">
             <span>您的位置：</span>
             <span>

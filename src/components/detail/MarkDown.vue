@@ -115,6 +115,18 @@ watch(
       }
     }
 )
+// 监听是否查看大图，阻止默认事件
+watch(
+    () => images.isShow,
+    (value) => {
+      console.log(value)
+      if (value){
+        document.body.style.overflow='hidden'
+      }else {
+        document.body.style.overflow='visible'
+      }
+    }
+)
 onMounted(async () => {
   await getTitle()
 })
