@@ -8,8 +8,8 @@
         </div>
       </template>
       <div class="input-field">
-        <span><el-avatar :size="50"
-                         :src="logo"></el-avatar></span>
+        <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+        <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
         <span><Editor ref="messageEditor"></Editor></span>
         <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">发表留言</el-button></span>
         <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
@@ -41,25 +41,33 @@ import Comments from "@/components/common/Comments.vue";
 import LoginPopup from "@/components/common/LoginPopup.vue"
 import {onMounted, reactive, ref} from "vue";
 import {getLeaveMessage} from "@/api/record";
-import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import user from "@/utils/user";
 import {getSiteConfig} from "@/api/management";
+import {getUserinfoId} from "@/api/account";
 // 引入用户信息模块
 let {userId, isLogin} = user();
 let {MyIcon} = icon()
 // 登录弹窗对象
 const loginPopupRef = ref(null)
-// 时间显示几天前
-let {timeAgo} = timeFormat()
 // logo
 const logo = ref()
+// 用户头像
+const photo = ref()
 
 // 获取网站logo
 async function getLogoData() {
   let data = await getSiteConfig()
   logo.value = data.logo
   console.log("logo:", logo.value)
+}
+
+// 获取用户头像
+async function getPhotoData() {
+  let data = await getUserinfoId(userId.value)
+  console.log(data)
+  photo.value = data.photo
+  console.log("photo:", photo.value)
 }
 
 // 留言列表
@@ -87,8 +95,13 @@ async function leaveMessageData() {
 }
 
 onMounted(() => {
-  getLogoData()
+  console.log(userId.value)
   leaveMessageData()
+  if (isLogin.value === true) {
+    getPhotoData()
+  } else {
+    getLogoData()
+  }
 })
 </script>
 

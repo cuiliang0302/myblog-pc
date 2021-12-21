@@ -119,7 +119,7 @@
     </el-card>
     <el-card class="card-hover">
       <template #header>
-        <span class="card-title no-choose">📊 网站信息</span>
+        <span class="card-title no-choose">📊 网站统计</span>
       </template>
       <div class="statistics">
         <div>

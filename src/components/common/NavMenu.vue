@@ -58,7 +58,7 @@
       <span class="user">
         <el-dropdown v-if="isLogin" @visible-change="dropdownChange">
           <span class="no-choose">
-            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            <el-avatar :src="photo"></el-avatar>
             <p>{{ userName }}<i
                 :class="isDropdown?' el-icon-arrow-up'+' el-icon--right':' el-icon-arrow-down'+' el-icon--right'"></i></p>
           </span>
@@ -132,6 +132,7 @@ import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
 import {useRouter} from "vue-router";
 import user from "@/utils/user";
+import {getUserinfoId} from "@/api/account";
 
 const router = useRouter()
 let {MyIcon} = icon()
@@ -217,6 +218,14 @@ const logout = () => {
         console.log("算了，没退出")
       })
 }
+// 个人中心-用户头像
+const photo = ref()
+// 个人中心-获取用户头像
+async function getPhotoData() {
+  let data = await getUserinfoId(userId.value)
+  photo.value = data.photo
+  console.log("photo:", photo.value)
+}
 //设置-菜单默认关闭
 let drawer = ref(false);
 //设置-菜单关闭事件
@@ -229,6 +238,9 @@ onMounted(() => {
   siteConfigData()
   categoryData()
   NoteData()
+  if (isLogin.value === true) {
+    getPhotoData()
+  }
 })
 // 设置-默认主题色
 const colorValue = ref('blue')

@@ -27,6 +27,11 @@ export function getTag() {
 	return index.get('blog/tag/')
 }
 
+// 获取文章标签名称
+export function getTagName(id) {
+	return index.get('blog/tag/' + id + '/')
+}
+
 // 获取文章详情
 export function getArticleDetail(id) {
 	return index.get('blog/article/' + id + '/')

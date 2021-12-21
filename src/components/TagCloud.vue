@@ -3,10 +3,12 @@
     <a v-for="(item,index) in tagList"
        :key="index"
        :style="'background-color:'+tagColor(item.id)"
+       @click="$router.push(`/tag/${item.id}`)"
     >{{ item.name }}</a>
     <a v-for="(item,index) in tagList"
        :key="index"
        :style="'background-color:'+tagColor(item.id)"
+       @click="$router.push(`/tag/${item.id}`)"
     >{{ item.name }}</a>
   </div>
 </template>
@@ -242,8 +244,7 @@ a:hover {
 }
 
 #tags-cloud a:hover {
-  background: #0099ff !important;
   cursor: pointer;
-  color: $color-text-placeholder !important;
+  transform: scale(1.1)
 }
 </style>

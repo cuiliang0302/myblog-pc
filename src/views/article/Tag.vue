@@ -1,6 +1,6 @@
 <template>
-  <section class="category">
-    <NavMenu :activeMenu="'2-'+router.currentRoute.value.params.id"></NavMenu>
+  <section class="article-tag">
+    <NavMenu></NavMenu>
     <div class="page">
       <article class="animate__animated animate__fadeInLeft">
         <div class="current-position">
@@ -8,8 +8,8 @@
           <span>
             <el-breadcrumb separator=">">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>文章分类</el-breadcrumb-item>
-            <el-breadcrumb-item>{{ categoryName }}</el-breadcrumb-item>
+            <el-breadcrumb-item>文章标签</el-breadcrumb-item>
+            <el-breadcrumb-item>{{ tagName }}</el-breadcrumb-item>
           </el-breadcrumb>
           </span>
         </div>
@@ -49,19 +49,19 @@ import BackTop from "@/components/common/BackTop.vue"
 import Pagination from "@/components/common/Pagination.vue"
 import {onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
-import {getArticle, getCategoryName} from "@/api/blog";
+import {getArticle, getCategoryName, getTagName} from "@/api/blog";
 
 const router = useRouter()
 // 当前文章id
-const categoryID = ref()
-// 文章分类名
-const categoryName = ref('')
+const tagID = ref()
+// 文章标签名
+const tagName = ref('')
 
-// 获取文章分类名称
-async function categoryNameData(categoryID) {
-  let data = await getCategoryName(categoryID)
+// 获取文章标签名称
+async function tagNameData(tagID) {
+  let data = await getTagName(tagID)
   console.log(data)
-  categoryName.value = data.name
+  tagName.value = data.name
 }
 
 // 文章列表
@@ -71,8 +71,8 @@ const article = reactive({
 })
 
 // 获取文章数据
-async function articleData(page, size, categoryID) {
-  let data = await getArticle(page, size, '-created_time', categoryID, NaN)
+async function articleData(page, size, tagID) {
+  let data = await getArticle(page, size, '-created_time', NaN, tagID)
   article.list = data.results
   article.count = data.count
   console.log(article.list, article.count)
@@ -80,25 +80,25 @@ async function articleData(page, size, categoryID) {
 
 // 分页-页面跳转
 const changePage = (pageSize, pageNumber) => {
-  console.log(categoryID)
+  console.log(tagID)
   window.scrollTo({top: 0})
-  articleData(pageNumber, pageSize, categoryID.value)
+  articleData(pageNumber, pageSize, tagID.value)
 }
 
 onMounted(() => {
-  categoryID.value = router.currentRoute.value.params.id
-  categoryNameData(categoryID.value)
-  articleData(1, 10, categoryID.value)
+  tagID.value = router.currentRoute.value.params.id
+  tagNameData(tagID.value)
+  articleData(1, 10, tagID.value)
 })
 onBeforeRouteUpdate(async (to) => {
-  categoryID.value = to.params.id
-  await categoryNameData(categoryID.value)
-  await articleData(1, 10, categoryID.value)
+  tagID.value = to.params.id
+  await tagNameData(tagID.value)
+  await articleData(1, 10, tagID.value)
 });
 </script>
 
 <style scoped lang="scss">
-.category {
+.article-tag {
   .article-list {
     margin-top: 15px;
 

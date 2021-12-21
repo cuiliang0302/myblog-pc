@@ -10,6 +10,7 @@ function user() {
 	const userToken = ref()
 	const userName = ref()
 	onMounted(() => {
+		// 获取用户基本信息
 		if (keepLogin === true) {
 			userId.value = store.state.userLocal.userid
 			userToken.value = store.state.userLocal.token
@@ -24,6 +25,7 @@ function user() {
 				userName.value = store.state.userSession.username
 			}
 		}
+		// 获取用户头像
 	})
 	return {
 		isLogin, userId, userToken, userName

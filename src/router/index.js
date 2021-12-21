@@ -52,6 +52,15 @@ const router = createRouter({
 			}
 		},
 		{
+			path: '/tag/:id',
+			name: 'Tag',
+			component: () => import('@/views/article/Tag.vue'),
+			meta: {
+				title: '标签',
+				keepAlive: true,
+			}
+		},
+		{
 			path: '/detail/article/:id',
 			name: 'ArticleDetail',
 			component: () => import('@/views/article/ArticleDetail.vue'),
