@@ -295,7 +295,7 @@ function loginFn() {
       console.log(response)
       let domain = window.location.protocol + "//" + window.location.host
       let url = 'https://api.weibo.com/oauth2/authorize?client_id=' + response.clientId +
-          '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind
+          '&response_type=code&redirect_uri=' + domain + '/OAuth_pc/' + kind
       console.log(url)
       window.location.href = url;
     }).catch(response => {
