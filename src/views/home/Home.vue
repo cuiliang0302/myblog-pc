@@ -72,7 +72,7 @@ async function CarouselData() {
 // 点击轮播图跳转
 const toCarousel = (url) => {
   console.log(url)
-  window.location.href = url
+  window.open(url)
 }
 //最新文章列表
 const article = reactive({

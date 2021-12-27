@@ -124,6 +124,15 @@ const router = createRouter({
 			}
 		},
 		{
+			path: '/OAuth/:platform',
+			name: 'OAuth',
+			component: () => import('@/views/personal/OAuth.vue'),
+			meta: {
+				title: '第三方登录授权页',
+				keepAlive: true,
+			}
+		},
+		{
 			path: '/setPassword',
 			name: 'SetPassword',
 			component: () => import('@/views/personal/SetPassword.vue'),

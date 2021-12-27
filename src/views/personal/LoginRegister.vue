@@ -83,9 +83,11 @@
               <span>第三方账号登录</span>
             </el-divider>
             <div class="other-logo">
-              <span @click="otherLogin('qq')" class="pointer"><MyIcon type="icon-qq-logo"/></span>
-              <span @click="otherLogin('微博')" class="pointer"><MyIcon type="icon-weibo-logo"/></span>
-              <span @click="otherLogin('github')" class="pointer"><MyIcon type="icon-github-logo"/></span>
+              <span @click="otherLogin('QQ')" class="pointer"><MyIcon type="icon-qq-logo"/></span>
+              <span @click="otherLogin('WEIBO')" class="pointer"><MyIcon type="icon-weibo-logo"/></span>
+              <span @click="otherLogin('GITHUB')" class="pointer"><MyIcon type="icon-github-logo"/></span>
+              <span @click="otherLogin('GITHUB')" class="pointer"><MyIcon type="icon-baidu-logo"/></span>
+              <span @click="otherLogin('GITHUB')" class="pointer"><MyIcon type="icon-alipay-logo"/></span>
             </div>
           </div>
         </div>
@@ -120,7 +122,7 @@ import {useRouter} from "vue-router";
 import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {ElMessage} from 'element-plus'
-import {getOAuthUrl, getRegister, postCode, postLogin, postRegister} from "@/api/account";
+import {getOAuthID, getRegister, postCode, postLogin, postRegister} from "@/api/account";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
 
@@ -285,25 +287,23 @@ function loginFn() {
     console.log("验证通过了")
     isPassing.value = true
   }
-  // 第三方登录链接
-  let otherLoginUrl = {}
   // 第三方登录
   const otherLogin = (kind) => {
     ElMessage('第三方登录正在开发中！')
-    // console.log(otherLoginUrl)
     console.log(kind)
-    console.log(otherLoginUrl[kind])
-    window.location.href=otherLoginUrl[kind];
+    getOAuthID(kind).then((response) => {
+      console.log(response)
+      let domain = window.location.protocol + "//" + window.location.host
+      let url = 'https://api.weibo.com/oauth2/authorize?client_id=' + response.clientId +
+          '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind
+      console.log(url)
+      window.location.href = url;
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error('获取第三方登录ID失败！')
+    });
   }
-
-  // 获取第三方登录链接
-  async function getOAuthUrlData() {
-    Object.assign(otherLoginUrl, await getOAuthUrl())
-  }
-
-  onMounted(() => {
-    getOAuthUrlData()
-  })
   return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
 }
 
@@ -450,7 +450,7 @@ function registerFn() {
     width: 768px;
     max-width: 100%;
     min-height: 520px;
-    opacity: 0.8;
+    opacity: 0.9;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

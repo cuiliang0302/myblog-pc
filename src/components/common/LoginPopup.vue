@@ -1,7 +1,7 @@
 <template>
   <el-dialog
       v-model="popupIsShow"
-      width="40%"
+      width="50%"
   >
     <div class="login-popup">
       <el-divider>
@@ -11,6 +11,8 @@
         <span @click="otherLogin"><MyIcon class="logo-icon" type="icon-qq-logo"/><br>QQ登录</span>
         <span @click="otherLogin"><MyIcon class="logo-icon" type="icon-weibo-logo"/><br>微博登录</span>
         <span @click="otherLogin"><MyIcon class="logo-icon" type="icon-github-logo"/><br>GitHub登录</span>
+        <span @click="otherLogin"><MyIcon class="logo-icon" type="icon-baidu-logo"/><br>百度登录</span>
+        <span @click="otherLogin"><MyIcon class="logo-icon" type="icon-alipay-logo"/><br>支付宝登录</span>
       </div>
       <div class="login-other">
         <el-link class="login" type="info" @click="toLogin">手机/邮箱/账号登录</el-link>
@@ -29,7 +31,7 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
 import icon from '@/utils/icon'
 import {onMounted, reactive, ref} from "vue";
 import {getSiteConfig} from "@/api/management";
@@ -102,7 +104,7 @@ defineExpose({
 
     span {
       text-align: center;
-      margin: 10px 15px;
+      margin: 10px 3%;
       cursor: pointer;
     }
 

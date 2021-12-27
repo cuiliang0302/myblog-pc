@@ -1,6 +1,10 @@
 <template>
-  <div v-show="type='image'" class="image-loading">
+  <div v-show="props.type==='image'" class="image-loading">
     <vue-loaders-ball-spin-fade-loader name="ball-spin-fade-loader" color="#74b9ff"></vue-loaders-ball-spin-fade-loader>
+  </div>
+  <div v-show="props.type==='tips'" class="tips-loading">
+    <vue-loaders-pacman color="#74b9ff"/>
+    <p>{{ text }}</p>
   </div>
 </template>
 <script setup>
@@ -11,6 +15,12 @@ const props = defineProps({
     required: false,
     default: 'image',
   },
+  // 提示文字
+  text: {
+    type: String,
+    required: false,
+    default: '',
+  }
 })
 </script>
 
@@ -20,5 +30,15 @@ const props = defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.tips-loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p{
+    color: $color-text-primary;
+  }
 }
 </style>

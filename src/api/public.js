@@ -2,7 +2,7 @@ import index from './index'
 
 // 获取七牛图片上传token
 export function getQiNiuToken() {
-    return index.get('public/qiniuToken/')
+    return index.get('/public/qiniuToken/')
 }
 
 // 图片防盗链代理
@@ -12,10 +12,10 @@ export function getImgProxy(url) {
 
 // 获取echarts数据
 export function getEcharts(user, chart) {
-    return index.get('public/echarts/?user=' + user + '&chart=' + chart)
+    return index.get('/public/echarts/?user=' + user + '&chart=' + chart)
 }
 
 // 获取背景图片地址
 export function getBgiUrl() {
-    return index.get('public/backgroundImage/')
+    return index.get('/public/backgroundImage/')
 }
