@@ -296,7 +296,7 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://api.weibo.com/oauth2/authorize?client_id=' + response.clientId +
-            '&response_type=code&redirect_uri=' + domain + '/OAuth_pc/' + kind
+            '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind
         console.log(url)
         window.location.href = url;
       }).catch(response => {
