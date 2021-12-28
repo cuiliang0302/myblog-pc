@@ -49,6 +49,9 @@ onMounted(() => {
     case 'WEIBO':
       platform_name.value = '新浪微博'
       break;
+    case 'QQ':
+      platform_name.value = '腾讯QQ'
+      break;
     default:
       platform_name.value = '第三方'
   }
