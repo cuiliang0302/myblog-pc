@@ -124,7 +124,7 @@ const router = createRouter({
 			}
 		},
 		{
-			path: '/OAuth_pc/:platform',
+			path: '/OAuth/:platform',
 			name: 'OAuth',
 			component: () => import('@/views/personal/OAuth.vue'),
 			meta: {

@@ -291,18 +291,33 @@ function loginFn() {
   const otherLogin = (kind) => {
     ElMessage('第三方登录正在开发中！')
     console.log(kind)
-    getOAuthID(kind).then((response) => {
-      console.log(response)
-      let domain = window.location.protocol + "//" + window.location.host
-      let url = 'https://api.weibo.com/oauth2/authorize?client_id=' + response.clientId +
-          '&response_type=code&redirect_uri=' + domain + '/OAuth_pc/' + kind
-      console.log(url)
-      window.location.href = url;
-    }).catch(response => {
-      //发生错误时执行的代码
-      console.log(response)
-      ElMessage.error('获取第三方登录ID失败！')
-    });
+    let domain = window.location.protocol + "//" + window.location.host
+    if (kind === 'WEIBO') {
+      getOAuthID(kind).then((response) => {
+        console.log(response)
+        let url = 'https://api.weibo.com/oauth2/authorize?client_id=' + response.clientId +
+            '&response_type=code&redirect_uri=' + domain + '/OAuth_pc/' + kind
+        console.log(url)
+        window.location.href = url;
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('获取第三方登录ID失败！')
+      });
+    }
+    if (kind === 'QQ') {
+      getOAuthID(kind).then((response) => {
+        console.log(response)
+        let url = 'https://graph.qq.com/oauth2.0/authorize?client_id=' + response.clientId +
+            '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
+        console.log(url)
+        window.location.href = url;
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('获取第三方登录ID失败！')
+      });
+    }
   }
   return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
 }
