@@ -86,8 +86,8 @@
               <span @click="otherLogin('QQ')" class="pointer"><MyIcon type="icon-qq-logo"/></span>
               <span @click="otherLogin('WEIBO')" class="pointer"><MyIcon type="icon-weibo-logo"/></span>
               <span @click="otherLogin('GITHUB')" class="pointer"><MyIcon type="icon-github-logo"/></span>
-              <span @click="otherLogin('GITHUB')" class="pointer"><MyIcon type="icon-baidu-logo"/></span>
-              <span @click="otherLogin('GITHUB')" class="pointer"><MyIcon type="icon-alipay-logo"/></span>
+              <span @click="otherLogin('BAIDU')" class="pointer"><MyIcon type="icon-baidu-logo"/></span>
+              <span @click="otherLogin('PAY')" class="pointer"><MyIcon type="icon-alipay-logo"/></span>
             </div>
           </div>
         </div>
@@ -289,7 +289,7 @@ function loginFn() {
   }
   // 第三方登录
   const otherLogin = (kind) => {
-    ElMessage('第三方登录正在开发中！')
+    ElMessage('第三方登录正在调试中，如遇异常请更换其他登录方式！')
     console.log(kind)
     let domain = window.location.protocol + "//" + window.location.host
     if (kind === 'WEIBO') {
@@ -311,6 +311,20 @@ function loginFn() {
         let url = 'https://graph.qq.com/oauth2.0/authorize?client_id=' + response.clientId +
             '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
+        window.location.href = url;
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('获取第三方登录ID失败！')
+      });
+    }
+    if (kind === 'PAY') {
+      getOAuthID(kind).then((response) => {
+        console.log(response)
+        let url = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=' + response.clientId +
+            '&scope=auth_user&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
+        console.log(url)
+        alert(url)
         window.location.href = url;
       }).catch(response => {
         //发生错误时执行的代码
