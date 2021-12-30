@@ -324,7 +324,6 @@ function loginFn() {
         let url = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=' + response.clientId +
             '&scope=auth_user&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
-        alert(url)
         window.location.href = url;
       }).catch(response => {
         //发生错误时执行的代码

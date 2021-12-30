@@ -68,8 +68,7 @@ onMounted(() => {
       break;
     default:
       platform_name.value = '第三方'
-  }
-  alert(OAuthForm.code)
+  }a
   postCallback()
 })
 </script>
