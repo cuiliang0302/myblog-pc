@@ -48,6 +48,7 @@ onMounted(() => {
   }else {
     OAuthForm.code = router.currentRoute.value.query.code
   }
+  console.log(router.currentRoute.value.query)
   console.log(OAuthForm)
   switch (OAuthForm.platform) {
     case 'WEIBO':
@@ -68,7 +69,7 @@ onMounted(() => {
     default:
       platform_name.value = '第三方'
   }
-  alert(OAuthForm)
+  alert(OAuthForm.code)
   postCallback()
 })
 </script>
