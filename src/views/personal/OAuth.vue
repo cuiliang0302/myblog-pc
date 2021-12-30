@@ -44,7 +44,7 @@ onMounted(() => {
   OAuthForm.platform = router.currentRoute.value.params.platform
   OAuthForm.redirect_uri = window.location.protocol + "//" + window.location.host + router.currentRoute.value.path
   if (OAuthForm.platform==='PAY'){
-    OAuthForm.code = router.currentRoute.value.query.app_auth_code
+    OAuthForm.code = router.currentRoute.value.query.auth_code
   }else {
     OAuthForm.code = router.currentRoute.value.query.code
   }
