@@ -48,7 +48,7 @@ onMounted(() => {
   }else {
     OAuthForm.code = router.currentRoute.value.query.code
   }
-  console.log(router.currentRoute.value.query)
+  console.log(router.currentRoute.value)
   console.log(OAuthForm)
   switch (OAuthForm.platform) {
     case 'WEIBO':
