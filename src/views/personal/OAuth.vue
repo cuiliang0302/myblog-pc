@@ -42,8 +42,12 @@ const postCallback = () => {
 ref('')
 onMounted(() => {
   OAuthForm.platform = router.currentRoute.value.params.platform
-  OAuthForm.code = router.currentRoute.value.query.code
   OAuthForm.redirect_uri = window.location.protocol + "//" + window.location.host + router.currentRoute.value.path
+  if (OAuthForm.platform==='PAY'){
+    OAuthForm.code = router.currentRoute.value.query.app_auth_code
+  }else {
+    OAuthForm.code = router.currentRoute.value.query.code
+  }
   console.log(OAuthForm)
   switch (OAuthForm.platform) {
     case 'WEIBO':
@@ -52,9 +56,19 @@ onMounted(() => {
     case 'QQ':
       platform_name.value = '腾讯QQ'
       break;
+    case 'PAY':
+      platform_name.value = '支付宝'
+      break;
+    case 'GITHUB':
+      platform_name.value = 'GitHub'
+      break;
+    case 'BAIDU':
+      platform_name.value = '百度'
+      break;
     default:
       platform_name.value = '第三方'
   }
+  alert(OAuthForm)
   postCallback()
 })
 </script>
