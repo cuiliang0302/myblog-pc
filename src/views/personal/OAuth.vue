@@ -35,8 +35,8 @@ const postCallback = () => {
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)
-    ElMessage.error('自动登录出现异常，请重试！')
-    router.push('/loginRegister')
+    ElMessage.error('自动登录异常，请更换其他登录方式！')
+    router.push('/loginRegister')a
   });
 }
 ref('')
@@ -71,7 +71,7 @@ onMounted(() => {
     default:
       platform_name.value = '第三方'
   }
-  alert(OAuthForm.code)
+  // alert(OAuthForm.code)
   postCallback()
 })
 </script>

@@ -338,7 +338,6 @@ function loginFn() {
         let url = 'https://github.com/login/oauth/authorize?client_id=' + response.clientId +
             '&scope=user&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
-        alert(url)
         window.location.href = url;
       }).catch(response => {
         //发生错误时执行的代码
