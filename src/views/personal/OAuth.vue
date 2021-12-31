@@ -43,9 +43,9 @@ ref('')
 onMounted(() => {
   OAuthForm.platform = router.currentRoute.value.params.platform
   OAuthForm.redirect_uri = window.location.protocol + "//" + window.location.host + router.currentRoute.value.path
-  if (OAuthForm.platform==='PAY'){
+  if (OAuthForm.platform === 'PAY') {
     OAuthForm.code = router.currentRoute.value.query.auth_code
-  }else {
+  } else {
     OAuthForm.code = router.currentRoute.value.query.code
   }
   console.log(OAuthForm)
@@ -65,9 +65,13 @@ onMounted(() => {
     case 'BAIDU':
       platform_name.value = '百度'
       break;
+    case 'MICROSOFT':
+      platform_name.value = '微软'
+      break;
     default:
       platform_name.value = '第三方'
   }
+  alert(OAuthForm.code)
   postCallback()
 })
 </script>
