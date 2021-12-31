@@ -36,7 +36,7 @@ const postCallback = () => {
     //发生错误时执行的代码
     console.log(response)
     ElMessage.error('自动登录异常，请更换其他登录方式！')
-    router.push('/loginRegister')a
+    router.push('/loginRegister')
   });
 }
 ref('')
