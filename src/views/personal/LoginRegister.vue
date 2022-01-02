@@ -362,7 +362,7 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + response.clientId +
-            '&response_type=code&redirect_uri=' + encodeURIComponent(domain + '/OAuth/' + kind) +
+            '&response_type=code&redirect_uri=' + encodeURIComponent(domain + '/OAuth/' + kind + '/') +
             'response_mode=query&scope=' + encodeURIComponent('openid offline_access https://graph.microsoft.com/mail.read')
         console.log(url)
         alert(url)
