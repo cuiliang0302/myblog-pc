@@ -349,7 +349,7 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://openapi.baidu.com/oauth/2.0/authorize?client_id=' + response.clientId +
-            '&redirect_uri=' + domain + '/OAuth/' + kind
+            '&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code'
         console.log(url)
         alert(url)
         window.location.href = url;
