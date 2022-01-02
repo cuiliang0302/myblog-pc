@@ -349,7 +349,20 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://openapi.baidu.com/oauth/2.0/authorize?client_id=' + response.clientId +
-            '&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code'
+            '&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code&state=' + Math.random().toString(36).slice(-6)
+        console.log(url)
+        window.location.href = url;
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('获取第三方登录ID失败！')
+      });
+    }
+    if (kind === 'MICROSOFT') {
+      getOAuthID(kind).then((response) => {
+        console.log(response)
+        let url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + response.clientId +
+            '&scope=https://graph.microsoft.com&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
         alert(url)
         window.location.href = url;
