@@ -362,7 +362,8 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + response.clientId +
-            '&scope=https://graph.microsoft.com&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code&state=' + Math.random().toString(36).slice(-6)
+            '&scope=' + encodeURIComponent('https://graph.microsoft.com/mail.read') + '&redirect_uri=' +
+            encodeURIComponent(domain + '/OAuth/' + kind) + '&response_type=code&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
         alert(url)
         window.location.href = url;
