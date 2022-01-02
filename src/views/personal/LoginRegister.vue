@@ -361,9 +361,8 @@ function loginFn() {
     if (kind === 'MICROSOFT') {
       getOAuthID(kind).then((response) => {
         console.log(response)
-        let url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=' + response.clientId +
-            '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind +
-            'response_mode=query&scope=' + encodeURIComponent('openid offline_access https://graph.microsoft.com/mail.read')
+        let url = 'https://login.live.com/oauth20_authorize.srf?client_id=' + response.clientId +
+            '&redirect_uri=' + domain + '/OAuth/' + kind + '&scope=wl.Emails&response_type=code&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
         alert(url)
         window.location.href = url;
