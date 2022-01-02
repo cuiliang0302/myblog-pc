@@ -345,6 +345,20 @@ function loginFn() {
         ElMessage.error('获取第三方登录ID失败！')
       });
     }
+    if (kind === 'BAIDU') {
+      getOAuthID(kind).then((response) => {
+        console.log(response)
+        let url = 'https://openapi.baidu.com/oauth/2.0/authorize?client_id=' + response.clientId +
+            '&redirect_uri=' + domain + '/OAuth/' + kind
+        console.log(url)
+        alert(url)
+        window.location.href = url;
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        ElMessage.error('获取第三方登录ID失败！')
+      });
+    }
   }
   return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
 }
