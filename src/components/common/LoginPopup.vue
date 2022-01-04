@@ -144,9 +144,9 @@ const otherLogin = (kind) => {
     getOAuthID(kind).then((response) => {
       console.log(response)
       let url = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=' + response.clientId +
-          '&redirect_uri=' + domain + '/OAuth/' + kind + '&scope=offline_access user.read&response_type=code&response_mode=query&state=' + Math.random().toString(36).slice(-6)
+          '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind +
+          '&response_mode=query&scope=offline_access user.read&state=' + Math.random().toString(36).slice(-6)
       console.log(url)
-      alert(url)
       window.location.href = url;
     }).catch(response => {
       //发生错误时执行的代码

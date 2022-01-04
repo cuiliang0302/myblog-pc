@@ -71,7 +71,6 @@ onMounted(() => {
     default:
       platform_name.value = '第三方'
   }
-  alert(OAuthForm.code)
   postCallback()
 })
 </script>
