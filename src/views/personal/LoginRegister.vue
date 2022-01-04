@@ -310,7 +310,8 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://graph.qq.com/oauth2.0/authorize?client_id=' + response.clientId +
-            '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
+            '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' +
+            Math.random().toString(36).slice(-6)
         console.log(url)
         window.location.href = url;
       }).catch(response => {
@@ -323,7 +324,8 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=' + response.clientId +
-            '&scope=auth_user&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
+            '&scope=auth_user&redirect_uri=' + encodeURIComponent(domain + '/OAuth/' + kind) +
+            '&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
         window.location.href = url;
       }).catch(response => {
@@ -336,7 +338,8 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://github.com/login/oauth/authorize?client_id=' + response.clientId +
-            '&scope=user&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' + Math.random().toString(36).slice(-6)
+            '&scope=user&redirect_uri=' + domain + '/OAuth/' + kind + '&state=' +
+            Math.random().toString(36).slice(-6)
         console.log(url)
         window.location.href = url;
       }).catch(response => {
@@ -349,7 +352,8 @@ function loginFn() {
       getOAuthID(kind).then((response) => {
         console.log(response)
         let url = 'https://openapi.baidu.com/oauth/2.0/authorize?client_id=' + response.clientId +
-            '&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code&state=' + Math.random().toString(36).slice(-6)
+            '&redirect_uri=' + domain + '/OAuth/' + kind + '&response_type=code&state=' +
+            Math.random().toString(36).slice(-6)
         console.log(url)
         window.location.href = url;
       }).catch(response => {
@@ -361,8 +365,9 @@ function loginFn() {
     if (kind === 'MICROSOFT') {
       getOAuthID(kind).then((response) => {
         console.log(response)
-        let url = 'https://login.live.com/oauth20_authorize.srf?client_id=' + response.clientId +
-            '&redirect_uri=' + domain + '/OAuth/' + kind + '&scope=wl.Emails&response_type=code&state=' + Math.random().toString(36).slice(-6)
+        let url = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?client_id=' + response.clientId +
+            '&response_type=code&redirect_uri=' + domain + '/OAuth/' + kind +
+            '&response_mode=query&scope=offline_access user.read&state=' + Math.random().toString(36).slice(-6)
         console.log(url)
         alert(url)
         window.location.href = url;
