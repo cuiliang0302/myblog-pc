@@ -290,7 +290,7 @@ function loginFn() {
   }
   // 第三方登录
   const otherLogin = (kind) => {
-    ElMessage('第三方登录正在调试中，如遇异常请更换其他登录方式！')
+    ElMessage('正在跳转至第三方平台，请稍候……')
     console.log(kind)
     let domain = window.location.protocol + "//" + window.location.host
     if (kind === 'WEIBO') {

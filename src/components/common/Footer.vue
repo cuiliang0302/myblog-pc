@@ -1,5 +1,5 @@
 <template>
-  <footer class="animate__animated animate__fadeInUp">
+  <footer>
     <el-breadcrumb separator="|">
       <el-breadcrumb-item>{{ footerData.copyright }}</el-breadcrumb-item>
       <el-breadcrumb-item><a :href="footerData.icp_url">{{ footerData.icp_num }}</a></el-breadcrumb-item>

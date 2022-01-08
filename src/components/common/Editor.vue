@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElLoading} from 'element-plus'
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import WangEditor from 'wangeditor';
 import hljs from 'highlight.js'
@@ -58,7 +58,7 @@ let instance;
 onMounted(() => {
   instance = new WangEditor(editor.value);
   // 设置编辑器高度
-  instance.config.height = 150
+  instance.config.height = 200
   // 自定义提示内容
   instance.config.placeholder = '元芳，你怎么看？'
   // 配置菜单栏，删减菜单，调整顺序
@@ -76,12 +76,18 @@ onMounted(() => {
   instance.config.zIndex = 1
   // 图片上传
   instance.config.customUploadImg = function (resultFiles, insertImgFn) {
+    const loading = ElLoading.service({
+      lock: true,
+      text: '图片上传中，请稍候……',
+      background: 'rgba(255, 255, 255, 0.5)',
+    })
     upload('comment', resultFiles[0]).then((response) => {
       console.log(response)
       ElMessage.success({
         message: '图片上传成功',
         type: 'success'
       });
+      loading.close()
       insertImgFn(response)
     }).catch(response => {
       //发生错误时执行的代码
@@ -101,8 +107,14 @@ const syncHTML = () => {
   content.value = instance.txt.html();
   console.log(instance.txt.html())
 };
+// 清空编辑器内容
+const clear = () => {
+  instance.txt.clear()
+  content.value = ''
+}
 // 声明暴露的对象
 defineExpose({
+  clear,
   syncHTML,
   content
 })

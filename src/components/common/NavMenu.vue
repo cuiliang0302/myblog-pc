@@ -133,7 +133,7 @@ import {getSiteConfig} from "@/api/management";
 import {useRouter} from "vue-router";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
-
+import store from "@/store/index";
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
@@ -210,8 +210,8 @@ const logout = () => {
           type: 'success',
           message: '账号已成功退出，即将跳转至登录页',
         })
-        window.sessionStorage.clear()
-        window.localStorage.clear()
+        store.commit('setUserLocal', {})
+        store.commit('setUserSession', {})
         router.push('/loginRegister')
       })
       .catch(() => {

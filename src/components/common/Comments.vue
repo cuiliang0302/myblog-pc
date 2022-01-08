@@ -9,18 +9,26 @@
             <span class="username">{{ item.username }}</span>
             <span class="time-ago">{{ timeAgo(item.time) }}</span>
           </p>
-          <p class="content">{{ item.content }}</p>
+          <p class="content" v-html=item.content></p>
           <p class="action">
-            <span><MyIcon type="icon-like"/>赞 {{ item.like }}</span>
             <span>
-              <span v-if="isReply(item.user)===true">
-                <el-popconfirm
-                    title="确定要删除吗？"
-                >
-                <template #reference>
-                  <span><MyIcon type="icon-comment"/>回复</span>
-                </template>
-                </el-popconfirm>
+              <span v-if="isLike(item.id)===true" class="no-choose">
+                <MyIcon class="icon" type="icon-like-solid"/>赞 {{ item.like }}
+              </span>
+              <span v-else @click="likeMessage(item.id)">
+                <MyIcon class="icon" type="icon-like"/>赞 {{ item.like }}
+              </span>
+            </span>
+            <span>
+              <span v-if="isReply(item.user)===true" @click="replyMessage(item.id)">
+                <MyIcon type="icon-comment"/>回复
+                <!--                <el-popconfirm-->
+                <!--                    title="确定要删除吗？"-->
+                <!--                >-->
+                <!--                <template #reference>-->
+                <!--                  <span><MyIcon type="icon-comment"/>回复</span>-->
+                <!--                </template>-->
+                <!--                </el-popconfirm>-->
               </span>
               <span v-else class="no-choose"><MyIcon type="icon-comment"/>回复</span>
             </span>
@@ -28,6 +36,7 @@
               <span v-if="isDelete(item.user)===true">
                 <el-popconfirm
                     title="确定要删除吗？"
+                    @confirm="delMessage(item.id)"
                 >
                 <template #reference>
                   <span><MyIcon type="icon-delete"/>删除</span>
@@ -43,6 +52,19 @@
       <Comments :commentsList="item.child"></Comments>
     </div>
   </ol>
+  <el-dialog
+      v-model="textareaShow"
+      title="回复留言"
+      width="50%"
+  >
+    <Editor ref="replyEditor"></Editor>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="textareaShow = false">取消</el-button>
+        <el-button type="primary" @click="replySend">提交</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -50,6 +72,7 @@ import {reactive, ref, getCurrentInstance} from "vue";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import user from "@/utils/user";
+import {ElMessage} from "element-plus";
 
 let {MyIcon} = icon()
 const props = defineProps({
@@ -82,10 +105,13 @@ const isLike = (messageId) => {
 // 留言评论点赞
 const likeMessage = (messageId) => {
   likeList.value.push(messageId)
+  console.log(likeList.value)
   $bus.emit("likeMessage", messageId);
 }
 // 回复输入框默认状态
 const textareaShow = ref(false)
+// 回复编辑器对象
+const replyEditor = ref(null)
 // 回复输入框内容
 const replyForm = reactive({
   content: '',
@@ -94,21 +120,25 @@ const replyForm = reactive({
 })
 // 点击留言评论回复事件
 const replyMessage = (father) => {
+  console.log(father)
   textareaShow.value = true
   replyForm.father = father
-  // replyForm.user = userId.value
+  replyForm.user = userId.value
 }
 // 发送评论留言回复事件
 const replySend = () => {
-  // if (replyForm.content === '') {
-  //   Toast.fail("请输入内容！")
-  //   return false
-  // } else {
-  //   $bus.emit("replySend", replyForm);
-  //   // emit('replySend', replyForm)
-  //   replyForm.content = ''
-  //   textareaShow.value = false
-  // }
+  replyEditor.value.syncHTML()
+  replyForm.content = replyEditor.value.content
+  console.log(replyForm.content)
+  if (replyForm.content === '') {
+    ElMessage("请输入内容！")
+    return false
+  } else {
+    $bus.emit("replySend", replyForm);
+    replyEditor.value.clear()
+    replyForm.content = ''
+    textareaShow.value = false
+  }
 }
 // 判断是否可回复留言
 const isReply = (userID) => {
@@ -128,12 +158,8 @@ const isDelete = (userID) => {
 }
 // 评论留言删除
 const delMessage = (messageId) => {
-  // Dialog.confirm({
-  //   title: '删除确认',
-  //   message: '当真要删除这条宝贵的记录吗？',
-  // }).then(() => {
-  //   $bus.emit("delMessage", messageId);
-  // })
+  console.log(messageId)
+  $bus.emit("delMessage", messageId);
 }
 </script>
 
@@ -173,6 +199,10 @@ ol {
 
         .content {
           color: $color-text-primary;
+
+          :deep(img) {
+            max-height: 150px;
+          }
         }
 
         .action {

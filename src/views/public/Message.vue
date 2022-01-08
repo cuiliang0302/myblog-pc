@@ -11,7 +11,7 @@
         <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
         <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
         <span><Editor ref="messageEditor"></Editor></span>
-        <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">发表留言</el-button></span>
+        <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">留言</el-button></span>
         <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
       </div>
       <div class="comment-list">
@@ -25,26 +25,31 @@
 </template>
 
 <script setup>
-import {
-  ElCard,
-  ElTabs,
-  ElTabPane,
-  ElAvatar,
-  ElPopconfirm,
-  ElButton,
-} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue";
 import LoginPopup from "@/components/common/LoginPopup.vue"
-import {onMounted, reactive, ref} from "vue";
-import {getLeaveMessage} from "@/api/record";
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
+import {
+  deleteLeaveMessage,
+  getLeaveMessage,
+  postLeaveMessage,
+  postReplyLeaveMessage,
+  putLeaveMessage
+} from "@/api/record";
 import icon from "@/utils/icon";
 import user from "@/utils/user";
 import {getSiteConfig} from "@/api/management";
 import {getUserinfoId} from "@/api/account";
+import store from "@/store";
+import {useRouter} from "vue-router";
+const router = useRouter()
+// 事件总线
+const internalInstance = getCurrentInstance();  //当前组件实例
+const $bus = internalInstance.appContext.config.globalProperties.$bus;
 // 引入用户信息模块
 let {userId, isLogin} = user();
 let {MyIcon} = icon()
@@ -67,7 +72,6 @@ async function getPhotoData() {
   let data = await getUserinfoId(userId.value)
   console.log(data)
   photo.value = data.photo
-  console.log("photo:", photo.value)
 }
 
 // 留言列表
@@ -82,10 +86,33 @@ const messageEditor = ref(null)
 // 发送留言事件
 const sendMessage = () => {
   messageEditor.value.syncHTML()
-  console.log(messageEditor.value.content)
+  messageForm.content = messageEditor.value.content
+  console.log(messageForm.content)
+  if (messageForm.content) {
+    messageForm.user = userId.value
+    postLeaveMessage(messageForm).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '留言成功！',
+        type: 'success',
+      })
+      messageForm.content = ''
+      messageEditor.value.clear()
+      leaveMessageData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      for (let i in response) {
+        ElMessage.error(i + response[i][0])
+      }
+    });
+  } else {
+    ElMessage('请输入留言内容')
+  }
 }
 // 弹出登录框
 const showLogin = () => {
+  store.commit('setNextPath', router.currentRoute.value.fullPath)
   loginPopupRef.value.showPopup()
 }
 
@@ -93,9 +120,57 @@ const showLogin = () => {
 async function leaveMessageData() {
   messageList.value = await getLeaveMessage()
 }
-
+// 留言点赞事件
+if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
+  console.log(messageId)
+  putLeaveMessage(messageId).then((response) => {
+    console.log(response)
+    ElMessage({
+      message: '点赞成功！',
+      type: 'success',
+    })
+    leaveMessageData()
+  }).catch(response => {
+    //发生错误时执行的代码
+    console.log(response)
+    ElMessage.error(response.msg)
+  });
+});
+// 留言回复事件
+if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+  console.log(replyForm)
+  postReplyLeaveMessage(replyForm).then((response) => {
+    console.log(response)
+    ElMessage({
+      message: '回复成功！',
+      type: 'success',
+    })
+    leaveMessageData()
+  }).catch(response => {
+    //发生错误时执行的代码
+    console.log(response)
+    for (let i in response) {
+      ElMessage.error(i + response[i][0])
+    }
+  });
+});
+// 留言删除事件
+if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+  console.log(messageId)
+  deleteLeaveMessage(messageId).then((response) => {
+    console.log(response)
+    ElMessage({
+      message: '留言删除成功！',
+      type: 'success',
+    })
+    leaveMessageData()
+  }).catch(response => {
+    //发生错误时执行的代码
+    console.log(response)
+    ElMessage.error(response.msg)
+  });
+});
 onMounted(() => {
-  console.log(userId.value)
   leaveMessageData()
   if (isLogin.value === true) {
     getPhotoData()

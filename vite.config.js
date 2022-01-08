@@ -32,10 +32,10 @@ export default defineConfig(({mode}) => {
 		build: {
 			terserOptions: {
 				compress: {
-					drop_console: mode !== 'serve',
-					// 默认是true
-					drop_debugger: mode !== 'serve'
-				}
+					//生产环境时移除console
+					drop_console: true,
+					drop_debugger: true,
+				},
 			},
 		}
 	}

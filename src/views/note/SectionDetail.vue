@@ -53,8 +53,12 @@
           </div>
           <div class="comments detail-card" id="comment">
             <h2>📝 评论交流</h2>
-            <div>
-              <Editor></Editor>
+            <div class="input-field">
+              <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+              <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
+              <span><Editor ref="messageEditor"></Editor></span>
+              <span v-if="isLogin===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
+              <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
             </div>
             <div class="comment-list">
               <Comments :comments-list="commentsList"></Comments>
@@ -69,6 +73,7 @@
         </div>
       </div>
       <Footer></Footer>
+      <LoginPopup ref="loginPopupRef"></LoginPopup>
     </section>
   </div>
 </template>
@@ -84,16 +89,25 @@ import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElMessage, ElLoading} from 'element-plus'
 import {getSectionDetail, getContextSection, getCatalogue, putSectionDetail} from "@/api/blog";
-import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
+import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
-import {getSectionComment, getSectionHistory} from "@/api/record";
+import {
+  deleteSectionComment,
+  getSectionComment,
+  getSectionHistory,
+  postReplySectionComment,
+  postSectionComment,
+  putSectionComment
+} from "@/api/record";
 import user from "@/utils/user";
-
+import {getUserinfoId} from "@/api/account";
+// 引入用户信息模块
+let {userId, isLogin} = user();
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 const router = useRouter()
@@ -115,9 +129,43 @@ let {
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
 // 调用评论回复模块
-let {commentsList, getArticleCommentData} = comment(sectionID)
+let {commentsList, getSectionCommentData, logo, photo, messageEditor, loginPopupRef, messageForm} = comment(sectionID)
 // 调用动作菜单模块
 let {likeClick, isCollect} = action(sectionID, sectionData)
+// 弹出登录框
+const showLogin = () => {
+  store.commit('setNextPath', router.currentRoute.value.fullPath)
+  loginPopupRef.value.showPopup()
+}
+// 点击发表评论事件
+const clickSend = () => {
+  messageEditor.value.syncHTML()
+  messageForm.content = messageEditor.value.content
+  console.log(messageForm.content)
+  if (messageForm.content) {
+    messageForm.user = userId.value
+    messageForm['section_id'] = sectionID.value
+    console.log(messageForm)
+    postSectionComment(messageForm).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '评论成功！',
+        type: 'success',
+      })
+      messageForm.content = ''
+      messageEditor.value.clear()
+      getSectionCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      for (let i in response) {
+        ElMessage.error(i + response[i][0])
+      }
+    });
+  } else {
+    ElMessage('请输入评论内容')
+  }
+}
 onMounted(async () => {
   window.scrollTo({top: 0})
   store.commit('setOutline', '')
@@ -142,7 +190,7 @@ onBeforeRouteUpdate(async (to) => {
   loading.value = true
   await getSectionData(to.params.id)
   await contextData(to.params.id)
-  await getArticleCommentData(to.params.id)
+  await getSectionCommentData(to.params.id)
 });
 
 // 公共模块
@@ -307,21 +355,106 @@ function markdown() {
 
 // 评论回复点赞模块
 function comment(sectionID) {
+  // 事件总线
+  const internalInstance = getCurrentInstance();  //当前组件实例
+  const $bus = internalInstance.appContext.config.globalProperties.$bus;
+  // logo
+  const logo = ref()
+  // 用户头像
+  const photo = ref()
+
+  // 获取网站logo
+  async function getLogoData() {
+    let data = await getSiteConfig()
+    logo.value = data.logo
+    console.log("logo:", logo.value)
+  }
+
+  // 获取用户头像
+  async function getPhotoData() {
+    let data = await getUserinfoId(userId.value)
+    console.log(data)
+    photo.value = data.photo
+  }
+
   // 留言评论列表
   const commentsList = ref([])
 
   // 获取笔记评论数据
-  async function getArticleCommentData() {
+  async function getSectionCommentData() {
     await nextTick()
     commentsList.value = await getSectionComment(sectionID.value)
     console.log("commentsList", commentsList.value)
   }
 
+  // 弹窗登录对象
+  const loginPopupRef = ref(null)
+  // 评论编辑器对象
+  const messageEditor = ref(null)
+  // 评论表单
+  const messageForm = reactive({
+    content: '',
+    user: '',
+  })
+  // 评论点赞事件
+  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
+    putSectionComment(messageId).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '点赞成功',
+        type: 'success',
+      })
+      getSectionCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  });
+  // 留言回复事件
+  if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+    replyForm['section_id'] = sectionID.value
+    console.log(replyForm)
+    postReplySectionComment(replyForm).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '回复成功！',
+        type: 'success',
+      })
+      getSectionCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      for (let i in response) {
+        ElMessage.error(i + response[i][0])
+      }
+    });
+  });
+  // 评论删除事件
+  if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+    deleteSectionComment(messageId).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '评论删除成功！',
+        type: 'success',
+      })
+      getSectionCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  });
   onMounted(() => {
-    getArticleCommentData()
+    getSectionCommentData()
+    if (isLogin.value === true) {
+      getPhotoData()
+    } else {
+      getLogoData()
+    }
   })
   return {
-    commentsList, getArticleCommentData
+    commentsList, getSectionCommentData, logo, photo, messageEditor, loginPopupRef, messageForm
   }
 }
 
@@ -456,6 +589,31 @@ function action(sectionID, sectionData) {
 
       .comments {
         margin-bottom: 15px;
+
+        .input-field {
+          display: flex;
+          justify-content: center;
+
+          > span:nth-child(1) {
+            width: 10%;
+            padding-top: 10px;
+            text-align: center;
+          }
+
+          > span:nth-child(2) {
+            width: 80%;
+          }
+
+          > span:nth-child(3) {
+            width: 10%;
+            padding-top: 85px;
+            text-align: center;
+          }
+
+          .editor {
+            margin: 10px 0 30px 0 !important;
+          }
+        }
 
         .comment-list {
           padding: 0px 25px 0px 5px;

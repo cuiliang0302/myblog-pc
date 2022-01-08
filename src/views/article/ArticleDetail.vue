@@ -83,8 +83,12 @@
           </div>
           <div class="comments detail-card" id="comment">
             <h2>📝 评论交流</h2>
-            <div>
-              <Editor></Editor>
+            <div class="input-field">
+              <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+              <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
+              <span><Editor ref="messageEditor"></Editor></span>
+              <span v-if="isLogin===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
+              <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
             </div>
             <div class="comment-list">
               <div class="comment-list">
@@ -100,6 +104,7 @@
         </div>
       </div>
       <Footer></Footer>
+      <LoginPopup ref="loginPopupRef"></LoginPopup>
     </section>
   </div>
 </template>
@@ -116,7 +121,7 @@ import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElMessage} from 'element-plus'
 import {getArticleDetail, getContextArticle, getGuessLike, putArticleDetail} from "@/api/blog";
-import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
+import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -124,13 +129,23 @@ import icon from "@/utils/icon";
 import setColor from "@/utils/setColor";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
-import {getArticleComment, getArticleHistory} from "@/api/record";
+import {
+  deleteArticleComment,
+  getArticleComment,
+  getArticleHistory,
+  postArticleComment,
+  postReplyArticleComment,
+  putArticleComment
+} from "@/api/record";
 import user from "@/utils/user";
+import {getUserinfoId} from "@/api/account";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = setColor()
 const router = useRouter()
+// 引入用户信息模块
+let {userId, isLogin} = user();
 // 引入公共模块
 let {articleID, activeMenu, loading, sitename, toDetail, toCategory} = publicFn()
 // 引入文章内容模块
@@ -138,9 +153,43 @@ let {articleData, context, recommendList, getArticleData, getContextData, getGue
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
 // 调用评论回复点赞模块
-let {commentsList, getArticleCommentData} = comment(articleID, getArticleData)
+let {commentsList, getArticleCommentData, logo, photo, messageEditor,loginPopupRef,messageForm} = comment(articleID, getArticleData)
 // 调用动作菜单模块
 let {likeClick, isCollect} = action(articleID, articleData)
+// 弹出登录框
+const showLogin = () => {
+  store.commit('setNextPath', router.currentRoute.value.fullPath)
+  loginPopupRef.value.showPopup()
+}
+// 点击发表评论事件
+const clickSend = () => {
+    messageEditor.value.syncHTML()
+    messageForm.content = messageEditor.value.content
+    console.log(messageForm.content)
+    if (messageForm.content) {
+      messageForm.user = userId.value
+      messageForm['article_id'] = articleID.value
+      console.log(messageForm)
+      postArticleComment(messageForm).then((response) => {
+        console.log(response)
+        ElMessage({
+          message: '评论成功！',
+          type: 'success',
+        })
+        messageForm.content = ''
+        messageEditor.value.clear()
+        getArticleCommentData()
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        for (let i in response) {
+          ElMessage.error(i + response[i][0])
+        }
+      });
+    } else {
+      ElMessage('请输入评论内容')
+    }
+  }
 onMounted(async () => {
   window.scrollTo({top: 0})
   store.commit('setOutline', '')
@@ -279,21 +328,101 @@ function markdown() {
 
 // 评论回复模块
 function comment(articleID) {
-  // 留言评论列表
+  // 事件总线
+  const internalInstance = getCurrentInstance();  //当前组件实例
+  const $bus = internalInstance.appContext.config.globalProperties.$bus;
+  // logo
+  const logo = ref()
+  // 用户头像
+  const photo = ref()
+  // 获取网站logo
+  async function getLogoData() {
+    let data = await getSiteConfig()
+    logo.value = data.logo
+    console.log("logo:", logo.value)
+  }
+  // 获取用户头像
+  async function getPhotoData() {
+    let data = await getUserinfoId(userId.value)
+    console.log(data)
+    photo.value = data.photo
+  }
+  // 评论列表
   const commentsList = ref([])
-
   // 获取文章评论数据
   async function getArticleCommentData() {
     await nextTick()
     commentsList.value = await getArticleComment(articleID.value)
     console.log("commentsList", commentsList.value)
   }
-
+  // 评论编辑器对象
+  const messageEditor = ref(null)
+  // 弹窗登录对象
+  const loginPopupRef = ref(null)
+  // 评论表单
+  const messageForm = reactive({
+    content: '',
+    user: '',
+  })
+  // 评论点赞事件
+  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
+    putArticleComment(messageId).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '点赞成功',
+        type: 'success',
+      })
+      getArticleCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  });
+  // 评论回复事件
+  if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+    replyForm['article_id'] = articleID.value
+    console.log(replyForm)
+    postReplyArticleComment(replyForm).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '回复成功！',
+        type: 'success',
+      })
+      getArticleCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      for (let i in response) {
+        ElMessage.error(i + response[i][0])
+      }
+    });
+  });
+  // 评论删除事件
+  if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+    deleteArticleComment(messageId).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '评论删除成功！',
+        type: 'success',
+      })
+      getArticleCommentData()
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  });
   onMounted(() => {
     getArticleCommentData()
+    if (isLogin.value === true) {
+      getPhotoData()
+    } else {
+      getLogoData()
+    }
   })
   return {
-    commentsList, getArticleCommentData
+    commentsList, getArticleCommentData, logo, photo, messageEditor,loginPopupRef,messageForm
   }
 }
 
@@ -453,6 +582,31 @@ function action(articleID, articleData) {
 
       .comments {
         margin-bottom: 15px;
+
+        .input-field {
+          display: flex;
+          justify-content: center;
+
+          > span:nth-child(1) {
+            width: 10%;
+            padding-top: 10px;
+            text-align: center;
+          }
+
+          > span:nth-child(2) {
+            width: 80%;
+          }
+
+          > span:nth-child(3) {
+            width: 10%;
+            padding-top: 85px;
+            text-align: center;
+          }
+
+          .editor {
+            margin: 10px 0 30px 0 !important;
+          }
+        }
 
         .comment-list {
           padding: 0px 15px 0px 5px;
