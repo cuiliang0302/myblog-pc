@@ -22,13 +22,6 @@
             <span>
               <span v-if="isReply(item.user)===true" @click="replyMessage(item.id)">
                 <MyIcon type="icon-comment"/>回复
-                <!--                <el-popconfirm-->
-                <!--                    title="确定要删除吗？"-->
-                <!--                >-->
-                <!--                <template #reference>-->
-                <!--                  <span><MyIcon type="icon-comment"/>回复</span>-->
-                <!--                </template>-->
-                <!--                </el-popconfirm>-->
               </span>
               <span v-else class="no-choose"><MyIcon type="icon-comment"/>回复</span>
             </span>

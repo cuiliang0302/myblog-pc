@@ -128,44 +128,14 @@ let {
 } = catalog(sectionData)
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
+// 弹窗登录对象
+const loginPopupRef = ref(null)
+// 评论编辑器对象
+const messageEditor = ref(null)
 // 调用评论回复模块
-let {commentsList, getSectionCommentData, logo, photo, messageEditor, loginPopupRef, messageForm} = comment(sectionID)
+let {commentsList, getSectionCommentData, logo, photo, showLogin, clickSend} = comment(sectionID, loginPopupRef, messageEditor)
 // 调用动作菜单模块
 let {likeClick, isCollect} = action(sectionID, sectionData)
-// 弹出登录框
-const showLogin = () => {
-  store.commit('setNextPath', router.currentRoute.value.fullPath)
-  loginPopupRef.value.showPopup()
-}
-// 点击发表评论事件
-const clickSend = () => {
-  messageEditor.value.syncHTML()
-  messageForm.content = messageEditor.value.content
-  console.log(messageForm.content)
-  if (messageForm.content) {
-    messageForm.user = userId.value
-    messageForm['section_id'] = sectionID.value
-    console.log(messageForm)
-    postSectionComment(messageForm).then((response) => {
-      console.log(response)
-      ElMessage({
-        message: '评论成功！',
-        type: 'success',
-      })
-      messageForm.content = ''
-      messageEditor.value.clear()
-      getSectionCommentData()
-    }).catch(response => {
-      //发生错误时执行的代码
-      console.log(response)
-      for (let i in response) {
-        ElMessage.error(i + response[i][0])
-      }
-    });
-  } else {
-    ElMessage('请输入评论内容')
-  }
-}
 onMounted(async () => {
   window.scrollTo({top: 0})
   store.commit('setOutline', '')
@@ -387,15 +357,45 @@ function comment(sectionID) {
     console.log("commentsList", commentsList.value)
   }
 
-  // 弹窗登录对象
-  const loginPopupRef = ref(null)
-  // 评论编辑器对象
-  const messageEditor = ref(null)
   // 评论表单
   const messageForm = reactive({
     content: '',
     user: '',
   })
+  // 弹出登录框
+  const showLogin = () => {
+    store.commit('setNextPath', router.currentRoute.value.fullPath)
+    loginPopupRef.value.showPopup()
+  }
+// 点击发表评论事件
+  const clickSend = () => {
+    messageEditor.value.syncHTML()
+    messageForm.content = messageEditor.value.content
+    console.log(messageForm.content)
+    if (messageForm.content) {
+      messageForm.user = userId.value
+      messageForm['section_id'] = sectionID.value
+      console.log(messageForm)
+      postSectionComment(messageForm).then((response) => {
+        console.log(response)
+        ElMessage({
+          message: '评论成功！',
+          type: 'success',
+        })
+        messageForm.content = ''
+        messageEditor.value.clear()
+        getSectionCommentData()
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        for (let i in response) {
+          ElMessage.error(i + response[i][0])
+        }
+      });
+    } else {
+      ElMessage('请输入评论内容')
+    }
+  }
   // 评论点赞事件
   if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
     putSectionComment(messageId).then((response) => {
@@ -454,7 +454,7 @@ function comment(sectionID) {
     }
   })
   return {
-    commentsList, getSectionCommentData, logo, photo, messageEditor, loginPopupRef, messageForm
+    commentsList, getSectionCommentData, logo, photo, messageForm, showLogin, clickSend
   }
 }
 
