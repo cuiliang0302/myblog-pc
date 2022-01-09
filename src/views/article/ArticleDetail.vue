@@ -152,44 +152,14 @@ let {articleID, activeMenu, loading, sitename, toDetail, toCategory} = publicFn(
 let {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData} = article()
 // 引入markdown模块
 let {rollTo, scrollTop, scroll} = markdown()
+// 评论编辑器对象
+const messageEditor = ref(null)
+// 弹窗登录对象
+const loginPopupRef = ref(null)
 // 调用评论回复点赞模块
-let {commentsList, getArticleCommentData, logo, photo, messageEditor,loginPopupRef,messageForm} = comment(articleID, getArticleData)
+let {commentsList, getArticleCommentData, logo, photo, showLogin, clickSend} = comment(articleID, getArticleData,loginPopupRef, messageEditor)
 // 调用动作菜单模块
 let {likeClick, isCollect} = action(articleID, articleData)
-// 弹出登录框
-const showLogin = () => {
-  store.commit('setNextPath', router.currentRoute.value.fullPath)
-  loginPopupRef.value.showPopup()
-}
-// 点击发表评论事件
-const clickSend = () => {
-    messageEditor.value.syncHTML()
-    messageForm.content = messageEditor.value.content
-    console.log(messageForm.content)
-    if (messageForm.content) {
-      messageForm.user = userId.value
-      messageForm['article_id'] = articleID.value
-      console.log(messageForm)
-      postArticleComment(messageForm).then((response) => {
-        console.log(response)
-        ElMessage({
-          message: '评论成功！',
-          type: 'success',
-        })
-        messageForm.content = ''
-        messageEditor.value.clear()
-        getArticleCommentData()
-      }).catch(response => {
-        //发生错误时执行的代码
-        console.log(response)
-        for (let i in response) {
-          ElMessage.error(i + response[i][0])
-        }
-      });
-    } else {
-      ElMessage('请输入评论内容')
-    }
-  }
 onMounted(async () => {
   window.scrollTo({top: 0})
   store.commit('setOutline', '')
@@ -355,15 +325,45 @@ function comment(articleID) {
     commentsList.value = await getArticleComment(articleID.value)
     console.log("commentsList", commentsList.value)
   }
-  // 评论编辑器对象
-  const messageEditor = ref(null)
-  // 弹窗登录对象
-  const loginPopupRef = ref(null)
   // 评论表单
   const messageForm = reactive({
     content: '',
     user: '',
   })
+  // 弹出登录框
+  const showLogin = () => {
+    store.commit('setNextPath', router.currentRoute.value.fullPath)
+    loginPopupRef.value.showPopup()
+  }
+  // 点击发表评论事件
+  const clickSend = () => {
+    messageEditor.value.syncHTML()
+    messageForm.content = messageEditor.value.content
+    console.log(messageForm.content)
+    if (messageForm.content) {
+      messageForm.user = userId.value
+      messageForm['article_id'] = articleID.value
+      console.log(messageForm)
+      postArticleComment(messageForm).then((response) => {
+        console.log(response)
+        ElMessage({
+          message: '评论成功！',
+          type: 'success',
+        })
+        messageForm.content = ''
+        messageEditor.value.clear()
+        getArticleCommentData()
+      }).catch(response => {
+        //发生错误时执行的代码
+        console.log(response)
+        for (let i in response) {
+          ElMessage.error(i + response[i][0])
+        }
+      });
+    } else {
+      ElMessage('请输入评论内容')
+    }
+  }
   // 评论点赞事件
   if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
     putArticleComment(messageId).then((response) => {
@@ -422,7 +422,7 @@ function comment(articleID) {
     }
   })
   return {
-    commentsList, getArticleCommentData, logo, photo, messageEditor,loginPopupRef,messageForm
+    commentsList, getArticleCommentData, logo, photo,messageForm,showLogin, clickSend
   }
 }
 
