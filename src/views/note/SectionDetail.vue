@@ -1,8 +1,6 @@
 <template>
   <div v-title="sectionData.title+'-'+sitename">
-    <section class="detail" v-loading="loading"
-             element-loading-text="拼命加载中"
-             element-loading-spinner="el-icon-loading">
+    <section class="detail">
       <NavMenu :activeMenu="activeMenu"></NavMenu>
       <div class="detail-page">
         <div :class="'detail-left animate__animated animate__'+ (catalogShow===true?'fadeIn':'fadeOut')">
@@ -68,7 +66,7 @@
         <div class="detail-right">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
           <Action :detailType="'section'" @setCatalog="catalogShow=!catalogShow" :catalogShow="catalogShow"
-                  @likeClick="likeClick" :isCollect="isCollect"></Action>
+                  @likeClick="likeClick" :isCollect="isCollect" @collectClick="collectClick"></Action>
           <BackTop></BackTop>
         </div>
       </div>
@@ -101,8 +99,8 @@ import {
   getSectionComment,
   getSectionHistory,
   postReplySectionComment,
-  postSectionComment,
-  putSectionComment
+  postSectionComment, postSectionHistory, putArticleHistory,
+  putSectionComment, putSectionHistory
 } from "@/api/record";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
@@ -112,7 +110,7 @@ let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 const router = useRouter()
 // 引入公共模块
-let {sectionID, activeMenu, loading, toNote, sitename, toDetail} = publicFn()
+let {sectionID, activeMenu, toNote, sitename, toDetail} = publicFn()
 // 引入笔记内容模块
 let {sectionData, context, getSectionData, contextData} = section()
 // 引入笔记目录模块
@@ -133,17 +131,32 @@ const loginPopupRef = ref(null)
 // 评论编辑器对象
 const messageEditor = ref(null)
 // 调用评论回复模块
-let {commentsList, getSectionCommentData, logo, photo, showLogin, clickSend} = comment(sectionID, loginPopupRef, messageEditor)
+let {
+  commentsList,
+  getSectionCommentData,
+  logo,
+  photo,
+  showLogin,
+  clickSend
+} = comment(sectionID, loginPopupRef, messageEditor)
 // 调用动作菜单模块
-let {likeClick, isCollect} = action(sectionID, sectionData)
+let {likeClick, isCollect, collectClick, getSectionHistoryData, postSectionHistoryData} = action(sectionID, sectionData)
 onMounted(async () => {
+  // 开启加载中动画
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在加载中……',
+    background: 'rgba(255, 255, 255, 0.3)',
+  })
   window.scrollTo({top: 0})
   store.commit('setOutline', '')
   sectionID.value = router.currentRoute.value.params.id
   await getSectionData(sectionID.value)
+  loading.close()
   await catalogueData(sectionData.note_id)
   await findCatalogId(sectionID.value)
   await contextData(sectionID.value)
+  await postSectionHistoryData(sectionID.value)
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
@@ -151,16 +164,23 @@ onBeforeUnmount(() => {
   store.commit('setOutline', '')
 })
 onBeforeRouteUpdate(async (to) => {
+  // 开启加载中动画
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在加载中……',
+    background: 'rgba(255, 255, 255, 0.3)',
+  })
   window.scrollTo({top: 0})
-  // console.log(to)
   store.commit('setOutline', '')
   for (let key in context) {
     delete context[key];
   }
-  loading.value = true
   await getSectionData(to.params.id)
+  loading.close()
   await contextData(to.params.id)
   await getSectionCommentData(to.params.id)
+  await getSectionHistoryData()
+  await postSectionHistoryData(to.params.id)
 });
 
 // 公共模块
@@ -169,8 +189,6 @@ function publicFn() {
   const sectionID = ref()
   // 当前导航栏id
   const activeMenu = ref()
-  // 是否开启加载中动画
-  const loading = ref(false)
   //跳转笔记列表
   const toNote = (noteId) => {
     router.push({path: `/note/${noteId}`})
@@ -194,7 +212,7 @@ function publicFn() {
   onMounted(() => {
     siteConfigData()
   })
-  return {sectionID, activeMenu, loading, toNote, sitename, toDetail}
+  return {sectionID, activeMenu, toNote, sitename, toDetail}
 }
 
 // 笔记目录模块
@@ -284,7 +302,6 @@ function section() {
       }
     }
     activeMenu.value = "3-" + sectionData.note_id
-    loading.value = false
   }
 
   // 获取笔记上下篇
@@ -492,11 +509,59 @@ function action(sectionID, sectionData) {
     }
   }
 
+  // 添加/取消收藏表单
+  const CollectForm = reactive({
+    user: '',
+    is_collect: ''
+  })
+  // 子组件添加/取消收藏事件
+  const collectClick = () => {
+    console.log("当前收藏状态是", isCollect.value)
+    isCollect.value = !isCollect.value
+    CollectForm.user = userId.value
+    CollectForm.is_collect = isCollect.value
+    CollectForm['section_id'] = sectionID
+    putSectionHistory(CollectForm).then((response) => {
+      console.log(response)
+      if (response.is_collect === true) {
+        ElMessage({
+          message: '已添加收藏！',
+          type: 'success',
+        })
+      } else {
+        ElMessage({
+          message: '已取消收藏！',
+          type: 'success',
+        })
+      }
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  }
+  // 添加笔记浏览记录表单
+  const sectionHistoryForm = reactive({
+    section_id: '',
+    user: ''
+  })
+
+  // 添加笔记浏览记录
+  async function postSectionHistoryData(section_id) {
+    if (isLogin.value === true) {
+      sectionHistoryForm.section_id = section_id
+      sectionHistoryForm.user = userId.value
+      console.log(sectionHistoryForm)
+      let res = await postSectionHistory(sectionHistoryForm)
+      console.log(res)
+    }
+  }
+
   onMounted(() => {
     getSectionHistoryData()
   })
   return {
-    likeClick, isCollect
+    likeClick, isCollect, collectClick, getSectionHistoryData, postSectionHistoryData
   }
 }
 </script>

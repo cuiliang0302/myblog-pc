@@ -95,7 +95,7 @@ const props = defineProps({
     default: false
   }
 })
-const emit = defineEmits(['setCatalog', 'likeClick']);
+const emit = defineEmits(['setCatalog', 'likeClick','collectClick']);
 // 大纲是否显示
 const outlineShow = computed(() => store.state.outlineShow)
 // 设置目录是否显示
@@ -132,6 +132,7 @@ const lickAction = () => {
 // 收藏事件
 const collectAction = () => {
   console.log("收藏文章了")
+  emit('collectClick')
 }
 // 跳转评论事件
 const commentAction = () => {

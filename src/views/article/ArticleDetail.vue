@@ -1,8 +1,6 @@
 <template>
   <div v-title="articleData.title+'-'+sitename">
-    <section class="detail" v-loading="loading"
-             element-loading-text="拼命加载中"
-             element-loading-spinner="el-icon-loading">
+    <section class="detail">
       <NavMenu :activeMenu="activeMenu"></NavMenu>
       <div class="detail-page">
         <div class="detail-left">
@@ -99,7 +97,8 @@
         </div>
         <div class="detail-right">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
-          <Action :detailType="'article'" @likeClick="likeClick" :isCollect="isCollect"></Action>
+          <Action :detailType="'article'" @likeClick="likeClick" :isCollect="isCollect"
+                  @collectClick="collectClick"></Action>
           <BackTop></BackTop>
         </div>
       </div>
@@ -119,7 +118,7 @@ import Action from "@/components/detail/Action.vue"
 import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
-import {ElMessage} from 'element-plus'
+import {ElLoading, ElMessage} from 'element-plus'
 import {getArticleDetail, getContextArticle, getGuessLike, putArticleDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
@@ -133,9 +132,9 @@ import {
   deleteArticleComment,
   getArticleComment,
   getArticleHistory,
-  postArticleComment,
+  postArticleComment, postArticleHistory,
   postReplyArticleComment,
-  putArticleComment
+  putArticleComment, putArticleHistory
 } from "@/api/record";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
@@ -147,7 +146,7 @@ const router = useRouter()
 // 引入用户信息模块
 let {userId, isLogin} = user();
 // 引入公共模块
-let {articleID, activeMenu, loading, sitename, toDetail, toCategory} = publicFn()
+let {articleID, activeMenu, sitename, toDetail, toCategory} = publicFn()
 // 引入文章内容模块
 let {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData} = article()
 // 引入markdown模块
@@ -157,33 +156,56 @@ const messageEditor = ref(null)
 // 弹窗登录对象
 const loginPopupRef = ref(null)
 // 调用评论回复点赞模块
-let {commentsList, getArticleCommentData, logo, photo, showLogin, clickSend} = comment(articleID, getArticleData,loginPopupRef, messageEditor)
+let {
+  commentsList,
+  getArticleCommentData,
+  logo,
+  photo,
+  showLogin,
+  clickSend
+} = comment(articleID, getArticleData, loginPopupRef, messageEditor)
 // 调用动作菜单模块
-let {likeClick, isCollect} = action(articleID, articleData)
+let {likeClick, isCollect, getArticleHistoryData, collectClick, postArticleHistoryData} = action(articleID, articleData)
 onMounted(async () => {
+  // 开启加载中动画
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在加载中……',
+    background: 'rgba(255, 255, 255, 0.3)',
+  })
   window.scrollTo({top: 0})
   store.commit('setOutline', '')
   articleID.value = router.currentRoute.value.params.id
   await getArticleData(articleID.value)
+  loading.close()
   await getContextData(articleID.value)
   await getGuessLikeData(articleID.value)
+  await postArticleHistoryData(articleID.value)
   window.addEventListener('scroll', scroll())
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
 })
 onBeforeRouteUpdate(async (to) => {
+  // 开启加载中动画
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在加载中……',
+    background: 'rgba(255, 255, 255,0.3)',
+  })
   window.scrollTo({top: 0})
   console.log(to)
   store.commit('setOutline', '')
   for (let key in context) {
     delete context[key];
   }
-  loading.value = true
   await getArticleData(to.params.id)
+  loading.close()
   await getContextData(to.params.id)
   await getGuessLikeData(to.params.id)
   await getArticleCommentData(to.params.id)
+  await getArticleHistoryData()
+  await postArticleHistoryData(to.params.id)
 });
 
 // 公共模块
@@ -192,8 +214,6 @@ function publicFn() {
   const articleID = ref()
   // 当前文章分类id
   const activeMenu = ref()
-  // 是否开启加载中动画
-  const loading = ref(false)
   // 站点名称
   const sitename = ref('')
   //跳转文章列表
@@ -215,7 +235,7 @@ function publicFn() {
   onMounted(() => {
     siteConfigData()
   })
-  return {articleID, activeMenu, loading, sitename, toDetail, toCategory}
+  return {articleID, activeMenu, sitename, toDetail, toCategory}
 }
 
 // 文章模块
@@ -251,7 +271,6 @@ function article() {
       }
     }
     activeMenu.value = "2-" + articleData.category_id
-    loading.value = false
   }
 
   // 获取文章上下篇
@@ -305,26 +324,31 @@ function comment(articleID) {
   const logo = ref()
   // 用户头像
   const photo = ref()
+
   // 获取网站logo
   async function getLogoData() {
     let data = await getSiteConfig()
     logo.value = data.logo
     console.log("logo:", logo.value)
   }
+
   // 获取用户头像
   async function getPhotoData() {
     let data = await getUserinfoId(userId.value)
     console.log(data)
     photo.value = data.photo
   }
+
   // 评论列表
   const commentsList = ref([])
+
   // 获取文章评论数据
   async function getArticleCommentData() {
     await nextTick()
     commentsList.value = await getArticleComment(articleID.value)
     console.log("commentsList", commentsList.value)
   }
+
   // 评论表单
   const messageForm = reactive({
     content: '',
@@ -402,10 +426,12 @@ function comment(articleID) {
   if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
     deleteArticleComment(messageId).then((response) => {
       console.log(response)
+      console.log("要开始删除了")
       ElMessage({
         message: '评论删除成功！',
         type: 'success',
       })
+      console.log("删除完成了")
       getArticleCommentData()
     }).catch(response => {
       //发生错误时执行的代码
@@ -422,7 +448,7 @@ function comment(articleID) {
     }
   })
   return {
-    commentsList, getArticleCommentData, logo, photo,messageForm,showLogin, clickSend
+    commentsList, getArticleCommentData, logo, photo, messageForm, showLogin, clickSend
   }
 }
 
@@ -454,9 +480,58 @@ function action(articleID, articleData) {
     await nextTick()
     if (isLogin.value === true) {
       let res = await getArticleHistory(articleID.value, userId.value)
-      console.log(res)
+      console.log("查询是否已收藏", res.is_collect)
       isCollect.value = res.is_collect
       console.log(isCollect.value)
+    }
+  }
+
+  // 添加/取消收藏表单
+  const CollectForm = reactive({
+    user: '',
+    is_collect: ''
+  })
+  // 子组件添加/取消收藏事件
+  const collectClick = () => {
+    console.log("当前收藏状态是", isCollect.value)
+    isCollect.value = !isCollect.value
+    CollectForm.user = userId.value
+    CollectForm.is_collect = isCollect.value
+    CollectForm['article_id'] = articleID
+    putArticleHistory(CollectForm).then((response) => {
+      console.log(response)
+      if (response.is_collect === true) {
+        ElMessage({
+          message: '已添加收藏！',
+          type: 'success',
+        })
+      } else {
+        ElMessage({
+          message: '已取消收藏！',
+          type: 'success',
+        })
+      }
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  }
+  // 添加文章浏览记录表单
+  const articleHistoryForm = reactive({
+    article_id: '',
+    user: ''
+  })
+
+  // 添加文章浏览记录
+  async function postArticleHistoryData(article_id) {
+    if (isLogin.value === true) {
+      articleHistoryForm.article_id = article_id
+      articleHistoryForm.user = userId.value
+      console.log("添加文章浏览记录了")
+      console.log("articleHistoryForm", articleHistoryForm)
+      let res = await postArticleHistory(articleHistoryForm)
+      console.log(res)
     }
   }
 
@@ -464,7 +539,7 @@ function action(articleID, articleData) {
     getArticleHistoryData()
   })
   return {
-    likeClick, isCollect
+    likeClick, isCollect, getArticleHistoryData, collectClick, postArticleHistoryData
   }
 }
 </script>
@@ -559,7 +634,7 @@ function action(articleID, articleData) {
 
           &:hover {
             span {
-              opacity: 0.5;
+              opacity: 0.3;
             }
           }
 
