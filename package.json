@@ -10,6 +10,7 @@
     "@ant-design/icons-vue": "^6.0.1",
     "@kangc/v-md-editor": "^2.3.8",
     "dayjs": "^1.10.7",
+    "echarts": "^5.2.1",
     "element-plus": "^1.1.0-beta.24",
     "fuse.js": "^6.4.6",
     "highlight.js": "^10.7.3",

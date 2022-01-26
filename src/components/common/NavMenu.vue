@@ -1,6 +1,6 @@
 <template>
   <header>
-    <span class="left">
+    <span v-show="props.kind==='front'" class="left">
       <el-image
           style="width: 40px; height: 40px"
           :src="siteConfig.logo"
@@ -64,7 +64,7 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item @click="router.push('/personal')">个人中心</el-dropdown-item>
               <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -79,9 +79,11 @@
         title="系统设置"
         v-model="drawer"
         :direction="'rtl'"
+        :size="'20%'"
         :before-close="handleClose" destroy-on-close
     >
       <span>
+        <el-divider></el-divider>
         <div class="display">
           <h4>显示模式</h4>
           <span>
@@ -97,6 +99,7 @@
                 inactive-text="浅色模式"
             />
         </div>
+        <el-divider></el-divider>
         <div class="color">
           <h4>主题色</h4>
           <div>
@@ -107,7 +110,8 @@
             </el-tooltip>
           </div>
          </div>
-        <div class="nav-style">
+        <el-divider></el-divider>
+        <div v-if="props.kind==='front'" class="nav-style">
           <h4>导航菜单</h4>
           菜单显示模式：
           <el-select v-model="navValue">
@@ -119,6 +123,12 @@
             </el-option>
           </el-select>
         </div>
+        <div v-else>
+          <h4>侧边菜单</h4>
+          是否折叠菜单：
+          <el-switch v-model="navFlod"/>
+        </div>
+        <el-divider></el-divider>
       </span>
     </el-drawer>
   </header>
@@ -134,11 +144,18 @@ import {useRouter} from "vue-router";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import store from "@/store/index";
+
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
 let {isLogin, userId, userName} = user();
 const props = defineProps({
+  // 导航栏类型(前台后台)
+  kind: {
+    type: String,
+    required: false,
+    default: 'front'
+  },
   // 导航菜单-当前选中的菜单
   activeMenu: {
     type: String,
@@ -220,12 +237,14 @@ const logout = () => {
 }
 // 个人中心-用户头像
 const photo = ref()
+
 // 个人中心-获取用户头像
 async function getPhotoData() {
   let data = await getUserinfoId(userId.value)
   photo.value = data.photo
   console.log("photo:", photo.value)
 }
+
 //设置-菜单默认关闭
 let drawer = ref(false);
 //设置-菜单关闭事件
@@ -234,6 +253,8 @@ const handleClose = () => {
 };
 // 设置-显示模式默认值
 const isDark = ref(false)
+// 设置-侧边菜单显示样式
+const navFlod = ref(false)
 onMounted(() => {
   siteConfigData()
   categoryData()

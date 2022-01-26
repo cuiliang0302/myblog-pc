@@ -141,6 +141,35 @@ const router = createRouter({
 				keepAlive: false
 			}
 		},
+		{
+			path: '/personal',
+			name: 'Personal',
+			component: () => import('@/views/personal/Personal.vue'),
+			children:[
+				{
+					path:"",
+					redirect:"/personal/myIndex"
+				},
+				{
+					path: 'myIndex',
+					name: 'MyIndex',
+					component: () => import('@/views/personal/MyIndex.vue'),
+					meta: {
+						title: '个人中心',
+						keepAlive: true,
+					},
+				},
+				{
+					path: 'myInfo',
+					name: 'MyInfo',
+					component: () => import('@/views/personal/MyInfo.vue'),
+					meta: {
+						title: '我的信息',
+						keepAlive: true,
+					},
+				}
+			]
+		},
 		{path: '/test', component: () => import('@/views/Test.vue')},
 		{path: '/test1', component: () => import('@/views/Test1.vue')},
 		{path: '/test2', component: () => import('@/views/Test2.vue')},
