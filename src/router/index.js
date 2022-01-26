@@ -164,7 +164,7 @@ const router = createRouter({
 					name: 'MyInfo',
 					component: () => import('@/views/personal/MyInfo.vue'),
 					meta: {
-						title: '我的信息',
+						title: '修改信息',
 						keepAlive: true,
 					},
 				}

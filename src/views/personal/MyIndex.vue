@@ -15,14 +15,20 @@
             <el-tag v-if="userInfo.sex='1'" size="small">男</el-tag>
             <el-tag v-else class="small" type="danger">女</el-tag>
           </el-descriptions-item>
+          <el-descriptions-item label="来源：" label-align="right" align="center">
+            {{ userInfo.source }}
+          </el-descriptions-item>
+          <el-descriptions-item label="生日：" label-align="right" align="center">
+            {{ userInfo.birthday }}
+          </el-descriptions-item>
           <el-descriptions-item label="手机：" label-align="right" align="center">
             {{ userInfo.phone }}
           </el-descriptions-item>
           <el-descriptions-item label="邮箱：" label-align="right" align="center">
             {{ userInfo.email }}
           </el-descriptions-item>
-          <el-descriptions-item label="生日：" label-align="right" align="center">
-            {{ userInfo.birthday }}
+          <el-descriptions-item label="地区：" label-align="right" align="center">
+            {{ userInfo.area_name }}
           </el-descriptions-item>
           <el-descriptions-item label="个人网站：" label-align="right" align="center">
             {{ userInfo.web }}
@@ -42,28 +48,40 @@
         </template>
         <el-row :gutter="10">
           <el-col :span="8">
-            <div class="number-count-card article-card"><p class="count-card-title">浏览文章数</p>
+            <div class="number-count-card article-card">
+              <img src="/src/assets/images/read.png" alt=""/>
+              <p class="count-card-title">浏览文章数</p>
               <p class="count-card-number">{{ dataCount.article_history }}</p></div>
           </el-col>
           <el-col :span="8">
-            <div class="number-count-card article-card"><p class="count-card-title">收藏文章数</p>
+            <div class="number-count-card article-card">
+              <img src="/src/assets/images/collection.png" alt=""/>
+              <p class="count-card-title">收藏文章数</p>
               <p class="count-card-number">{{ dataCount.article_collect }}</p>
             </div>
           </el-col>
           <el-col :span="8">
-            <div class="number-count-card article-card"><p class="count-card-title">评论文章数</p>
+            <div class="number-count-card article-card">
+              <img src="/src/assets/images/comments.png" alt=""/>
+              <p class="count-card-title">评论文章数</p>
               <p class="count-card-number">{{ dataCount.article_comment }}</p></div>
           </el-col>
           <el-col :span="8">
-            <div class="number-count-card section-card"><p class="count-card-title">浏览笔记数</p>
+            <div class="number-count-card section-card">
+              <img src="/src/assets/images/read.png" alt=""/>
+              <p class="count-card-title">浏览笔记数</p>
               <p class="count-card-number">{{ dataCount.section_history }}</p></div>
           </el-col>
           <el-col :span="8">
-            <div class="number-count-card section-card"><p class="count-card-title">收藏笔记数</p>
+            <div class="number-count-card section-card">
+              <img src="/src/assets/images/collection.png" alt=""/>
+              <p class="count-card-title">收藏笔记数</p>
               <p class="count-card-number">{{ dataCount.section_collect }}</p></div>
           </el-col>
           <el-col :span="8">
-            <div class="number-count-card section-card"><p class="count-card-title">评论笔记数</p>
+            <div class="number-count-card section-card">
+              <img src="/src/assets/images/comments.png" alt=""/>
+              <p class="count-card-title">评论笔记数</p>
               <p class="count-card-number">{{ dataCount.section_comment }}</p></div>
           </el-col>
         </el-row>
@@ -343,6 +361,7 @@ async function note() {
     myChart.resize();
   };
 };
+
 // 浏览时间柱形图
 async function time() {
   let chartData = await getEcharts(userId.value, 'time')
@@ -425,20 +444,31 @@ onMounted(() => {
 }
 
 .number-count-card {
-  height: 84px;
+  height: 107px;
   background-color: $color-background-input;
   margin-bottom: 10px;
   text-align: center;
   border-radius: 5px;
   color: white;
+  position: relative;
+
+  img {
+    border-style: none;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 50px;
+    opacity: 0.3;
+  }
 
   .count-card-title {
-    font-size: 14px;
-    padding: 10px;
+    font-size: 16px;
+    padding: 15px;
   }
 
   .count-card-number {
-    font-size: 30px;
+    margin-top: 6px;
+    font-size: 36px;
   }
 }
 
