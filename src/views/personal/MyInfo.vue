@@ -56,7 +56,7 @@
         >
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="form-btn">
         <el-button type="primary" @click="onSubmit">提交</el-button>
         <el-button @click="reset">重置</el-button>
       </el-form-item>
@@ -214,6 +214,9 @@ onMounted(() => {
 <style scoped lang="scss">
 .el-form {
   padding: 20px 50px 20px 0;
+  .form-btn{
+    margin-top: 50px;
+  }
 }
 
 .photo-btn {

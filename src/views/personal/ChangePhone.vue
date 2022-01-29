@@ -9,5 +9,10 @@
 </script>
 
 <style scoped lang="scss">
-
+.el-form {
+  padding: 20px 50px 20px 0;
+  .form-btn{
+    margin-top: 50px;
+  }
+}
 </style>

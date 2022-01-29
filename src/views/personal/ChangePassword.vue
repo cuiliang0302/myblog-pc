@@ -13,7 +13,7 @@
         <el-input v-model="verifyForm.password2" type="password" show-password clearable style="width: 50%"
                   placeholder="请再次填写新密码"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="form-btn">
         <el-button type="primary" @click="onSubmit">提交</el-button>
         <el-button @click="reset">重置</el-button>
       </el-form-item>
@@ -119,5 +119,10 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-
+.el-form {
+  padding: 20px 50px 20px 0;
+  .form-btn{
+    margin-top: 50px;
+  }
+}
 </style>
