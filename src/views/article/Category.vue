@@ -52,7 +52,7 @@ import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getArticle, getCategoryName} from "@/api/blog";
 
 const router = useRouter()
-// 当前文章id
+// 当前文章分类id
 const categoryID = ref()
 // 文章分类名
 const categoryName = ref('')

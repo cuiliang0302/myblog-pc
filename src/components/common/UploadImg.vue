@@ -173,6 +173,13 @@ const confirmFn = () => {
     });
   })
 }
+const test=()=>{
+  console.log("这是图片上传组件的方法")
+}
+defineExpose({
+  test,
+  uploadChange
+})
 </script>
 <style scoped lang="scss">
 .upload-btn {

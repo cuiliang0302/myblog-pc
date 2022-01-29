@@ -229,7 +229,7 @@ const logout = () => {
         })
         store.commit('setUserLocal', {})
         store.commit('setUserSession', {})
-        router.push('/loginRegister')
+        router.replace('/loginRegister')
       })
       .catch(() => {
         console.log("算了，没退出")

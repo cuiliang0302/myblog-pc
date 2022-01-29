@@ -91,10 +91,6 @@ const close = () => {
 }
 // 通过滑块验证事件
 const pass = () => {
-  ElMessage({
-    message: '滑块验证成功！',
-    type: 'success',
-  })
   getCode()
   emit('pass')
   setTimeout(() => {

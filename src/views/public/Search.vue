@@ -136,7 +136,7 @@ const querySearch = (queryString, cb) => {
     cb(hotListAll)
   } else {
     let resultList = []
-    const fuse = new Fuse(hotList.value, {includeScore: false})
+    const fuse = new Fuse(hotList.value, {includeScore: false, keys: ["item"]})
     const result = fuse.search(queryString)
     console.log(result)
     result.forEach(function (item, index) {

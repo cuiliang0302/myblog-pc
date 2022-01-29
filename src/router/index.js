@@ -167,7 +167,34 @@ const router = createRouter({
 						title: '修改信息',
 						keepAlive: true,
 					},
-				}
+				},
+				{
+					path: 'changePassword',
+					name: 'ChangePassword',
+					component: () => import('@/views/personal/ChangePassword.vue'),
+					meta: {
+						title: '修改密码',
+						keepAlive: true,
+					},
+				},
+				{
+					path: 'changeEmail',
+					name: 'ChangeEmail',
+					component: () => import('@/views/personal/ChangeEmail.vue'),
+					meta: {
+						title: '更换邮箱',
+						keepAlive: true,
+					},
+				},
+				{
+					path: 'changePhone',
+					name: 'ChangePhone',
+					component: () => import('@/views/personal/ChangePhone.vue'),
+					meta: {
+						title: '更换手机',
+						keepAlive: true,
+					},
+				},
 			]
 		},
 		{path: '/test', component: () => import('@/views/Test.vue')},

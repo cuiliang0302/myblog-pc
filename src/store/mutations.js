@@ -22,6 +22,10 @@ const mutations = {
 	// 用户信息（临时存储）
 	setUserSession(state, value) {
 		state.userSession = value
+	},
+	// 当前激活的个人中心导航栏ID
+	setAsideMenuIndex(state, value) {
+		state.asideMenuIndex = value
 	}
 }
 export default mutations

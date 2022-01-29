@@ -88,10 +88,6 @@ const close = () => {
 const pass = () => {
   console.log("过了")
   emit('verifyPass')
-  ElMessage({
-    message: '滑块验证成功！',
-    type: 'success',
-  })
   setTimeout(() => {
     show.value = false
     dragVerify.value.reset()

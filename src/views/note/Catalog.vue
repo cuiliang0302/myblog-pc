@@ -1,6 +1,6 @@
 <template>
   <NavMenu :activeMenu="'3-'+router.currentRoute.value.params.id"></NavMenu>
-  <div class="page">
+  <div class="page" v-title="title+'-笔记目录'">
     <div class="catalog animate__animated animate__zoomIn">
       <el-tree :data="catalogList" @node-click="handleNodeClick"></el-tree>
     </div>
@@ -18,9 +18,10 @@ import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
-import {getCatalogue} from "@/api/blog";
-
+import {getCatalogue, getNoteDetail} from "@/api/blog";
 const router = useRouter()
+// 笔记名称
+const title = ref()
 // 点击跳转笔记详情页
 const handleNodeClick = (data) => {
   if (!data.children) {
@@ -48,10 +49,15 @@ async function catalogueData(catalogueID) {
     }
   })
 }
-
+// 获取笔记名称
+async function titleData(catalogueID) {
+  let note_data = await getNoteDetail(catalogueID)
+  title.value = note_data.name
+}
 onMounted(async () => {
   let catalogueID = router.currentRoute.value.params.id
   await catalogueData(catalogueID)
+  await titleData(catalogueID)
 })
 onBeforeRouteUpdate(async (to) => {
   console.log(to.params.id)

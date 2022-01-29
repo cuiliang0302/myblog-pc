@@ -101,13 +101,26 @@ const linkForm = reactive({
   describe: '',
   logo: '',
 })
+// url校验
+const checkUrl = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('请输入网站地址'))
+  }
+  const pattern = /[a-zA-z]+:\/\/[^\s]*/
+  if(pattern.test(value)){
+    callback()
+  }else {
+    callback(new Error('请输入正确的网站地址'))
+  }
+}
 // 表单验证规则
 const rules = {
-  url: [{required: true, message: '请输入网站地址', trigger: 'blur',}],
+  url: [{validator: checkUrl, trigger: 'blur',}],
   name: [{required: true, message: '请输入网站名称', trigger: 'blur',}],
   describe: [{required: true, message: '请输入网站描述', trigger: 'blur',}],
   logo: [{required: true, message: '请上传网站logo', trigger: 'blur',}],
 }
+
 // 提交表单事件
 const onSubmit = () => {
   console.log('submit!')

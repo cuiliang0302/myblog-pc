@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="10">
     <el-col :span="12">
-      <el-card>
+      <el-card shadow="hover">
         <template #header>
           <div>
             <span>我的信息</span>
@@ -40,7 +40,7 @@
       </el-card>
     </el-col>
     <el-col :span="12">
-      <el-card>
+      <el-card shadow="hover">
         <template #header>
           <div>
             <span>数据统计</span>
@@ -90,7 +90,7 @@
   </el-row>
   <el-row :gutter="10">
     <el-col :span="16">
-      <el-card>
+      <el-card shadow="hover">
         <template #header>
           <span>浏览趋势</span>
         </template>
@@ -98,7 +98,7 @@
       </el-card>
     </el-col>
     <el-col :span="8">
-      <el-card>
+      <el-card shadow="hover">
         <template #header>
           <span>浏览文章</span>
         </template>
@@ -108,7 +108,7 @@
   </el-row>
   <el-row :gutter="10">
     <el-col :span="8">
-      <el-card>
+      <el-card shadow="hover">
         <template #header>
           <span>浏览笔记</span>
         </template>
@@ -116,7 +116,7 @@
       </el-card>
     </el-col>
     <el-col :span="16">
-      <el-card>
+      <el-card shadow="hover">
         <template #header>
           <span>浏览时间</span>
         </template>
@@ -124,8 +124,6 @@
       </el-card>
     </el-col>
   </el-row>
-
-
 </template>
 
 <script setup>
@@ -473,14 +471,14 @@ onMounted(() => {
 }
 
 .article-card {
-  background: #FF416C; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to left, #FF4B2B, #FF416C); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to left, #FF4B2B, #FF416C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #ff5f50; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #ed4551, #ff5f50); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #ed4551, #ff5f50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .section-card {
-  background: #56CCF2; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to left, #2F80ED, #56CCF2); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to left, #2F80ED, #56CCF2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #3889fc; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #5455f5, #3889fc); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #5455f5, #3889fc); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 </style>

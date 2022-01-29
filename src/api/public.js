@@ -19,3 +19,7 @@ export function getEcharts(user, chart) {
 export function getBgiUrl() {
     return index.get('/public/backgroundImage/')
 }
+// 获取省市代码
+export function getAreaData() {
+    return index.get('/public/areaData/')
+}
