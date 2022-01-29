@@ -25,7 +25,7 @@
 // 验证密码表单
 import {reactive, ref} from "vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
-import {getRegister, postCode, putChangeEmail, putChangePassword} from "@/api/account";
+import {getRegister, postCode, putChangeEmail} from "@/api/account";
 import {ElMessage} from "element-plus";
 import user from "@/utils/user";
 // 引入用户信息模块
@@ -78,7 +78,7 @@ const checkContact = (rule, value, callback) => {
     });
   } else {
     codeBtnDisabled.value = true
-    return callback(new Error("新邮箱格式不正确！"))
+    return callback(new Error("新邮箱号格式不正确！"))
   }
 }
 // 表单校验规则
@@ -98,7 +98,7 @@ const onSubmit = () => {
       putChangeEmail(userId.value, emailForm).then((response) => {
         console.log(response)
         ElMessage({
-          message: '邮箱修改成功！',
+          message: '邮箱号修改成功！',
           type: 'success',
         })
       }).catch(response => {
