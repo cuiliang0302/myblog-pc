@@ -75,7 +75,7 @@ import timeFormat from "@/utils/timeFormat";
 
 let {timeDate} = timeFormat()
 // 引入用户信息模块
-let {userId, isLogin} = user();
+let {userId} = user();
 // 我的信息表单
 const userInfoForm = reactive({});
 // 表单对象

@@ -445,7 +445,7 @@ function registerFn() {
       const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
       if (!pattern.test(value)) {
         console.log("没通过")
-        callback(new Error('密码不符合安全要求！'))
+        callback(new Error('密码必须是数字+字符组合，8-16位长度！'))
       } else {
         console.log("通过了")
         callback()
@@ -462,7 +462,7 @@ function registerFn() {
       const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
       if (!pattern.test(value)) {
         console.log("没通过")
-        callback(new Error('密码不符合安全要求！'))
+        callback(new Error('密码必须是数字+字符组合，8-16位长度！'))
       } else {
         if (registerForm.password1 !== registerForm.password2) {
           callback(new Error('两次密码不一致'))
