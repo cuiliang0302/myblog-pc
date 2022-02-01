@@ -151,6 +151,10 @@ const router = createRouter({
 					redirect:"/personal/myIndex"
 				},
 				{
+					path:"statistics",
+					redirect:"/personal/myIndex"
+				},
+				{
 					path: 'myIndex',
 					name: 'MyIndex',
 					component: () => import('@/views/personal/MyIndex.vue'),
@@ -193,8 +197,35 @@ const router = createRouter({
 					meta: {
 						title: '更换手机',
 						keepAlive: true,
-					},
+					}
 				},
+				{
+					path: 'myHistory',
+					name: 'MyHistory',
+					component: () => import('@/views/personal/MyHistory.vue'),
+					meta: {
+						title: '浏览记录',
+						keepAlive: true,
+					}
+				},
+				{
+					path: 'myCollect',
+					name: 'MyCollect',
+					component: () => import('@/views/personal/MyCollect.vue'),
+					meta: {
+						title: '我的收藏',
+						keepAlive: true,
+					}
+				},
+				{
+					path: 'myComments',
+					name: 'MyComments',
+					component: () => import('@/views/personal/MyComments.vue'),
+					meta: {
+						title: '我的评论',
+						keepAlive: true,
+					}
+				}
 			]
 		},
 		{path: '/test', component: () => import('@/views/Test.vue')},

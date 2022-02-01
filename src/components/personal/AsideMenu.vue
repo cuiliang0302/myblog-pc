@@ -31,10 +31,9 @@
         <MyIcon class="icon" type="icon-history"/>
         <span>我的足迹</span>
       </template>
-      <el-menu-item index="3-1">浏览记录</el-menu-item>
-      <el-menu-item index="3-2">收藏记录</el-menu-item>
-      <el-menu-item index="3-3">评论记录</el-menu-item>
-      <el-menu-item index="3-4">留言记录</el-menu-item>
+      <el-menu-item index="3-1" @click="$router.push('/personal/myHistory')">浏览记录</el-menu-item>
+      <el-menu-item index="3-2" @click="$router.push('/personal/MyCollect')">收藏记录</el-menu-item>
+      <el-menu-item index="3-3" @click="$router.push('/personal/MyComments')">评论记录</el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
