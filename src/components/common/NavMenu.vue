@@ -126,7 +126,7 @@
         <div v-else>
           <h4>侧边菜单</h4>
           是否折叠菜单：
-          <el-switch v-model="navFlod"/>
+          <el-switch v-model="asideMenuFold" @change="asideMenuFoldChange"/>
         </div>
         <el-divider></el-divider>
       </span>
@@ -253,9 +253,14 @@ const handleClose = () => {
 };
 // 设置-显示模式默认值
 const isDark = ref(false)
-// 设置-侧边菜单显示样式
-const navFlod = ref(false)
+// 设置-侧边菜单显示是否折叠
+const asideMenuFold = ref(false)
+// 设置-侧边菜单显示折叠切换事件
+const asideMenuFoldChange = () => {
+  store.commit('setAsideMenuFold', asideMenuFold.value)
+}
 onMounted(() => {
+  asideMenuFold.value = store.state.asideMenuFold
   siteConfigData()
   categoryData()
   NoteData()

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
+    "@element-plus/icons-vue": "^0.2.6",
     "@kangc/v-md-editor": "^2.3.8",
     "dayjs": "^1.10.7",
     "echarts": "^5.2.1",
