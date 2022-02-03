@@ -23,10 +23,6 @@ const mutations = {
 	setUserSession(state, value) {
 		state.userSession = value
 	},
-	// 当前激活的个人中心导航栏ID
-	setAsideMenuIndex(state, value) {
-		state.asideMenuIndex = value
-	},
 	// 个人中心导航栏是否折叠
 	setAsideMenuFold(state, value) {
 		state.asideMenuFold = value

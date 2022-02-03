@@ -11,8 +11,6 @@ const state = {
 	userLocal: {},
 	// 临时登录用户信息(sessionStorage)
 	userSession: {},
-	// 个人中心导航栏当前激活的ID
-	asideMenuIndex: '1',
 	// 个人中心导航栏是否折叠
 	asideMenuFold: false
 }

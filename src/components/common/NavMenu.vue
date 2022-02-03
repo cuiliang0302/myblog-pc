@@ -79,7 +79,7 @@
         title="系统设置"
         v-model="drawer"
         :direction="'rtl'"
-        :size="'20%'"
+        :size="'25%'"
         :before-close="handleClose" destroy-on-close
     >
       <span>

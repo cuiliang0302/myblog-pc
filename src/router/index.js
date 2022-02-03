@@ -225,6 +225,15 @@ const router = createRouter({
 						title: '我的评论',
 						keepAlive: true,
 					}
+				},
+				{
+					path: 'test',
+					name: 'Test',
+					component: () => import('@/views/Test.vue'),
+					meta: {
+						title: '测试页',
+						keepAlive: true,
+					}
 				}
 			]
 		},

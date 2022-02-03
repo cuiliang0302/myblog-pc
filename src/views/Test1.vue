@@ -1,123 +1,116 @@
 <template>
-  <el-card shadow="hover">
-    <el-form ref="passwordFormRef" :model="verifyForm" label-width="120px" :rules="rules">
-      <el-form-item label="当前密码：" prop="oldPassword">
-        <el-input v-model="verifyForm.oldPassword" type="password" show-password clearable style="width: 50%"
-                  placeholder="请填写当前密码"></el-input>
-      </el-form-item>
-      <el-form-item label="新密码：" prop="password1">
-        <el-input v-model="verifyForm.password1" type="password" show-password clearable style="width: 50%"
-                  placeholder="请填写新密码"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码：" prop="password2">
-        <el-input v-model="verifyForm.password2" type="password" show-password clearable style="width: 50%"
-                  placeholder="请再次填写新密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">提交</el-button>
-        <el-button @click="reset">重置</el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+  <el-menu
+      default-active="1"
+      class="el-menu-vertical-demo"
+      :default-openeds="['2','3']"
+      @select="changePage"
+      :collapse="isCollapse"
+      router
+  >
+    <span class="logo">
+      <el-image
+          style="width: 40px; height: 40px"
+          :src="siteConfig.logo"
+          :fit="'fill'"></el-image>
+      <span class="no-choose" v-show="isCollapse===false">{{ siteConfig.name }}</span>
+    </span>
+    <el-menu-item index="1" @click="$router.push('/personal/myIndex')">
+      <el-icon><icon-user /></el-icon>
+      <span class="menu-icon-text">个人中心</span>
+    </el-menu-item>
+    <el-sub-menu index="2">
+      <template #title>
+        <el-icon>
+          <operation/>
+        </el-icon>
+        <span class="menu-icon-text">账号管理</span>
+      </template>
+      <el-menu-item index="2-1" @click="$router.push('/personal/myInfo')">修改信息</el-menu-item>
+      <el-menu-item index="2-2" @click="$router.push('/personal/changePassword')">修改密码</el-menu-item>
+      <el-menu-item index="2-3" @click="$router.push('/personal/changeEmail')">更换邮箱</el-menu-item>
+      <el-menu-item index="2-4" @click="$router.push('/personal/changePhone')">更换手机</el-menu-item>
+      <el-menu-item index="2-5" @click="changeFlow">文章发布邮件通知</el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="3">
+      <template #title>
+        <el-icon><tickets /></el-icon>
+        <span class="menu-icon-text">我的足迹</span>
+      </template>
+      <el-menu-item index="3-1" @click="$router.push('/personal/myHistory')">浏览记录</el-menu-item>
+      <el-menu-item index="3-2" @click="$router.push('/personal/MyCollect')">收藏记录</el-menu-item>
+      <el-menu-item index="3-3" @click="$router.push('/personal/MyComments')">评论记录</el-menu-item>
+    </el-sub-menu>
+  </el-menu>
 </template>
 
 <script setup>
-import {onMounted, reactive, ref} from "vue";
-import {useRouter} from "vue-router";
-import user from "@/utils/user";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {getUserinfoId} from "@/api/account";
+import {User as IconUser, Tickets, Operation} from '@element-plus/icons-vue'
+import {computed, onMounted, reactive} from "vue";
+import {getSiteConfig} from "@/api/management";
 import store from "@/store";
-
-const router = useRouter()
+import {getUserinfoId} from "@/api/account";
+import user from "@/utils/user";
 // 引入用户信息模块
-let {userId} = user();
-// 修改提交密码表单
-const passwordForm = reactive({
-  oldPassword: '',
-  newPassword: '',
-});
-// 表单对象
-const passwordFormRef = ref(null)
-// 验证密码表单
-const verifyForm = reactive({
-  oldPassword:'',
-  password1: '',
-  password2: '',
-});
-// 密码正则校验
-const checkPasswordRegular = (rule, value, callback) => {
-  console.log(value)
-  const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
-  console.log(pattern.test(value))
-  if (pattern.test(value)) {
-    callback()
-  } else {
-    console.log("没过去")
-    callback(new Error('Age must be greater than 18'))
-    // return callback(new Error("密码必须是数字+字符组合，8-16位长度！"))
-  }
-}
-// 密码一致性校验
-const checkPasswordSame = (rule, value, callback) => {
-  console.log(value)
-  // if (value && checkPasswordForm.password1 === checkPasswordForm.password2) {
-  //   callback()
-  // } else {
-  //   return callback(new Error("新密码与确认密码不一致！"))
-  // }
-}
-// 表单校验规则
-const rules = reactive({
-  oldPassword: [{validator: checkPasswordRegular, trigger: 'blur'}],
-  password1: [{validator: checkPasswordRegular, trigger: 'blur'}],
-  password2: [{validator: checkPasswordSame, trigger: 'blur'}],
+// let {userId} = user();
+//导航菜单-logo和name
+const siteConfig = reactive({
+  logo: '',
+  name: '',
 })
-// 表单重置事件
-const reset = () => {
-
-}
-// 表单提交事件
-const onSubmit = () => {
-  console.log('submit!')
-  passwordFormRef.value.validate((valid) => {
-    if (valid) {
-      // putUserinfoId(userId.value, userInfoForm).then((response) => {
-      //   console.log(response)
-      //   ElMessage({
-      //     message: '信息修改成功！',
-      //     type: 'success',
-      //   })
-      // }).catch(response => {
-      //   //发生错误时执行的代码
-      //   console.log(response)
-      //   for (let i in response) {
-      //     ElMessage.error(response[i][0])
-      //   }
-      // });
-    }
-  })
+// 获取网站数据
+async function siteConfigData() {
+  let data = await getSiteConfig()
+  siteConfig.logo = data.logo
+  siteConfig.name = data.name
 }
 
+// 当前激活的id
+const asideMenuIndex = computed(() => store.state.asideMenuIndex)
+// 点击导航栏切换页面事件
+const changePage = (index) => {
+  store.commit("setAsideMenuIndex", index)
+}
+// 个人中心导航栏是否折叠
+const isCollapse = computed(() => store.state.asideMenuFold)
+// 用户信息
+const userInfo = reactive({})
 // 获取用户信息
-async function getUserinfo(userid) {
-  const userinfo_data = await getUserinfoId(userid)
-  console.log(userinfo_data.source)
-  if (userinfo_data.source !== '直接注册') {
-    ElMessageBox.alert('您的账号直接使用' + userinfo_data.source + '登录即可，无需修改密码！', '修改密码提示', {
-      confirmButtonText: 'OK',
-      callback: () => {
-        router.push('/personal/myIndex')
-        store.commit('setAsideMenuIndex', '1')
-      },
-    })
-  }
+async function getUserinfo() {
+  Object.assign(userInfo,await getUserinfoId(userId.value))
+}
+// 设置是否接收邮件通知
+const changeFlow = () => {
+  console.log("点了")
+  console.log(userInfo)
 }
 onMounted(() => {
-  getUserinfo(userId.value)
+  siteConfigData()
+  // getUserinfo()
 })
 </script>
 
 <style scoped lang="scss">
+.el-menu {
+  height: 100%;
+}
 
+.icon {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.logo {
+  display: inline-block;
+  margin: 10px 0 15px 10px;
+
+  span {
+    vertical-align: 15px;
+    margin-left: 10px;
+  }
+}
+
+.menu-icon-text {
+  margin-left: 10px;
+  vertical-align: -3px;
+}
 </style>
