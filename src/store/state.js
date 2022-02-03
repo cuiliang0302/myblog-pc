@@ -12,7 +12,9 @@ const state = {
 	// 临时登录用户信息(sessionStorage)
 	userSession: {},
 	// 个人中心导航栏是否折叠
-	asideMenuFold: false
+	asideMenuFold: false,
+	// 是否开启暗黑模式
+	dark: false,
 }
 export default state
 

@@ -97,6 +97,7 @@
                 inactive-color="#f5f7fa"
                 active-text="深色模式"
                 inactive-text="浅色模式"
+                @change="setDarkMode"
             />
         </div>
         <el-divider></el-divider>
@@ -144,7 +145,8 @@ import {useRouter} from "vue-router";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import store from "@/store/index";
-
+import dark from "@/utils/dark";
+let {setDark} = dark()
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
@@ -253,6 +255,10 @@ const handleClose = () => {
 };
 // 设置-显示模式默认值
 const isDark = ref(false)
+// 设置-切换是否设置暗黑模式
+const setDarkMode = ()=>{
+  setDark(isDark.value)
+}
 // 设置-侧边菜单显示是否折叠
 const asideMenuFold = ref(false)
 // 设置-侧边菜单显示折叠切换事件

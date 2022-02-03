@@ -12,7 +12,7 @@ export default createStore({
 				list: ["userLocal", "keepLogin"],
 			},
 			session: {
-				list: ["outline", "outlineShow", "userSession", "nextPath", "asideMenuFold"],
+				list: ["outline", "outlineShow", "userSession", "nextPath", "asideMenuFold","dark"],
 			}
 		})
 	]

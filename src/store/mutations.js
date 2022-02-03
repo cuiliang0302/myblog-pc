@@ -26,6 +26,10 @@ const mutations = {
 	// 个人中心导航栏是否折叠
 	setAsideMenuFold(state, value) {
 		state.asideMenuFold = value
-	}
+	},
+	// 是否开启暗黑模式
+	setDark(state, value) {
+		state.dark = value
+	},
 }
 export default mutations

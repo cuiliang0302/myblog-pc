@@ -10,14 +10,10 @@ $themes: (
                 background_color4: #ffffff,
                 background_color5: #f6f8fa,
                 background_color6: #f6f8fa,
-          // markdown专用
-                background_color7: #ffffff,
           //边框
                 border_color1: #DCDFE6,
                 border_color2: #8bb9f3,
                 border_color3: #fafafb,
-          //背景图
-                background_img1: url("~@/assets/images/wave-light.png")
         ),
         dark: (
           //字体
@@ -30,15 +26,11 @@ $themes: (
                 background_color4: #000000,
                 background_color5: #bfbfbf,
                 background_color6: #262626,
-          // markdown专用
-                background_color7: #464546,
           //边框
                 border_color1: #3d414a,
                 border_color2: #3d414a,
                 border_color3: #595959,
-          //背景图
-                background_img1: url("~@/assets/images/wave-dark.png")
-        )
+        ),
 );
 
 //遍历主题map
@@ -48,7 +40,7 @@ $themes: (
     $theme-map: $theme-map !global;
     //判断html的data-theme的属性值  #{}是sass的插值表达式
     //& sass嵌套里的父容器标识   @content是混合器插槽，像vue的slot
-    [data-theme="#{$theme-name}"] & {
+    [data-theme="#{$theme-name}"] * {
       @content;
     }
   }
@@ -59,21 +51,21 @@ $themes: (
   @return map-get($theme-map, $key);
 }
 
-//背景颜色
+//获取背景颜色
 @mixin background_color($color) {
   @include themeify {
     background-color: themed($color) !important;
   }
 }
 
-//字体颜色
+//获取字体颜色
 @mixin font_color($color) {
   @include themeify {
     color: themed($color) !important;
   }
 }
 
-//边框颜色
+//获取边框颜色
 @mixin border_color($color) {
   @include themeify {
     border-color: themed($color) !important;

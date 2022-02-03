@@ -1,6 +1,8 @@
 // 导入Nprogress加载效果插件
 import Nprogress from 'nprogress'
 import {createRouter, createWebHistory} from 'vue-router';
+import {ElMessage} from "element-plus";
+import store from "@/store";
 
 const router = createRouter({
 	// history: createWebHashHistory(),  // hash模式，
@@ -12,7 +14,8 @@ const router = createRouter({
 			component: () => import('@/views/home/Home.vue'),
 			meta: {
 				title: '崔亮的博客-专注devops自动化运维，传播优秀it运维技术文章',
-				keepAlive: true
+				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -21,7 +24,8 @@ const router = createRouter({
 			component: () => import('@/views/public/Search.vue'),
 			meta: {
 				title: '搜索',
-				keepAlive: true
+				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -31,6 +35,7 @@ const router = createRouter({
 			meta: {
 				title: '友情链接',
 				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -40,6 +45,7 @@ const router = createRouter({
 			meta: {
 				title: '申请友链',
 				keepAlive: true,
+				isAuth: false
 			},
 		},
 		{
@@ -48,7 +54,8 @@ const router = createRouter({
 			component: () => import('@/views/article/Category.vue'),
 			meta: {
 				title: '文章分类',
-				keepAlive: true
+				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -58,6 +65,7 @@ const router = createRouter({
 			meta: {
 				title: '标签',
 				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -66,7 +74,8 @@ const router = createRouter({
 			component: () => import('@/views/article/ArticleDetail.vue'),
 			meta: {
 				title: '文章正文',
-				keepAlive: false
+				keepAlive: false,
+				isAuth: false
 			}
 		},
 		{
@@ -75,7 +84,8 @@ const router = createRouter({
 			component: () => import('@/views/note/Catalog.vue'),
 			meta: {
 				title: '笔记目录',
-				keepAlive: true
+				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -84,7 +94,8 @@ const router = createRouter({
 			component: () => import('@/views/note/SectionDetail.vue'),
 			meta: {
 				title: '笔记正文',
-				keepAlive: false
+				keepAlive: false,
+				isAuth: false
 			}
 		},
 		{
@@ -93,7 +104,8 @@ const router = createRouter({
 			component: () => import('@/views/public/Classify.vue'),
 			meta: {
 				title: '归档',
-				keepAlive: true
+				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -102,7 +114,8 @@ const router = createRouter({
 			component: () => import('@/views/public/Message.vue'),
 			meta: {
 				title: '留言板',
-				keepAlive: false
+				keepAlive: false,
+				isAuth: false
 			}
 		},
 		{
@@ -111,7 +124,8 @@ const router = createRouter({
 			component: () => import('@/views/public/About.vue'),
 			meta: {
 				title: '关于',
-				keepAlive: true
+				keepAlive: true,
+				isAuth: false
 			}
 		},
 		{
@@ -120,7 +134,8 @@ const router = createRouter({
 			component: () => import('@/views/personal/LoginRegister.vue'),
 			meta: {
 				title: '登录&注册',
-				keepAlive: false
+				keepAlive: false,
+				isAuth: false
 			}
 		},
 		{
@@ -130,6 +145,7 @@ const router = createRouter({
 			meta: {
 				title: '第三方登录授权页',
 				keepAlive: true,
+				isAuth: true
 			}
 		},
 		{
@@ -138,7 +154,8 @@ const router = createRouter({
 			component: () => import('@/views/personal/SetPassword.vue'),
 			meta: {
 				title: '重置密码',
-				keepAlive: false
+				keepAlive: false,
+				isAuth: false
 			}
 		},
 		{
@@ -148,11 +165,13 @@ const router = createRouter({
 			children:[
 				{
 					path:"",
-					redirect:"/personal/myIndex"
+					redirect:"/personal/myIndex",
+					isAuth: true
 				},
 				{
 					path:"statistics",
-					redirect:"/personal/myIndex"
+					redirect:"/personal/myIndex",
+					isAuth: true
 				},
 				{
 					path: 'myIndex',
@@ -161,6 +180,7 @@ const router = createRouter({
 					meta: {
 						title: '个人中心',
 						keepAlive: true,
+						isAuth: true
 					},
 				},
 				{
@@ -170,6 +190,7 @@ const router = createRouter({
 					meta: {
 						title: '修改信息',
 						keepAlive: true,
+						isAuth: true
 					},
 				},
 				{
@@ -179,6 +200,7 @@ const router = createRouter({
 					meta: {
 						title: '修改密码',
 						keepAlive: true,
+						isAuth: true
 					},
 				},
 				{
@@ -188,6 +210,7 @@ const router = createRouter({
 					meta: {
 						title: '更换邮箱',
 						keepAlive: true,
+						isAuth: true
 					},
 				},
 				{
@@ -197,6 +220,7 @@ const router = createRouter({
 					meta: {
 						title: '更换手机',
 						keepAlive: true,
+						isAuth: true
 					}
 				},
 				{
@@ -206,6 +230,7 @@ const router = createRouter({
 					meta: {
 						title: '浏览记录',
 						keepAlive: true,
+						isAuth: true
 					}
 				},
 				{
@@ -215,6 +240,7 @@ const router = createRouter({
 					meta: {
 						title: '我的收藏',
 						keepAlive: true,
+						isAuth: true
 					}
 				},
 				{
@@ -224,15 +250,7 @@ const router = createRouter({
 					meta: {
 						title: '我的评论',
 						keepAlive: true,
-					}
-				},
-				{
-					path: 'test',
-					name: 'Test',
-					component: () => import('@/views/Test.vue'),
-					meta: {
-						title: '测试页',
-						keepAlive: true,
+						isAuth: true
 					}
 				}
 			]
@@ -265,12 +283,15 @@ router.beforeEach((to, from, next) => {
 			window._hmt.push(['_trackPageview', '/#' + to.fullPath])
 		}
 	}
-	// if (to.meta.isAuth === true && JSON.stringify(store.state.userSession) === '{}') {
-	// 	Toast.fail('还未登录，即将跳转至登录页')
-	// 	return next('/loginRegister')
-	// } else {
-	// 	next()
-	// }
+	if (to.meta.isAuth === true && JSON.stringify(store.state.userSession) === '{}') {
+		ElMessage({
+			message: '您还未登录，即将跳转至登录页',
+			type: 'warning',
+		})
+		return next('/loginRegister')
+	} else {
+		return next()
+	}
 	document.title = to.meta.title
 	next()
 })
