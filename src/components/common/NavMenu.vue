@@ -137,7 +137,7 @@
 
 <script setup>
 import {ElMessageBox, ElMessage} from 'element-plus'
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import icon from '@/utils/icon'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
@@ -274,6 +274,7 @@ onMounted(() => {
   if (isLogin.value === true) {
     getPhotoData()
   }
+  isDark.value = store.state.dark
 })
 // 设置-默认主题色
 const colorValue = ref('blue')

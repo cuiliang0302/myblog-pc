@@ -31,5 +31,13 @@
 .el-menu--horizontal>.el-sub-menu .el-sub-menu__title:hover{
   background-color: var(--el-color-white)!important;
 }
+// 下拉菜单颜色
+.el-dropdown-menu{
+  background-color:var(--el-color-white)!important;
+}
+// 导航菜单下边框颜色
+.el-menu{
+  --el-menu-border-color:var(--el-border-color-base)!important;
+}
 
 

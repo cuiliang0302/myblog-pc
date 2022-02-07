@@ -15,17 +15,17 @@ function dark() {
 		const el = ref(null)
 		if (isDark.value) {
 			console.log("要切换为暗黑模式")
-			console.log(darkList.value)
+			// console.log(darkList.value)
 			darkList.value.forEach((item, index) => {
-				console.log(item.name, item.value, index)
+				// console.log(item.name, item.value, index)
 				index = useCssVar(item.name, el)
 				index.value = item.value
 			})
 		} else {
 			console.log("要切换为明亮模式")
-			console.log(lightList.value)
+			// console.log(lightList.value)
 			lightList.value.forEach((item, index) => {
-				console.log(item.name, item.value, index)
+				// console.log(item.name, item.value, index)
 				index = useCssVar(item.name, el)
 				index.value = item.value
 			})
@@ -33,6 +33,7 @@ function dark() {
 	}
 	onMounted(() => {
 		// console.log("是否开启暗黑模式：",isDark)
+		setDark(isDark.value)
 	})
 	return {
 		setDark,
