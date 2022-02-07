@@ -275,14 +275,14 @@ onMounted(() => {
   display: none;
 }
 .background-img {
+  background-image: v-bind("bgiURL");
   width: 100vw;
   height: 100vh;
   display: block;
   position: relative;
-  // }
   .container {
     border-radius: 10px;
-    background-color: $color-background-white;
+    background-color: var(--el-color-white);
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     position: absolute;
     overflow: hidden;
@@ -296,7 +296,7 @@ onMounted(() => {
     text-align: center;
 
     h1 {
-      color: $color-primary;
+      color: var(--el-color-primary);
       padding: 10px 0 5px 0;
     }
 
@@ -320,7 +320,7 @@ onMounted(() => {
 
         .success-icon {
           font-size: 60px;
-          color: $color-success;
+          color: var(--el-color-success);
         }
 
         p {
@@ -338,7 +338,6 @@ onMounted(() => {
 
 .background-img::after {
   content: "";
-  background-image: v-bind("bgiURL");
   opacity: 0.9;
   top: 0;
   left: 0;

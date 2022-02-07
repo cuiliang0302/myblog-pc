@@ -18,13 +18,13 @@
 
 //文章标题
 .article-title-hover:hover {
-  color: $color-primary !important;
+  color: var(--el-color-primary) !important;
   cursor: pointer;
 }
 
 //文章摘要
 .article-abstract-hover:hover {
-  color: $color-text-regular !important;
+  color: var(--el-text-color-regular) !important;
   cursor: pointer;
 }
 
@@ -33,7 +33,7 @@
   transform: scale(1.1);
   cursor: pointer;
   font-weight: bold;
-  color: $color-text-primary !important;
+  color: var(--el-text-color-primary) !important;
 }
 
 //推荐阅读
@@ -50,7 +50,7 @@
 
 //阅读排行
 .ranking-hover:hover {
-  color: $color-primary !important;
+  color: var(--el-color-primary) !important;
   cursor: pointer;
   font-weight: 700;
 }
@@ -60,14 +60,14 @@
   opacity: 1 !important;
 
   .anticon {
-    color: $color-primary !important;
+    color: var(--el-color-primary) !important;
   }
 }
 
 // 文章内容-上下篇
 .detail-context-hover:hover {
-  background-color: $color-secondary;
+  background-color: var(--el-color-primary);
   border-radius: 5px;
-  color: $color-background-white;
+  color: var(--el-color-white);
   cursor: pointer;
 }

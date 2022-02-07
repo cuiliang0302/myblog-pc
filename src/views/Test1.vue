@@ -1,116 +1,101 @@
 <template>
   <el-menu
-      default-active="1"
-      class="el-menu-vertical-demo"
-      :default-openeds="['2','3']"
-      @select="changePage"
-      :collapse="isCollapse"
-      router
+      :default-active="activeIndex"
+      class="el-menu-demo"
+      mode="horizontal"
   >
-    <span class="logo">
-      <el-image
-          style="width: 40px; height: 40px"
-          :src="siteConfig.logo"
-          :fit="'fill'"></el-image>
-      <span class="no-choose" v-show="isCollapse===false">{{ siteConfig.name }}</span>
-    </span>
-    <el-menu-item index="1" @click="$router.push('/personal/myIndex')">
-      <el-icon><icon-user /></el-icon>
-      <span class="menu-icon-text">个人中心</span>
-    </el-menu-item>
+    <el-menu-item index="1">Processing Center</el-menu-item>
     <el-sub-menu index="2">
-      <template #title>
-        <el-icon>
-          <operation/>
-        </el-icon>
-        <span class="menu-icon-text">账号管理</span>
-      </template>
-      <el-menu-item index="2-1" @click="$router.push('/personal/myInfo')">修改信息</el-menu-item>
-      <el-menu-item index="2-2" @click="$router.push('/personal/changePassword')">修改密码</el-menu-item>
-      <el-menu-item index="2-3" @click="$router.push('/personal/changeEmail')">更换邮箱</el-menu-item>
-      <el-menu-item index="2-4" @click="$router.push('/personal/changePhone')">更换手机</el-menu-item>
-      <el-menu-item index="2-5" @click="changeFlow">文章发布邮件通知</el-menu-item>
+      <template #title>Workspace</template>
+      <el-menu-item index="2-1">item one</el-menu-item>
+      <el-menu-item index="2-2">item two</el-menu-item>
+      <el-menu-item index="2-3">item three</el-menu-item>
+      <el-sub-menu index="2-4">
+        <template #title>item four</template>
+        <el-menu-item index="2-4-1">item one</el-menu-item>
+        <el-menu-item index="2-4-2">item two</el-menu-item>
+        <el-menu-item index="2-4-3">item three</el-menu-item>
+      </el-sub-menu>
     </el-sub-menu>
-    <el-sub-menu index="3">
-      <template #title>
-        <el-icon><tickets /></el-icon>
-        <span class="menu-icon-text">我的足迹</span>
-      </template>
-      <el-menu-item index="3-1" @click="$router.push('/personal/myHistory')">浏览记录</el-menu-item>
-      <el-menu-item index="3-2" @click="$router.push('/personal/MyCollect')">收藏记录</el-menu-item>
-      <el-menu-item index="3-3" @click="$router.push('/personal/MyComments')">评论记录</el-menu-item>
-    </el-sub-menu>
+    <el-menu-item index="3" disabled>Info</el-menu-item>
+    <el-menu-item index="4">Orders</el-menu-item>
   </el-menu>
+  <el-card>
+    是否开启暗黑模式：
+    <el-switch v-model="isDark" @change="setDarkMode"/>
+    <br>
+    主题色选择：
+    <el-select v-model="color" placeholder="Select" size="large" @change="changeColor">
+      <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+      </el-option>
+    </el-select>
+  </el-card>
 </template>
 
 <script setup>
-import {User as IconUser, Tickets, Operation} from '@element-plus/icons-vue'
-import {computed, onMounted, reactive} from "vue";
-import {getSiteConfig} from "@/api/management";
-import store from "@/store";
-import {getUserinfoId} from "@/api/account";
-import user from "@/utils/user";
-// 引入用户信息模块
-// let {userId} = user();
-//导航菜单-logo和name
-const siteConfig = reactive({
-  logo: '',
-  name: '',
-})
-// 获取网站数据
-async function siteConfigData() {
-  let data = await getSiteConfig()
-  siteConfig.logo = data.logo
-  siteConfig.name = data.name
+import { ref } from 'vue'
+import dark from "@/utils/dark";
+import { useCssVar } from '@vueuse/core'
+let {setDark} = dark()
+const activeIndex = ref('1')
+// 设置-显示模式默认值
+const isDark = ref(false)
+// 设置-切换是否设置暗黑模式
+const setDarkMode = (value)=>{
+  console.log("切换暗黑模式事件")
+  console.log(value)
+  const el = ref(null)
+  const bg_color = useCssVar('--el-color-white', el)
+  const text_color = useCssVar('--el-text-color-primary', el)
+  if (value){
+    bg_color.value='#2b2b2b'
+    text_color.value='#d0d0d0'
+  }else {
+    bg_color.value='#ffffff'
+    text_color.value='#303133'
+  }
 }
-
-// 当前激活的id
-const asideMenuIndex = computed(() => store.state.asideMenuIndex)
-// 点击导航栏切换页面事件
-const changePage = (index) => {
-  store.commit("setAsideMenuIndex", index)
+const color = ref('')
+const options = [
+  {
+    value: '#409EFF',
+    label: '拂晓蓝(默认)',
+  },
+  {
+    value: '#e74c3c',
+    label: '薄暮红',
+  },
+  {
+    value: '#e67e22',
+    label: '火山橘',
+  },
+  {
+    value: '#f1c40f',
+    label: '日暮黄',
+  },
+  {
+    value: '#16a085',
+    label: '极光绿',
+  },
+  {
+    value: '#9b59b6',
+    label: '酱紫',
+  },
+]
+const changeColor = (val)=>{
+  console.log("切换主题色事件",val)
+  const el = ref(null)
+  const primary_color = useCssVar('--el-color-primary', el)
+  primary_color.value = val
 }
-// 个人中心导航栏是否折叠
-const isCollapse = computed(() => store.state.asideMenuFold)
-// 用户信息
-const userInfo = reactive({})
-// 获取用户信息
-async function getUserinfo() {
-  Object.assign(userInfo,await getUserinfoId(userId.value))
-}
-// 设置是否接收邮件通知
-const changeFlow = () => {
-  console.log("点了")
-  console.log(userInfo)
-}
-onMounted(() => {
-  siteConfigData()
-  // getUserinfo()
-})
 </script>
 
 <style scoped lang="scss">
-.el-menu {
-  height: 100%;
-}
-
-.icon {
-  font-size: 18px;
-  margin-right: 5px;
-}
-
-.logo {
-  display: inline-block;
-  margin: 10px 0 15px 10px;
-
-  span {
-    vertical-align: 15px;
-    margin-left: 10px;
-  }
-}
-
-.menu-icon-text {
-  margin-left: 10px;
-  vertical-align: -3px;
+.el-card{
+  margin-top:15px
 }
 </style>

@@ -45,7 +45,7 @@ onMounted(() => {
 footer {
   border-top: 1px solid #DCDFE6;
   width: 100%;
-  background-color: $color-background-white;
+  background-color:var(--el-color-white);
   height: 70px;
   display: flex;
   justify-content: center;

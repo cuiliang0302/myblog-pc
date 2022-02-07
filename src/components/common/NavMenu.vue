@@ -50,7 +50,7 @@
         </span>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="搜索" placement="bottom">
-        <span class="search hvr-grow" :style="{'color': (activeMenu=='7' ? '#409EFF':'')}"
+        <span class="search hvr-grow" :style="{'color': (activeMenu==='7' ? '#409EFF':'')}"
               @click="router.push('/search')">
           <MyIcon type="icon-search"/>
         </span>
@@ -257,6 +257,7 @@ const handleClose = () => {
 const isDark = ref(false)
 // 设置-切换是否设置暗黑模式
 const setDarkMode = ()=>{
+  console.log("菜单栏执行切换事件",isDark.value)
   setDark(isDark.value)
 }
 // 设置-侧边菜单显示是否折叠
@@ -302,14 +303,14 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $color-background-white;
+  background-color: var(--el-color-white);
 
   .left {
     padding-left: 20px;
     width: 20%;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid $color-border-base;
+    border-bottom: 1px solid var(--el-border-color-base);
     height: 60px;
 
     span {
@@ -326,7 +327,7 @@ header {
     width: 23%;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid $color-border-base;
+    border-bottom: 1px solid var(--el-border-color-base);
     height: 60px;
     flex-direction: row-reverse;
     cursor: pointer;
@@ -342,7 +343,7 @@ header {
       }
 
       span {
-        color: $color-text-regular;
+        color: var(--el-text-color-regular);
         font-size: 14px;
 
         p {
@@ -356,19 +357,19 @@ header {
 
     .search, .setting {
       font-size: 25px;
-      color: $color-text-regular;
+      color: var(--el-text-color-regular);
       margin-left: 35px;
     }
   }
 
   h4 {
     font-weight: normal;
-    color: $color-text-primary;
+    color: var(--el-text-color-primary);
     margin-top: 40px;
   }
 
   .display {
-    color: $color-text-primary;
+    color: var(--el-text-color-primary);
 
     img {
       width: 75px;
@@ -384,7 +385,7 @@ header {
   }
 
   .color {
-    color: $color-text-primary;
+    color: var(--el-text-color-primary);
 
     span {
       display: inline-block;
@@ -409,7 +410,7 @@ header {
     }
 
     .blue {
-      background-color: $color-primary;
+      background-color: var(--el-color-primary);
     }
 
     .red {
@@ -434,7 +435,7 @@ header {
   }
 
   .nav-style {
-    color: $color-text-primary;
+    color: var(--el-text-color-primary);
 
     .el-select {
       width: 120px;

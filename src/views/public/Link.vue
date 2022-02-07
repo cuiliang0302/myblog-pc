@@ -55,6 +55,6 @@ onMounted(() => {
   margin: 20px 0 15px 0;
 }
 .title:hover{
-  color: $color-secondary;
+  color: var(--el-color-primary);
 }
 </style>

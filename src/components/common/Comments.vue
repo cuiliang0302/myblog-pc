@@ -163,7 +163,7 @@ const delMessage = (messageId) => {
 
 ol {
   margin: 20px 0 20px 20px;
-  color: $color-text-regular;
+  color: var(--el-text-color-regular);
   list-style: none;
 
   li {
@@ -174,10 +174,10 @@ ol {
 
       div {
         position: relative;
-        background-color: $color-background-base;
+        background-color: var(--el-border-color-extra-light);
         border-radius: 10px;
         margin-left: 15px;
-        border: 1px solid $color-border-base;
+        border: 1px solid var(--color-background-base);
         padding: 15px;
 
         p {
@@ -186,12 +186,12 @@ ol {
 
         .username {
           margin-right: 40px;
-          color: $color-secondary;
+          color: var(--el-color-primary);
           cursor: pointer;
         }
 
         .content {
-          color: $color-text-primary;
+          color: var(--el-text-color-primary);
 
           :deep(img) {
             max-height: 150px;
@@ -203,7 +203,7 @@ ol {
             margin-right: 80px;
             cursor: pointer;
             font-size: 12px;
-            color: $color-text-secondary;
+            color: var(--el-text-color-secondary);
 
             .anticon {
               margin-right: 10px;
@@ -222,7 +222,7 @@ ol {
         display: inline-block;
         border-top: 9px solid transparent;
         border-bottom: 9px solid transparent;
-        border-right: 9px solid $color-border-base;
+        border-right: 9px solid var(--el-border-color-extra-light);
         top: 15px;
         left: -9px;
       }
@@ -233,7 +233,10 @@ ol {
     margin-left: 40px;
 
     span > div {
-      background-color: $color-background-input !important;
+      background-color: var(--el-border-color-base) !important;
+    }
+    span > div::before {
+      border-right: 9px solid var(--el-border-color-base)!important;
     }
   }
 }

@@ -275,7 +275,7 @@ onMounted(() => {
 
       p {
         text-align: center;
-        color: $color-text-regular;
+        color: var(--el-text-color-regular);
         margin: 7px 0;
         line-height: 20px;
         font-size: 14px;
@@ -293,7 +293,7 @@ onMounted(() => {
 
     li {
       p {
-        color: $color-text-regular;
+        color: var(--el-text-color-regular);
       }
     }
 
@@ -340,7 +340,7 @@ onMounted(() => {
 
   .info {
     line-height: 30px;
-    color: $color-text-regular;
+    color: var(--el-text-color-regular);
 
     .anticon {
       margin-right: 5px;
@@ -369,7 +369,7 @@ onMounted(() => {
     div {
       font-size: 16px;
       line-height: 30px;
-      color: $color-text-regular;
+      color: var(--el-text-color-regular);
 
       .anticon {
         margin-right: 5px;

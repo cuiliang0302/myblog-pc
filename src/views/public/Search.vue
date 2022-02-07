@@ -202,14 +202,14 @@ onMounted(() => {
 
 <style scoped lang="scss">
 :deep(.el-input-group__append) {
-  background-color: $color-primary;
+  background-color: var(--el-color-primary);
   width: 60px;
   transition: all 0.5s;
 }
 
 :deep(.el-input-group__append:hover) {
   cursor: pointer;
-  background-color: $color-secondary;
+  background-color: var(--el-color-primary);
   transition: all 0.5s;
 }
 

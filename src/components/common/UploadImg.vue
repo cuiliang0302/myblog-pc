@@ -185,7 +185,7 @@ defineExpose({
 .upload-btn {
   .upload-icon {
     font-size: 24px;
-    color: $color-text-secondary;
+    color: var(--el-text-color-secondary);
     vertical-align: -7 px !important;
     margin-right: 5px;
   }

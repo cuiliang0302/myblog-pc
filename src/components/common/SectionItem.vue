@@ -21,7 +21,7 @@
 <script setup>
 import icon from "@/utils/icon";
 import timeFormat from "@/utils/timeFormat";
-import setColor from "@/utils/setColor";
+import color from "@/utils/color";
 import {useRouter} from "vue-router";
 import {onMounted, reactive} from "vue";
 
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 let {MyIcon} = icon()
 let {timeAgo} = timeFormat()
-let {tagColor} = setColor()
+let {tagColor} = color()
 // 跳转文章详情页
 const toDetail = (detailID) => {
   router.push({path: `/detail/section/${detailID}`})
@@ -63,13 +63,13 @@ onMounted(() => {
     margin-left: 10px;
 
     h2 {
-      color: $color-text-primary;
+      color: var(--el-text-color-primary);
       margin: 0;
     }
 
     p {
       margin: 15px 0;
-      color: $color-text-secondary;
+      color: var(--el-text-color-secondary);
       line-height: 28px;
       height: 108px;
       overflow: hidden;
@@ -82,7 +82,7 @@ onMounted(() => {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: $color-text-placeholder;
+      color: var(--el-text-color-placeholder);
 
       span {
         margin: 0 5px 0 15px;

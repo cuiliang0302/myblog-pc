@@ -178,7 +178,7 @@ defineExpose({
 .login-popup {
   .login-info {
     text-align: center;
-    color: $color-text-regular;
+    color: var(--el-text-color-regular);
   }
 
   .login-logo {
@@ -199,7 +199,7 @@ defineExpose({
   .login-other {
     padding: 0 15px;
     margin-top: 40px;
-    color: $color-text-secondary;
+    color: var(--el-text-color-secondary);
 
     .login {
 

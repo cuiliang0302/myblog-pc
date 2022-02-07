@@ -159,7 +159,7 @@ onMounted(() => {
   > div {
     width: 40px;
     height: 40px;
-    background-color: $color-background-white;
+    background-color: var(--el-color-white);
     border-radius: 20px;
     box-shadow: 0 0 6px rgb(0 0 0 / 12%);
     cursor: pointer;
@@ -168,7 +168,7 @@ onMounted(() => {
 
     .anticon {
       transform: translate(50%, 50%);
-      color: $color-text-regular;
+      color: var(--el-text-color-regular);
       transition: all 0.5s;
       font-size: 20px
     }

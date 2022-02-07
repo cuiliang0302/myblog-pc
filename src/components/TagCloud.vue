@@ -16,9 +16,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {getTag} from "@/api/blog";
-import setColor from "@/utils/setColor";
+import color from "@/utils/color";
 
-let {tagColor} = setColor()
+let {tagColor} = color()
 const radius = 90;
 const d = 200;
 const dtr = Math.PI / 180;

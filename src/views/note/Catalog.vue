@@ -68,7 +68,7 @@ onBeforeRouteUpdate(async (to) => {
 <style lang="scss">
 .catalog {
   padding: 20px 10px;
-  background-color: $color-background-white;
+  background-color: var(--el-color-white);
 
   .el-tree {
     .el-tree-node {

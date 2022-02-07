@@ -3,12 +3,11 @@
 @import "src/assets/style/variable.scss";
 @import "src/assets/style/theme.scss";
 @import "src/assets/style/hover.scss";
-
+//@import "src/assets/style/theme/element-dark.scss";
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: $color-background-base;
   min-width: 1200px;
 }
 
@@ -64,7 +63,7 @@ ul {
 
 // 卡片标题
 .card-title {
-  color: $color-primary;
+  color: var(--el-color-primary);
   font-size: 25px;
 }
 
@@ -77,13 +76,13 @@ ul {
 
 // 您的位置面包屑
 .current-position {
-  background-color: $color-background-white;
+  background-color: var(--el-color-white);
   padding: 20px;
   display: flex;
   align-items: center;
 
   span:nth-child(1) {
-    color: $color-text-regular;
+    color: var(--el-text-color-regular);
   }
 }
 

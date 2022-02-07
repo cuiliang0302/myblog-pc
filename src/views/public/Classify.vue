@@ -40,7 +40,6 @@ import BackTop from "@/components/common/BackTop.vue"
 import {nextTick, onMounted, ref} from "vue";
 import {getClassify, getClassifyArticle} from "@/api/blog";
 import timeFormat from "@/utils/timeFormat";
-import setFixed from "@/utils/setFixed";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -51,8 +50,6 @@ const formatMonth = (value) => {
   console.log(value)
   return value.replace("-", "年") + '月'
 }
-// 文章日期完整显示
-let {elHeight} = setFixed()
 // 默认展开的数据
 const activeNames = ref([0]);
 // 月份列表
@@ -89,7 +86,7 @@ onMounted(async () => {
 <style lang="scss">
 .el-collapse-item__header {
   font-size: 20px !important;
-  color: $color-primary !important;
+  color: var(--el-color-primary) !important;
   padding-left: 1em;
 }
 
@@ -97,7 +94,7 @@ onMounted(async () => {
   margin: 10px 40px 0 40px;
 
   .title {
-    background-color: $color-background-base;
+    background-color: var(--el-background-color-base);
     padding: 10px 15px;
     border-radius: 10px;
     margin-right: 30px;
@@ -111,7 +108,7 @@ onMounted(async () => {
     border-bottom: 10px solid transparent;
     border-top: 10px solid transparent;
     border-left: 10px solid transparent;
-    border-right: 10px solid $color-background-base;
+    border-right: 10px solid var(--el-background-color-base);
     content: " ";
     position: absolute;
     top: 40px;

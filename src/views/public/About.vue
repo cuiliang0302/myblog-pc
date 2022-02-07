@@ -41,8 +41,8 @@ const activeNames = ref([0, 1, 2, 3, 4, 5]);
 
 <style lang="scss">
 .el-collapse-item__header {
-  font-size: 25px !important;
-  color: $color-primary !important;
+  font-size: 25px!important;
+  color: var(--el-color-primary)!important;
   padding-left: 1em;
 }
 </style>

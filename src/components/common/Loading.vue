@@ -38,7 +38,7 @@ const props = defineProps({
   justify-content: center;
   align-items: center;
   p{
-    color: $color-text-primary;
+    color: var(--el-text-color-primary);
   }
 }
 </style>

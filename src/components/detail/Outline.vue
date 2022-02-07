@@ -69,7 +69,7 @@ watch(
   position: fixed;
   font-size: 13px;
   line-height: 25px;
-  color: $color-text-secondary;
+  color: var(--el-text-color-secondary);
   margin-left: 10px;
   height: 82vh;
   overflow: auto;
@@ -80,13 +80,12 @@ watch(
   }
 
   p:hover {
-    color: $color-primary;
+    color: var(--el-color-primary);
   }
 
   .title-active {
-    background-color: $color-background-input;
-    color: $color-text-primary;
-    border-left: 2px solid $color-primary;
+    color: var(--el-text-color-primary);
+    border-left: 2px solid var(--el-color-primary);
   }
 }
 </style>

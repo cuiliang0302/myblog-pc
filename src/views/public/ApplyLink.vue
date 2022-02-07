@@ -162,6 +162,6 @@ onMounted(() => {
 
 .point-text {
   line-height: 30px;
-  color: $color-text-primary;
+  color: var(--el-text-color-primary);
 }
 </style>

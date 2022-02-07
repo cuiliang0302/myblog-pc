@@ -107,7 +107,7 @@ onMounted(() => {
 
 .verify-btn {
   width: 100%;
-  color: $color-text-placeholder;
+  color: var(--el-text-color-placeholder);
 
   .btn-text {
     margin-left: 10px;

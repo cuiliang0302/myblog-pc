@@ -1,8 +1,10 @@
 <template>
   <el-config-provider :locale="locale">
-    <router-view v-slot="{ Component }">
-      <component :is="Component"/>
-    </router-view>
+    <div class="router-view">
+      <router-view v-slot="{ Component }">
+        <component :is="Component"/>
+      </router-view>
+    </div>
   </el-config-provider>
 </template>
 
@@ -10,19 +12,9 @@
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {onMounted} from "vue";
 import {ElMessageBox} from 'element-plus'
-import dark from "@/utils/dark";
-let {setDark} = dark()
+
 const locale = zhCn
 onMounted(() => {
-  const now = new Date()
-  setDark(true)
-  if (now.getHours() >= 21 || now.getHours() <= 6) {
-    console.log("这是夜间模式")
-    setDark(true)
-  } else {
-    console.log("这是白天模式")
-    setDark(false)
-  }
   if (document.body.clientWidth <= 1200) {
     ElMessageBox.alert('检测到您使用移动设备访问，点击确定后跳转至移动版网站', {
       confirmButtonText: '确定',
@@ -44,5 +36,21 @@ onMounted(() => {
 })
 </script>
 
-<style>
+<style lang="scss">
+@import "src/assets/style/theme/vars.module.scss";
+
+.router-view {
+  color: var(--el-text-color-primary);
+  background-color: var(--el-background-color-base);
+  transition: background 1s, color 0.6s;
+  width: 100%;
+  height: max-content;
+  min-height: 100vh;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+  animation-timing-function: linear;
+}
 </style>

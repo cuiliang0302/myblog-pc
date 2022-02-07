@@ -510,6 +510,9 @@ function registerFn() {
 
 <style scoped lang="scss">
 .login-register {
+  //background-image:
+  //background-color: transparent!important;
+  background-image: v-bind('bgiURL');
   width: 100vw;
   height: 100vh;
   display: block;
@@ -545,7 +548,7 @@ function registerFn() {
         text-align: center;
 
         h1 {
-          color: $color-primary;
+          color: var(--el-color-primary);
           margin-bottom: 30px;
         }
 
@@ -553,13 +556,13 @@ function registerFn() {
           width: 300px;
 
           .login-setting {
-            color: $color-text-placeholder;
+            color: var(--el-text-color-secondary);
 
             .remember {
               float: left;
 
               .el-checkbox {
-                color: $color-text-placeholder;
+                color: var(--el-text-color-secondary);
               }
             }
 
@@ -573,7 +576,7 @@ function registerFn() {
           display: contents;
 
           .el-divider {
-            background-color: $color-border-base;
+            background-color: var(--el-border-color-base);
           }
 
           .other-logo {
@@ -636,7 +639,6 @@ function registerFn() {
 
 .login-register::after {
   content: "";
-  background-image: v-bind('bgiURL');
   opacity: 0.9;
   top: 0;
   left: 0;

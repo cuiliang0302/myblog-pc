@@ -125,7 +125,7 @@ import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
-import setColor from "@/utils/setColor";
+import color from "@/utils/color";
 import store from "@/store";
 import {getSiteConfig} from "@/api/management";
 import {
@@ -141,7 +141,7 @@ import {getUserinfoId} from "@/api/account";
 
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
-let {tagColor} = setColor()
+let {tagColor} = color()
 const router = useRouter()
 // 引入用户信息模块
 let {userId, isLogin} = user();
@@ -568,7 +568,7 @@ function action(articleID, articleData) {
           display: flex;
           justify-content: center;
           align-items: center;
-          color: $color-text-regular;
+          color: var(--el-text-color-regular);
           background-color: $color-other-clouds;
           padding: 5px 0px;
           margin: 10px 30px;
@@ -593,8 +593,8 @@ function action(articleID, articleData) {
           display: flex;
           align-items: center;
           justify-content: center;
-          color: $color-text-regular;
-          background-color: $color-background-base;
+          color: var(--el-text-color-regular);
+          background-color: var(--el-background-color-base);
           margin: 10px 30px;
           padding: 10px 10px;
           border-radius: 10px;
@@ -604,7 +604,7 @@ function action(articleID, articleData) {
             text-align: center;
 
             .anticon {
-              color: $color-primary;
+              color: var(--el-color-primary);
               margin: 0 10px;
               font-size: 25px;
             }
@@ -615,8 +615,8 @@ function action(articleID, articleData) {
           }
 
           > span:nth-child(2) {
-            border-left: 2px solid $color-text-placeholder;
-            border-right: 2px solid $color-text-placeholder;
+            border-left: 2px solid var(--el-text-color-placeholder);
+            border-right: 2px solid var(--el-text-color-placeholder);
 
             span {
               margin: 0 5px
@@ -648,7 +648,7 @@ function action(articleID, articleData) {
 
             p {
               font-size: 14px;
-              color: $color-text-secondary;
+              color: var(--el-text-color-secondary);
               margin: 10px 0px;
             }
           }
@@ -689,7 +689,7 @@ function action(articleID, articleData) {
       }
 
       h2 {
-        border-bottom: 1px solid $color-border-base;
+        border-bottom: 1px solid var(--el-border-color-base);
         padding: 10px 0;
         font-weight: normal;
       }
@@ -703,7 +703,7 @@ function action(articleID, articleData) {
   .detail-card {
     margin-top: 15px;
     padding: 20px 10px;
-    background-color: $color-background-white;
+    background-color: var(--el-color-white);
   }
 }
 </style>

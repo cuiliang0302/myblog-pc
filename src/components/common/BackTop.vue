@@ -21,12 +21,12 @@ let {MyIcon} = icon()
 
 <style scoped lang="scss">
 .el-backtop {
-  color: $color-text-regular;
+  color: var(--el-text-color-regular);
   transition: all 0.5s;
 }
 
 .el-backtop:hover {
   opacity: 1;
-  color: $color-primary;
+  color: var(--el-color-primary);
 }
 </style>

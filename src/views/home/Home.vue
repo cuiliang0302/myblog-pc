@@ -128,7 +128,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 article {
   .carousel {
-    background-color: $color-background-white;
+    background-color: var(--el-color-white);
   }
 
   .new {

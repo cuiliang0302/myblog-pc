@@ -31,7 +31,7 @@
 import Loading from "@/components/common/Loading.vue"
 import icon from "@/utils/icon";
 import timeFormat from "@/utils/timeFormat";
-import setColor from "@/utils/setColor";
+import color from "@/utils/color";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
@@ -44,7 +44,7 @@ const props = defineProps({
 })
 let {MyIcon} = icon()
 let {timeAgo} = timeFormat()
-let {tagColor} = setColor()
+let {tagColor} = color()
 // 跳转文章详情页
 const toDetail = (detailID) => {
   router.push({path: `/detail/article/${detailID}`})
@@ -62,7 +62,7 @@ const toDetail = (detailID) => {
     width: 270px;
     padding: 3px;
     display: inline-block;
-    border: 1px solid $color-border-base;
+    border: 1px solid var(--el-background-color-base);
     border-radius: 8px;
   }
 
@@ -70,13 +70,13 @@ const toDetail = (detailID) => {
     margin-left: 10px;
 
     h2 {
-      color: $color-text-primary;
+      color: var(--el-text-color-primary);
       margin: 0;
     }
 
     p {
       margin: 15px 0;
-      color: $color-text-secondary;
+      color: var(--el-text-color-secondary);
       line-height: 28px;
       height: 108px;
       overflow: hidden;
@@ -89,7 +89,7 @@ const toDetail = (detailID) => {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: $color-text-placeholder;
+      color: var(--el-text-color-placeholder);
 
       span {
         margin: 0 5px 0 15px;

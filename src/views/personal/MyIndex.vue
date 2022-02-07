@@ -443,11 +443,10 @@ onMounted(() => {
 
 .number-count-card {
   height: 107px;
-  background-color: $color-background-input;
   margin-bottom: 10px;
   text-align: center;
   border-radius: 5px;
-  color: white;
+  color: var(--el-color-white);
   position: relative;
 
   img {

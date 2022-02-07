@@ -579,7 +579,7 @@ function action(sectionID, sectionData) {
       .el-tree {
         width: 15%;
         position: fixed;
-        background-color: $color-background-base;
+        background-color: var(--el-background-color-base);
       }
     }
 
@@ -596,7 +596,7 @@ function action(sectionID, sectionData) {
           display: flex;
           justify-content: center;
           align-items: center;
-          color: $color-text-regular;
+          color: var(--el-text-color-regular);
           background-color: $color-other-clouds;
           padding: 5px 0px;
           margin: 10px 30px;
@@ -621,8 +621,8 @@ function action(sectionID, sectionData) {
           display: flex;
           align-items: center;
           justify-content: center;
-          color: $color-text-regular;
-          background-color: $color-background-base;
+          color: var(--el-text-color-regular);
+          background-color: var(--el-background-color-base);
           margin: 10px 30px;
           padding: 10px 10px;
           border-radius: 10px;
@@ -632,7 +632,7 @@ function action(sectionID, sectionData) {
             text-align: center;
 
             .anticon {
-              color: $color-primary;
+              color: var(--el-color-primary);
               margin: 0 10px;
               font-size: 25px;
             }
@@ -643,7 +643,7 @@ function action(sectionID, sectionData) {
           }
 
           > span:nth-child(2) {
-            border-left: 2px solid $color-text-placeholder;
+            border-left: 2px solid var(--el-text-color-placeholder);
 
             span {
               margin: 0 5px
@@ -686,7 +686,7 @@ function action(sectionID, sectionData) {
       }
 
       h2 {
-        border-bottom: 1px solid $color-border-base;
+        border-bottom: 1px solid var(--el-border-color-base);
         padding: 10px 0;
         font-weight: normal;
       }
@@ -700,7 +700,7 @@ function action(sectionID, sectionData) {
   .detail-card {
     margin-top: 15px;
     padding: 20px 10px;
-    background-color: $color-background-white;
+    background-color: var(--el-color-white);
   }
 }
 </style>
