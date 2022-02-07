@@ -145,7 +145,7 @@ const router = createRouter({
 			meta: {
 				title: '第三方登录授权页',
 				keepAlive: true,
-				isAuth: true
+				isAuth: false
 			}
 		},
 		{

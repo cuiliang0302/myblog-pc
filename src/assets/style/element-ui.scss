@@ -27,5 +27,9 @@
 .el-card__body {
   min-height: 140px;
 }
+// 导航栏悬浮下拉颜色
+.el-menu--horizontal>.el-sub-menu .el-sub-menu__title:hover{
+  background-color: var(--el-color-white)!important;
+}
 
 
