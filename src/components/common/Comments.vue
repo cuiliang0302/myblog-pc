@@ -177,7 +177,7 @@ ol {
         background-color: var(--el-border-color-extra-light);
         border-radius: 10px;
         margin-left: 15px;
-        border: 1px solid var(--color-background-base);
+        border: 1px solid var(--el-border-color-base);
         padding: 15px;
 
         p {

@@ -98,3 +98,11 @@ ul {
 .pointer {
   cursor: pointer
 }
+// 富文本编辑器暗黑模式适配
+.w-e-text-container{
+  background-color: var(--el-color-white)!important;
+}
+.w-e-toolbar{
+  background-color: var(--el-background-color-base)!important;
+}
+// markdown暗黑模式适配

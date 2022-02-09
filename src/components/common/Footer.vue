@@ -43,7 +43,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 footer {
-  border-top: 1px solid #DCDFE6;
+  border-top: 1px solid var(--el-border-color-base);
   width: 100%;
   background-color:var(--el-color-white);
   height: 70px;

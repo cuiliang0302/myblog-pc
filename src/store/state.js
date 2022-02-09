@@ -15,6 +15,8 @@ const state = {
 	asideMenuFold: false,
 	// 是否开启暗黑模式
 	dark: false,
+	// 默认主题色
+	theme:'#409eff'
 }
 export default state
 

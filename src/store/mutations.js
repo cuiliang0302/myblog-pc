@@ -31,5 +31,9 @@ const mutations = {
 	setDark(state, value) {
 		state.dark = value
 	},
+	// 设置主题色
+	setTheme(state,value){
+		state.theme=value
+	}
 }
 export default mutations

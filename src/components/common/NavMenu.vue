@@ -104,10 +104,10 @@
         <div class="color">
           <h4>主题色</h4>
           <div>
-            <el-tooltip v-for="(color,index) in colorList" :key="index"
-                        effect="dark" :content="color.name" placement="top">
-              <span :class="(colorValue===color.value?'color-active ':'') + color.value"
-                    @click="colorChoose(color.value)"></span>
+            <el-tooltip v-for="(item,index) in themeList" :key="index"
+                        effect="dark" :content="item.name" placement="top">
+              <span :style="{backgroundColor:item.value}" :class="(colorValue===item.value?'color-active ':'')"
+                    @click="colorChoose(item.value)"></span>
             </el-tooltip>
           </div>
          </div>
@@ -146,11 +146,16 @@ import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import store from "@/store/index";
 import dark from "@/utils/dark";
+import color from "@/utils/color"
+import theme from "@/utils/theme"
+
 let {setDark} = dark()
+let {setTheme} = theme()
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
 let {isLogin, userId, userName} = user();
+let {themeList} = color()
 const props = defineProps({
   // 导航栏类型(前台后台)
   kind: {
@@ -256,8 +261,8 @@ const handleClose = () => {
 // 设置-显示模式默认值
 const isDark = ref(false)
 // 设置-切换是否设置暗黑模式
-const setDarkMode = ()=>{
-  console.log("菜单栏执行切换事件",isDark.value)
+const setDarkMode = () => {
+  console.log("菜单栏执行切换事件", isDark.value)
   setDark(isDark.value)
 }
 // 设置-侧边菜单显示是否折叠
@@ -275,19 +280,15 @@ onMounted(() => {
     getPhotoData()
   }
   isDark.value = store.state.dark
+  colorValue.value = store.state.theme
 })
 // 设置-默认主题色
-const colorValue = ref('blue')
-const colorList = [
-  {name: '拂晓蓝(默认)', value: 'blue'},
-  {name: '薄暮红', value: 'red'},
-  {name: '火山橘', value: 'orange'},
-  {name: '日暮黄', value: 'yellow'},
-  {name: '极光绿', value: 'green'},
-  {name: '酱紫', value: 'purple'},
-]
+const colorValue = ref('')
+// 设置-切换主题色事件
 const colorChoose = (value) => {
   colorValue.value = value
+  console.log(colorValue.value)
+  setTheme(colorValue.value)
 }
 // 设置-默认导航菜单样式
 const navValue = ref('auto')
@@ -410,29 +411,30 @@ header {
       background-repeat: no-repeat;
     }
 
-    .blue {
-      background-color: var(--el-color-primary);
-    }
-
-    .red {
-      background-color: $color-other-alizarin;
-    }
-
-    .orange {
-      background-color: $color-other-carrot;
-    }
-
-    .yellow {
-      background-color: $color-other-sun-flower;
-    }
-
-    .green {
-      background-color: $color-other-green;
-    }
-
-    .purple {
-      background-color: $color-other-amethyst;
-    }
+    //
+    //.blue {
+    //  background-color: var(--el-color-primary);
+    //}
+    //
+    //.red {
+    //  background-color: $color-other-alizarin;
+    //}
+    //
+    //.orange {
+    //  background-color: $color-other-carrot;
+    //}
+    //
+    //.yellow {
+    //  background-color: $color-other-sun-flower;
+    //}
+    //
+    //.green {
+    //  background-color: $color-other-green;
+    //}
+    //
+    //.purple {
+    //  background-color: $color-other-amethyst;
+    //}
   }
 
   .nav-style {

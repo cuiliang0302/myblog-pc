@@ -4,12 +4,12 @@ import {ref} from "vue";
 function color() {
 	// 主题颜色变量组
 	const themeList = ref([
-		{name: 'blue', value: '#409eff'},
-		{name: 'red', value: '#e74c3c'},
-		{name: 'orange', value: '#e67e22'},
-		{name: 'yellow', value: '#f1c40f'},
-		{name: 'green', value: '#16a085'},
-		{name: 'purple', value: '#9b59b6'},
+		{name: '拂晓蓝(默认)', value: '#409eff'},
+		{name: '薄暮红', value: '#e74c3c'},
+		{name: '火山橘', value: '#e67e22'},
+		{name: '日暮黄', value: '#f1c40f'},
+		{name: '极光绿', value: '#16a085'},
+		{name: '酱紫', value: '#9b59b6'},
 	])
 	// 标签颜色变量组
 	const tagList = ref([
@@ -46,6 +46,43 @@ function color() {
 		{name: '--el-color-primary-light-9', value: '#ecf5ff'},
 		{name: '--el-border-color-base', value: '#dcdfe6'},
 		{name: '--el-border-color-light', value: '#e4e7ed'},
+		{name: '--el-border-color-extra-light', value: '#f2f6fc'},
+		{name: '--el-border-color-lighter', value: '#ebeef5'},
+		// 	--el-color-white: #ffffff;
+		// --el-color-black: #000000;
+		// --el-color-primary: hsl(210, 100%, 63%);
+		// --el-color-primary-light-1: #53a8ff;
+		// --el-color-primary-light-2: #66b1ff;
+		// --el-color-primary-light-3: #79bbff;
+		// --el-color-primary-light-4: #8cc5ff;
+		// --el-color-primary-light-5: #a0cfff;
+		// --el-color-primary-light-6: #b3d8ff;
+		// --el-color-primary-light-7: #c6e2ff;
+		// --el-color-primary-light-8: #d9ecff;
+		// --el-color-primary-light-9: #ecf5ff;
+		// --el-color-success: #67c23a;
+		// --el-color-success-light: #e1f3d8;
+		// --el-color-success-lighter: #f0f9eb;
+		// --el-color-warning: #e6a23c;
+		// --el-color-warning-light: #faecd8;
+		// --el-color-warning-lighter: #fdf6ec;
+		// --el-color-danger: #f56c6c;
+		// --el-color-danger-light: #fde2e2;
+		// --el-color-danger-lighter: #fef0f0;
+		// --el-color-error: #f56c6c;
+		// --el-color-error-light: #fde2e2;
+		// --el-color-error-lighter: #fef0f0;
+		// --el-color-info: #909399;
+		// --el-color-info-light: #e9e9eb;
+		// --el-color-info-lighter: #f4f4f5;
+		// --el-text-color-primary: #303133;
+		// --el-text-color-regular: #606266;
+		// --el-text-color-secondary: #909399;
+		// --el-text-color-placeholder: #c0c4cc;
+		// --el-border-color-base: #dcdfe6;
+		// --el-border-color-light: #e4e7ed;
+
+		// --el-background-color-base: #f5f7fa;
 	])
 	// 暗黑模式全局颜色
 	const darkList = ref([
@@ -56,9 +93,11 @@ function color() {
 		{name: '--el-color-primary-light-9', value: '#1f1f1f'},
 		{name: '--el-border-color-base', value: '#434343'},
 		{name: '--el-border-color-light', value: '#434343'},
+		{name: '--el-border-color-extra-light', value: '#5c5c5c'},
+		{name: '--el-border-color-lighter', value: '#434343'},
 		// {name: '--el-border-base', value: '#434343'},
 		// {name: '--el-color-white', value: '#383838'},
-		// {name: '--el-border-color-lighter', value: '#434343'},
+
 		// {name: '--el-border-color-hover', value: '#6d6d6d'},
 		// {name: '--el-text-color-placeholder', value: '#5c5c5c'},
 		// {name: '--el-text-color-regular', value: '#d0d0d0'},
@@ -79,7 +118,7 @@ function color() {
 		// {name: '--el-button-disabled-font-color', value: '#5c5c5c'}
 	])
 	return {
-		tagColor, lightList, darkList
+		tagColor, lightList, darkList, themeList
 	}
 }
 
