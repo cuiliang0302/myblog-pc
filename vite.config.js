@@ -19,13 +19,6 @@ export default defineConfig(({mode}) => {
 				resolvers: [ElementPlusResolver()],
 			}),
 		],
-		css: {
-			preprocessorOptions: {
-				scss: {
-					additionalData: '@import "./src/assets/style/variable.scss";',
-				}
-			}
-		},
 		optimizeDeps: {
 			include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],
 		},

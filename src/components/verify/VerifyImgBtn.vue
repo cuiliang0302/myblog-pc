@@ -115,6 +115,6 @@ onMounted(() => {
 }
 
 .verify-success {
-  color: $color-other-turquoise !important;
+  color: var(--el-color-success) !important;
 }
 </style>

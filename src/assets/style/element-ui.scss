@@ -43,5 +43,32 @@
 .el-button--primary{
   --el-button-background-color:var(--el-color-primary)!important;
 }
-
+// 描述表格表头
+.el-descriptions__label{
+  background-color:var(--el-background-color-base)!important;
+}
+// 描述表格内容
+.el-descriptions__content{
+  background-color: var(--el-color-white)!important;
+}
+// 远程搜索框
+.el-input-group__append, .el-input-group__prepend{
+  border: 1px solid var(--el-border-color-base)!important;
+}
+// 远程搜索框下拉选择
+.el-autocomplete__popper.el-popper[role=tooltip]{
+  background-color: var(--el-background-color-base)!important;
+}
+// 加载中背景图片
+.el-loading-mask{
+  background-color: var(--el-background-color-base)!important;
+}
+// 时间选择器
+.el-date-picker{
+  background-color: var(--el-background-color-base)!important;;
+}
+// 步骤条
+.el-steps--simple{
+  background-color: var(--el-background-color-base)!important;;
+}
 

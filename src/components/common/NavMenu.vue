@@ -410,31 +410,6 @@ header {
       background-image: url("/src/assets/images/yes.png");
       background-repeat: no-repeat;
     }
-
-    //
-    //.blue {
-    //  background-color: var(--el-color-primary);
-    //}
-    //
-    //.red {
-    //  background-color: $color-other-alizarin;
-    //}
-    //
-    //.orange {
-    //  background-color: $color-other-carrot;
-    //}
-    //
-    //.yellow {
-    //  background-color: $color-other-sun-flower;
-    //}
-    //
-    //.green {
-    //  background-color: $color-other-green;
-    //}
-    //
-    //.purple {
-    //  background-color: $color-other-amethyst;
-    //}
   }
 
   .nav-style {

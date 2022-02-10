@@ -597,7 +597,7 @@ function action(sectionID, sectionData) {
           justify-content: center;
           align-items: center;
           color: var(--el-text-color-regular);
-          background-color: $color-other-clouds;
+          background-color: var(--el-background-color-base);
           padding: 5px 0px;
           margin: 10px 30px;
           border-radius: 20px;

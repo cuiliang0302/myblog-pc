@@ -130,11 +130,11 @@
 // 引入用户信息模块
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {getStatistics} from "@/api/record";
 import {getEcharts} from "@/api/public";
 import * as echarts from 'echarts'
-
+import store from "@/store/index";
 let {userId} = user();
 // 用户信息
 const userInfo = reactive({})
@@ -165,7 +165,16 @@ const color = ref([
   "#b2bec3"
 ])
 // 是否开启暗黑模式
-const isDark = false
+const isDark = store.state.dark
+// 图表背景色
+const bgc = computed(() => {
+  console.log(isDark)
+  if (isDark === true) {
+    return '#141414'
+  } else {
+    return '#ffffff'
+  }
+})
 
 // 浏览趋势折线图
 async function trend() {
@@ -274,7 +283,8 @@ async function trend() {
         },
         data: chartData.section_collect
       }
-    ]
+    ],
+    backgroundColor: bgc.value
   });
   //自适应大小
   window.onresize = function () {
@@ -313,7 +323,8 @@ async function article() {
           }
         }
       }
-    ]
+    ],
+    backgroundColor: bgc.value
   });
   //自适应大小
   window.onresize = function () {
@@ -352,7 +363,8 @@ async function note() {
           name: '笔记统计'
         }
       ]
-    }]
+    }],
+    backgroundColor: bgc.value
   });
   //自适应大小
   window.onresize = function () {
@@ -419,7 +431,8 @@ async function time() {
         },
         data: chartData.section
       }
-    ]
+    ],
+    backgroundColor: bgc.value
   });
   //自适应大小
   window.onresize = function () {

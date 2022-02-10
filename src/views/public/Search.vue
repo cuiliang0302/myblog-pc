@@ -153,19 +153,20 @@ const handleSelect = (item) => {
 }
 // 提交搜索请求
 const searchFn = () => {
-  let userId
+  let user_id
   if (isLogin.value) {
-    userId = userId.value
+    user_id = userId.value
   } else {
-    userId = NaN
+    user_id = NaN
   }
   // 加载中动画
   const loading = ElLoading.service({
     lock: true,
     text: '玩命加载中……',
+    background: 'rgba(0, 0, 0, 0.7)',
   })
   searchList.value = []
-  getSearch(key.value, searchKind.value, userId).then((response) => {
+  getSearch(key.value, searchKind.value, user_id).then((response) => {
     console.log(response)
     searchList.value = response
     setTimeout(() => {

@@ -175,7 +175,7 @@ onMounted(() => {
   }
 
   .action-active {
-    background-color: $color-other-sun-flower;
+    background-color: var(--el-color-primary);
   }
 }
 

@@ -37,7 +37,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import "src/assets/style/theme/vars.module.scss";
 
 .router-view {
   color: var(--el-text-color-primary);
