@@ -1,5 +1,5 @@
 <template>
-  <header class="navigation-show">
+  <header :class="navigationClass">
     <span v-show="props.kind==='front'" class="left">
       <el-image
           style="width: 40px; height: 40px"
@@ -81,7 +81,6 @@
         :direction="'rtl'"
         :size="'25%'"
         :before-close="handleClose" destroy-on-close
-        z-index="9999"
     >
       <span>
         <el-divider></el-divider>
@@ -118,7 +117,7 @@
           菜单显示模式：
           <el-select v-model="navValue" @change="navChange">
             <el-option
-                v-for="item in navList"
+                v-for="item in navigationList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -134,7 +133,7 @@
       </span>
     </el-drawer>
   </header>
-  <div class="placeholder"></div>
+  <div v-show="navigationClass==='navigation-show'" class="placeholder"></div>
 </template>
 
 <script setup>
@@ -153,7 +152,7 @@ import theme from "@/utils/theme"
 import navigation from "@/utils/navigation";
 let {setDark} = dark()
 let {setTheme} = theme()
-let {setNavigation} = navigation()
+let {navigationList,setNavigation,navigationClass} = navigation()
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
@@ -296,12 +295,7 @@ const colorChoose = (value) => {
 }
 // 设置-默认导航菜单样式
 const navValue = ref('')
-// 设置-导航菜单样式选项
-const navList = [
-  {value: 'auto', label: '自动'},
-  {value: 'show', label: '固定显示'},
-  {value: 'hide', label: '滚动隐藏'},
-]
+
 // 设置-导航菜单样式切换事件
 const navChange = (value) => {
   console.log(value)
@@ -443,6 +437,7 @@ header {
   top:0;
   left: 0;
   width: 100%;
+  z-index: 1;
 }
 //.navigation-hide{
 //
