@@ -16,7 +16,9 @@ const state = {
 	// 是否开启暗黑模式
 	dark: false,
 	// 默认主题色
-	theme:'#409eff'
+	theme:'#409eff',
+	// 导航栏样式
+	navigation:'auto'
 }
 export default state
 

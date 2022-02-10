@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="navigation-show">
     <span v-show="props.kind==='front'" class="left">
       <el-image
           style="width: 40px; height: 40px"
@@ -81,6 +81,7 @@
         :direction="'rtl'"
         :size="'25%'"
         :before-close="handleClose" destroy-on-close
+        z-index="9999"
     >
       <span>
         <el-divider></el-divider>
@@ -115,7 +116,7 @@
         <div v-if="props.kind==='front'" class="nav-style">
           <h4>导航菜单</h4>
           菜单显示模式：
-          <el-select v-model="navValue">
+          <el-select v-model="navValue" @change="navChange">
             <el-option
                 v-for="item in navList"
                 :key="item.value"
@@ -133,6 +134,7 @@
       </span>
     </el-drawer>
   </header>
+  <div class="placeholder"></div>
 </template>
 
 <script setup>
@@ -148,9 +150,10 @@ import store from "@/store/index";
 import dark from "@/utils/dark";
 import color from "@/utils/color"
 import theme from "@/utils/theme"
-
+import navigation from "@/utils/navigation";
 let {setDark} = dark()
 let {setTheme} = theme()
+let {setNavigation} = navigation()
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
@@ -281,6 +284,7 @@ onMounted(() => {
   }
   isDark.value = store.state.dark
   colorValue.value = store.state.theme
+  navValue.value = store.state.navigation
 })
 // 设置-默认主题色
 const colorValue = ref('')
@@ -291,12 +295,18 @@ const colorChoose = (value) => {
   setTheme(colorValue.value)
 }
 // 设置-默认导航菜单样式
-const navValue = ref('auto')
+const navValue = ref('')
+// 设置-导航菜单样式选项
 const navList = [
   {value: 'auto', label: '自动'},
   {value: 'show', label: '固定显示'},
   {value: 'hide', label: '滚动隐藏'},
 ]
+// 设置-导航菜单样式切换事件
+const navChange = (value) => {
+  console.log(value)
+  setNavigation(value)
+}
 </script>
 
 <style scoped lang="scss">
@@ -424,4 +434,17 @@ header {
 .anticon {
   padding-right: 5px;
 }
+.placeholder{
+  height: 65px;
+  //display: none;
+}
+.navigation-show{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+}
+//.navigation-hide{
+//
+//}
 </style>

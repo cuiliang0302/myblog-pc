@@ -32,8 +32,12 @@ const mutations = {
 		state.dark = value
 	},
 	// 设置主题色
-	setTheme(state,value){
-		state.theme=value
+	setTheme(state, value) {
+		state.theme = value
+	},
+	// 设置导航栏模式
+	setNavigation(state, value) {
+		state.navigation = value
 	}
 }
 export default mutations
