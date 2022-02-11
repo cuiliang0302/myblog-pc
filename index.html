@@ -127,10 +127,16 @@
 		let url = window.location.href
 		console.log(url)
 		location.href = url.replace(/www.cuiliangblog.cn/, "m.cuiliangblog.cn")
-		// console.log(url.replace(/127.0.0.1/, "m.cuiliangblog.cn"))
-		// location.href = url.replace(/127.0.0.1/, "m.cuiliangblog.cn")
-		// location.href = 'https://www.baidu.com'
-		// console.log("调了")
+	}
+</script>
+<script>
+	const now = new Date()
+	if (now.getHours() >= 21 || now.getHours() <= 6) {
+		console.log("这是夜间模式")
+		document.bgColor = '#202023';
+	} else {
+		console.log("这是白天模式")
+		document.bgColor = '#ffffff';
 	}
 </script>
 </body>

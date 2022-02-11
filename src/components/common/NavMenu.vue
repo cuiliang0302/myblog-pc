@@ -1,5 +1,7 @@
 <template>
-  <header :class="navigationClass">
+  <transition enter-active-class="animate__animated animate__fadeInDown"
+              leave-active-class="animate__animated animate__fadeOutUp">
+  <header class="navigation-show" v-if="navigationType==='show'">
     <span v-show="props.kind==='front'" class="left">
       <el-image
           style="width: 40px; height: 40px"
@@ -133,7 +135,8 @@
       </span>
     </el-drawer>
   </header>
-  <div v-show="navigationClass==='navigation-show'" class="placeholder"></div>
+  </transition>
+  <div class="placeholder"></div>
 </template>
 
 <script setup>
@@ -150,9 +153,10 @@ import dark from "@/utils/dark";
 import color from "@/utils/color"
 import theme from "@/utils/theme"
 import navigation from "@/utils/navigation";
+
 let {setDark} = dark()
 let {setTheme} = theme()
-let {navigationList,setNavigation,navigationClass} = navigation()
+let {navigationList, setNavigation, navigationType} = navigation()
 const router = useRouter()
 let {MyIcon} = icon()
 // 引入用户信息模块
@@ -428,17 +432,20 @@ header {
 .anticon {
   padding-right: 5px;
 }
-.placeholder{
-  height: 65px;
+
+.placeholder {
+  height: 61px;
   //display: none;
 }
-.navigation-show{
+
+.navigation-show {
   position: fixed;
-  top:0;
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 1;
 }
+
 //.navigation-hide{
 //
 //}

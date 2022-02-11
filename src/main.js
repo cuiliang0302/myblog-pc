@@ -12,7 +12,6 @@ import "@/assets/style/hover-min.css";
 import 'nprogress/nprogress.css'
 import 'vue-loaders/dist/vue-loaders.css';
 import VueLoaders from 'vue-loaders';
-
 const app = createApp(App)
 //绑定事件总线
 app.config.globalProperties.$bus = new mitt();

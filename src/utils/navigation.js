@@ -1,8 +1,6 @@
 // 导航栏模式
 import {computed, onMounted, ref} from "vue";
 import store from "@/store/index";
-import color from "@/utils/color"
-import {useCssVar} from "@vueuse/core";
 
 function navigation() {
 	// 当前导航栏模式
@@ -14,28 +12,64 @@ function navigation() {
 		{value: 'hide', label: '滚动隐藏'},
 	]
 	// 导航栏样式
-	const navigationClass = ref('')
+	const navigationType = ref('show')
 	// 切换导航栏模式
 	const setNavigation = (value) => {
 		store.commit('setNavigation', value)
 		console.log("执行切换导航栏样式事件：", navigationMode.value)
-		if(value==='auto'){
+		if (value === 'auto') {
 			console.log("当前是自动")
 		}
-		if(value==='show'){
+		if (value === 'show') {
 			console.log("当前是显示")
-			navigationClass.value = 'navigation-show'
+			navigationType.value = 'show'
 		}
-		if(value==='hide'){
+		if (value === 'hide') {
 			console.log("当前是隐藏")
-			navigationClass.value = ''
+			navigationType.value = 'hide'
+		}
+	}
+	//上次滚动位置
+	const lastTop = ref(0)
+	//防抖处理
+	const debounce = (fn, wait) => {
+		let timer = null
+		return function () {
+			if (timer !== null) {
+				clearTimeout(timer)
+			}
+			timer = setTimeout(fn, wait)
+		}
+	}
+	// 监听页面滚动处理
+	const scrollHandle = () => {
+		let newTop = document.body.scrollTop || document.documentElement.scrollTop
+		if (navigationMode.value === 'auto') {
+			if (lastTop.value < newTop) {
+				console.log("向下滚动")
+				navigationType.value = 'hide'
+			} else {
+				console.log("向上滚动")
+				navigationType.value = 'show'
+			}
+			lastTop.value = newTop;
+		}
+		if (navigationMode.value === 'hide') {
+			if (newTop < 100){
+				navigationType.value = 'show'
+			}else {
+				navigationType.value = 'hide'
+			}
 		}
 	}
 	onMounted(() => {
 		setNavigation(navigationMode.value)
+		// 添加scroll监听
+		window.addEventListener("scroll", debounce(scrollHandle, 500), false);
+		navigationType.value = 'show'
 	})
 	return {
-		setNavigation,navigationList,navigationClass
+		setNavigation, navigationList, navigationType
 	}
 }
 

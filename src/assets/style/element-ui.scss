@@ -42,6 +42,7 @@
 // 主要按钮主题色
 .el-button--primary{
   --el-button-background-color:var(--el-color-primary)!important;
+  --el-button-border-color:var(--el-color-primary)!important;
 }
 // 描述表格表头
 .el-descriptions__label{
