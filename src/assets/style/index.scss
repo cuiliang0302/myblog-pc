@@ -102,7 +102,8 @@ ul {
   background-color: var(--el-color-white)!important;
 }
 .w-e-toolbar{
-  background-color: var(--el-background-color-base)!important;
+  background-color: var(--el-border-color-extra-light)!important;
+  z-index: 0!important;
 }
 .w-e-toolbar .w-e-menu:hover {
   background-color: var(--el-color-primary-light-9)!important;

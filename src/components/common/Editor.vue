@@ -73,7 +73,7 @@ onMounted(() => {
   // 挂载highlight代码高亮插件
   instance.highlight = hljs
   // z-index
-  instance.config.zIndex = 1
+  instance.config.zIndex = 0
   // 图片上传
   instance.config.customUploadImg = function (resultFiles, insertImgFn) {
     const loading = ElLoading.service({
