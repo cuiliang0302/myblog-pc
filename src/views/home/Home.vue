@@ -98,7 +98,7 @@ const load = () => {
 }
 // 页面滚动事件
 const scrollHandle = () => {
-  const scrollHeight = document.body.scrollHeight
+  const scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
   const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
   const clientHeight = document.documentElement.clientHeight
   const distance = scrollHeight - scrollTop - clientHeight

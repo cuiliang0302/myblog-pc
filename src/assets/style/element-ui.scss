@@ -72,4 +72,8 @@
 .el-steps--simple{
   background-color: var(--el-background-color-base)!important;;
 }
+// 下拉菜单样式
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
+  color:var(--el-color-primary)!important;
+}
 
