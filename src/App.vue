@@ -12,8 +12,12 @@
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {onMounted} from "vue";
 import {ElMessageBox} from 'element-plus'
+import dark from "@/utils/dark";
+let {setDark} = dark()
 const locale = zhCn
 onMounted(() => {
+  const is_dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  setDark(is_dark)
   if (document.body.clientWidth <= 1200) {
     ElMessageBox.alert('检测到您使用移动设备访问，点击确定后跳转至移动版网站', {
       confirmButtonText: '确定',
