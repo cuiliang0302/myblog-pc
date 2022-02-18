@@ -37,6 +37,7 @@ onMounted(() => {
     console.log(e)
   }
 })
+
 </script>
 
 <style lang="scss">

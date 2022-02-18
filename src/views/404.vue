@@ -29,6 +29,7 @@
       <a href="/"><span>返回首页</span></a>
     </div>
   </div>
+  <div class="bg"></div>
 </template>
 
 <script>
@@ -38,30 +39,23 @@ export default {
 </script>
 
 <style lang="scss">
-*, *:after, *:before {
-  box-sizing: border-box;
-}
-
-html {
+.bg{
   background: #23508a;
   background: radial-gradient(ellipse at center, #23508a 0%, #1b3b62 50%, #1a365b 100%);
   font-family: arial;
   min-width: 400px;
-}
-
-body {
   width: 100%;
   height: 100vh;
   margin: 0;
+}
+.figure {
   background: radial-gradient(ellipse at center, #73859a 1%, rgba(114, 132, 152, 0) 2%, rgba(0, 0, 0, 0) 100%), radial-gradient(ellipse at center, #73859a 1%, rgba(114, 132, 152, 0) 2%, rgba(0, 0, 0, 0) 100%), radial-gradient(ellipse at center, rgba(115, 133, 154, 0.5) 1%, rgba(114, 132, 152, 0) 2%, rgba(0, 0, 0, 0) 100%);
   background-size: 250px 250px, 100px 100px, 60px 60px;
   background-repeat: repeat;
-}
-
-.figure {
   position: fixed;
   left: 50%;
   top: 60%;
+  width: 100%;
   -webkit-transform: translate(-50%, -65%);
   transform: translate(-50%, -65%);
 }
