@@ -1,6 +1,6 @@
 <template>
   <transition enter-active-class="animate__animated animate__fadeInDown"
-              leave-active-class="animate__animated animate__fadeOutUp">
+              leave-active-class="animate__animated animate__fadeOutUp" mode="in-out">
   <header class="navigation-show" v-if="navigationType==='show'">
     <span v-show="props.kind==='front'" class="left">
       <el-image
@@ -435,7 +435,6 @@ header {
 
 .placeholder {
   height: 61px;
-  //display: none;
 }
 
 .navigation-show {
@@ -443,10 +442,6 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 5;
 }
-
-//.navigation-hide{
-//
-//}
 </style>
