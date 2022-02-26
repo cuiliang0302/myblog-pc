@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { ElMessageBox} from 'element-plus'
 export function request(config) {
 	// 创建axios的实例
 	const instance = axios.create({
@@ -20,20 +20,33 @@ export function request(config) {
 		return response.data
 	}, error => {
 		console.log(error)
-		switch (error.response.status) {
-			case 400:
-				return Promise.reject(error.response.data)
-			case 401:
-				console.log("无权访问")
-				break
-			case 403:
-				console.log("token过期啦")
-				break
-			case 404:
-				console.log("404啦")
-				break
-			default:
-				return Promise.reject(error)
+		if(error.response){
+			switch (error.response.status) {
+				case 400:
+					return Promise.reject(error.response.data)
+				case 401:
+					console.log("无权访问")
+					break
+				case 403:
+					console.log("token过期啦")
+					break
+				case 404:
+					console.log("404啦")
+					break
+				case 500:
+					console.log("500啦")
+					ElMessageBox.alert('后端接口异常，请稍候重试或联系管理员！', '异常提示', {
+						confirmButtonText: '确定'
+					})
+					break
+				default:
+					return Promise.reject(error)
+			}
+		}else {
+			console.log("请求超时")
+			ElMessageBox.alert('请求超时，请稍候重试或联系管理员！', '异常提示', {
+				confirmButtonText: '确定'
+			})
 		}
 		return Promise.reject(error)
 	})
