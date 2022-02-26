@@ -130,7 +130,7 @@
 // 引入用户信息模块
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import {getStatistics} from "@/api/record";
 import {getEcharts} from "@/api/public";
 import * as echarts from 'echarts'
@@ -182,16 +182,23 @@ const echartsDark = ref([
   '#f1c40f',
 ])
 // 是否开启暗黑模式
-const isDark = store.state.dark
-// 图表背景色
-const bgc = computed(() => {
-  console.log(isDark)
-  if (isDark === true) {
-    return '#141414'
+const isDark = computed(() => store.state.dark)
+// echarts背景色
+const bgc = ref()
+// echarts颜色
+const color = ref()
+// 设置echarts主题色
+const setColor = () => {
+  console.log(isDark.value)
+  if (isDark.value === true) {
+    bgc.value = '#141414'
+    color.value = echartsDark.value
   } else {
-    return '#ffffff'
+    bgc.value = '#ffffff'
+    color.value = echartsLight.value
   }
-})
+  console.log(bgc.value)
+}
 
 // 浏览趋势折线图
 async function trend() {
@@ -214,17 +221,14 @@ async function trend() {
     section_comment.push(chartData[i].section_comment)
   }
   let myChart;
-  let color;
-  if (isDark) {
+  if (isDark.value) {
     myChart = echarts.init(document.getElementById("trend"), 'dark');
-    color = echartsDark.value
   } else {
     myChart = echarts.init(document.getElementById("trend"));
-    color = echartsLight.value
   }
   // 绘制图表
   myChart.setOption({
-    color: color,
+    color: color.value,
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -330,17 +334,14 @@ async function article() {
   let chartData = await getEcharts(userId.value, 'article')
   console.log("article", chartData)
   let myChart;
-  let color;
-  if (isDark) {
+  if (isDark.value) {
     myChart = echarts.init(document.getElementById("article"), 'dark');
-    color = echartsDark.value
   } else {
     myChart = echarts.init(document.getElementById("article"));
-    color = echartsLight.value
   }
   // 绘制图表
   myChart.setOption({
-    color: color,
+    color: color.value,
     tooltip: {
       trigger: 'item'
     },
@@ -377,24 +378,21 @@ async function note() {
   const data = []
   for (let i in chartData) {
     const item = {
-      name : chartData[i].name,
-      max : chartData[i].max
+      name: chartData[i].name,
+      max: chartData[i].max
     }
     indicator.push(item)
     data.push(chartData[i].data)
   }
   let myChart;
-  let color;
-  if (isDark) {
+  if (isDark.value) {
     myChart = echarts.init(document.getElementById("note"), 'dark');
-    color = echartsDark.value
   } else {
     myChart = echarts.init(document.getElementById("note"));
-    color = echartsLight.value
   }
   // 绘制图表
   myChart.setOption({
-    color: color,
+    color: color.value,
     legend: {
       show: false
     },
@@ -426,35 +424,31 @@ async function note() {
 // 浏览时间柱形图
 async function time() {
   const chartData = await getEcharts(userId.value, 'time')
-  console.log("time",chartData)
+  console.log("time", chartData)
   const time = []
   const article = []
   const section = []
-  for (let i in chartData){
-    console.log(chartData[i])
+  for (let i in chartData) {
     time.push(chartData[i].time)
     article.push(chartData[i].article)
     section.push(chartData[i].section)
   }
   let myChart;
-  let color;
-  if (isDark) {
+  if (isDark.value) {
     myChart = echarts.init(document.getElementById("time"), 'dark');
-    color = echartsDark.value
   } else {
     myChart = echarts.init(document.getElementById("time"));
-    color = echartsLight.value
   }
   // 绘制图表
   myChart.setOption({
-    color: color,
+    color: color.value,
     tooltip: {
       trigger: 'axis',
       axisPointer: {
         type: 'shadow',
         label: {
           formatter: function (params) {
-            return params.value + ":00-"+params.value+":59";
+            return params.value + ":00-" + params.value + ":59";
           }
         }
       },
@@ -470,7 +464,7 @@ async function time() {
     },
     xAxis: {
       type: 'category',
-      data:time,
+      data: time,
     },
     yAxis: {
       type: 'value'
@@ -502,8 +496,18 @@ async function time() {
     myChart.resize();
   };
 }
-
+// 监听切换主题色事件
+watch(isDark, (newVal) => {
+  console.log("切换颜色了")
+  console.log({ newVal })
+  setColor()
+  trend()
+  article()
+  note()
+  time()
+})
 onMounted(() => {
+  setColor()
   getUserinfo()
   statisticsData()
   trend()
