@@ -132,7 +132,7 @@ import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import {getStatistics} from "@/api/record";
-import {getEcharts} from "@/api/public";
+import {getUserEcharts} from "@/api/record";
 import * as echarts from 'echarts'
 import store from "@/store/index";
 
@@ -155,17 +155,16 @@ async function statisticsData() {
 
 // echarts明亮模式曲线颜色
 const echartsLight = ref([
-  '#c22931',
-  '#e8ad29',
+  "#3498db",
+  "#f1c40f",
+  "#2ecc71",
+  "#f2b3c9",
+  "#16a085",
+  "#e67e22",
   '#008dd0',
-  '#157623',
-  '#00549d',
-  '#08919d',
-  '#009a7c',
+  '#c22931',
   '#8e44ad',
-  '#2ecc71',
-  '#f39c12',
-  '#e74c3c'
+  '#157623',
 ])
 // echarts暗黑模式曲线颜色
 const echartsDark = ref([
@@ -179,7 +178,6 @@ const echartsDark = ref([
   '#62996a',
   '#5db0b3',
   '#1abc9c',
-  '#f1c40f',
 ])
 // 是否开启暗黑模式
 const isDark = computed(() => store.state.dark)
@@ -202,7 +200,8 @@ const setColor = () => {
 
 // 浏览趋势折线图
 async function trend() {
-  const chartData = await getEcharts(userId.value, 'trend')
+  const query = {chart: 'trend',user:userId.value}
+  const chartData = await getUserEcharts(query)
   console.log("trend", chartData)
   const date = []
   const article_view = []
@@ -331,7 +330,8 @@ async function trend() {
 
 // 浏览文章饼图
 async function article() {
-  let chartData = await getEcharts(userId.value, 'article')
+  const query = {chart: 'article',user:userId.value}
+  const chartData = await getUserEcharts(query)
   console.log("article", chartData)
   let myChart;
   if (isDark.value) {
@@ -372,7 +372,8 @@ async function article() {
 
 // 浏览笔记雷达图
 async function note() {
-  const chartData = await getEcharts(userId.value, 'note')
+  const query = {chart: 'note',user:userId.value}
+  const chartData = await getUserEcharts(query)
   console.log("note", chartData)
   const indicator = []
   const data = []
@@ -423,7 +424,8 @@ async function note() {
 
 // 浏览时间柱形图
 async function time() {
-  const chartData = await getEcharts(userId.value, 'time')
+  const query = {chart: 'time',user:userId.value}
+  const chartData = await getUserEcharts(query)
   console.log("time", chartData)
   const time = []
   const article = []

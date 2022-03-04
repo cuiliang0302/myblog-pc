@@ -70,3 +70,4 @@ export function putChangePhone(userId, params) {
 	const url = '/account/changePhone/' + userId + '/'
 	return index.put(url, params)
 }
+
