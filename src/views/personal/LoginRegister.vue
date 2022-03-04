@@ -515,6 +515,8 @@ function registerFn() {
   background-image: v-bind('bgiURL');
   width: 100vw;
   height: 100vh;
+  background-size: 100% 100%;
+  background-attachment: fixed;
   display: block;
   position: relative;
 
