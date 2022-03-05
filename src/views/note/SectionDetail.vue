@@ -86,7 +86,7 @@ import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElMessage, ElLoading} from 'element-plus'
-import {getSectionDetail, getContextSection, getCatalogue, putSectionDetail} from "@/api/blog";
+import {getSectionDetail, getContextSection, getCatalogueList, putSectionDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -99,7 +99,7 @@ import {
   getSectionComment,
   getSectionHistory,
   postReplySectionComment,
-  postSectionComment, postSectionHistory, putArticleHistory,
+  postSectionComment, postSectionHistory,
   putSectionComment, putSectionHistory
 } from "@/api/record";
 import user from "@/utils/user";
@@ -230,7 +230,7 @@ function catalog(sectionData) {
 
   // 获取笔记目录数据
   async function catalogueData() {
-    let data = await getCatalogue(sectionData.note_id)
+    let data = await getCatalogueList(sectionData.note_id)
     catalogList.value = data.map((i, index) => {
       return {
         id: i['id'],
