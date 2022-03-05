@@ -18,7 +18,7 @@ import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
-import {getCatalogue, getNoteDetail} from "@/api/blog";
+import {getCatalogueList, getNoteDetail} from "@/api/blog";
 const router = useRouter()
 // 笔记名称
 const title = ref()
@@ -33,7 +33,7 @@ const catalogList = ref([])
 
 // 获取笔记目录数据
 async function catalogueData(catalogueID) {
-  let data = await getCatalogue(catalogueID)
+  let data = await getCatalogueList(catalogueID)
   console.log(data)
   catalogList.value = data.map((i, index) => {
     return {
