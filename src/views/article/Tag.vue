@@ -72,7 +72,13 @@ const article = reactive({
 
 // 获取文章数据
 async function articleData(page, size, tagID) {
-  let data = await getArticle(page, size, '-created_time', NaN, tagID)
+  const params = {
+    page: 1,
+    size: 5,
+    ordering: '-created_time',
+    tag: tagID
+  }
+  let data = await getArticle(params)
   article.list = data.results
   article.count = data.count
   console.log(article.list, article.count)

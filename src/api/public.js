@@ -10,11 +10,6 @@ export function getImgProxy(url) {
     return 'https://api.cuiliangblog.cn/v1/public/imgProxy/?url=' + url
 }
 
-// 获取echarts数据
-export function getEcharts(user, chart) {
-    return index.get('/public/echarts/?user=' + user + '&chart=' + chart)
-}
-
 // 获取背景图片地址
 export function getBgiUrl() {
     return index.get('/public/backgroundImage/')

@@ -15,7 +15,7 @@
               <span v-if="isLike(item.id)===true" class="no-choose">
                 <MyIcon class="icon" type="icon-like-solid"/>赞 {{ item.like }}
               </span>
-              <span v-else @click="likeMessage(item.id)">
+              <span v-else @click="likeMessage(item.id,item.like)">
                 <MyIcon class="icon" type="icon-like"/>赞 {{ item.like }}
               </span>
             </span>
@@ -96,10 +96,14 @@ const isLike = (messageId) => {
   return false;
 }
 // 留言评论点赞
-const likeMessage = (messageId) => {
+const likeMessage = (messageId, likeMessage) => {
+  console.log("留言点赞了啊")
   likeList.value.push(messageId)
-  console.log(likeList.value)
-  $bus.emit("likeMessage", messageId);
+  const value = {
+    'id': messageId,
+    'like': likeMessage + 1
+  }
+  $bus.emit("likeMessage", value);
 }
 // 回复输入框默认状态
 const textareaShow = ref(false)
@@ -235,8 +239,9 @@ ol {
     span > div {
       background-color: var(--el-border-color-base) !important;
     }
+
     span > div::before {
-      border-right: 9px solid var(--el-border-color-base)!important;
+      border-right: 9px solid var(--el-border-color-base) !important;
     }
   }
 }

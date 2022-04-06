@@ -1,15 +1,9 @@
 import index from './index'
 
 // 获取文章列表
-export function getArticle(page = 1, size = 5, order = '-created_time', category, tag) {
-	if (category) {
-		return index.get('/blog/article/' + '?size=' + size + '&page=' + page + '&ordering=' + order + '&category=' + category)
-	}
-	if (tag) {
-		return index.get('/blog/article/' + '?size=' + size + '&page=' + page + '&ordering=' + order + '&category=&tags=' + tag)
-	} else {
-		return index.get('/blog/article/' + '?size=' + size + '&page=' + page + '&ordering=' + order)
-	}
+export function getArticle(params) {
+	const url = '/blog/article/'
+	return index.get(url,params)
 }
 
 // 获取文章分类列表
@@ -38,9 +32,9 @@ export function getArticleDetail(id) {
 }
 
 // 修改文章详情(点赞)
-export function putArticleDetail(id, params) {
+export function patchArticleDetail(id, params) {
 	const url = '/blog/article/' + id + '/'
-	return index.put(url, params)
+	return index.patch(url, params)
 }
 
 // 获取猜你喜欢列表
@@ -74,9 +68,9 @@ export function getSectionDetail(id) {
 }
 
 // 修改笔记详情(点赞)
-export function putSectionDetail(id, params) {
+export function patchSectionDetail(id, params) {
 	const url = '/blog/section/' + id + '/'
-	return index.put(url, params)
+	return index.patch(url, params)
 }
 
 // 获取笔记目录列表
@@ -91,8 +85,4 @@ export function getContextSection(id) {
 // 获取文章上下篇
 export function getContextArticle(id) {
 	return index.get('/blog/context/' + id + '/?kind=article')
-}
-// 获取文章笔记二维码
-export function getQRcode(url) {
-	return index.get('/blog/QRcode/?url=' + url)
 }

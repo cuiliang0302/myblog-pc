@@ -47,7 +47,6 @@ const router = useRouter()
 let {timeFull} = timeFormat()
 // 格式化显示年月
 const formatMonth = (value) => {
-  console.log(value)
   return value.replace("-", "年") + '月'
 }
 // 默认展开的数据

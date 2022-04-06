@@ -72,7 +72,13 @@ const article = reactive({
 
 // 获取文章数据
 async function articleData(page, size, categoryID) {
-  let data = await getArticle(page, size, '-created_time', categoryID, NaN)
+  const params = {
+    page: page,
+    size: size,
+    ordering: '-created_time',
+    category: categoryID
+  }
+  let data = await getArticle(params)
   article.list = data.results
   article.count = data.count
   console.log(article.list, article.count)
@@ -80,8 +86,9 @@ async function articleData(page, size, categoryID) {
 
 // 分页-页面跳转
 const changePage = (pageSize, pageNumber) => {
-  console.log(categoryID)
+  console.log("categoryID",categoryID.value)
   window.scrollTo({top: 0})
+  console.log(pageSize, pageNumber)
   articleData(pageNumber, pageSize, categoryID.value)
 }
 

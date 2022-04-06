@@ -41,7 +41,7 @@
           </template>
         </el-dropdown>
       </template>
-      <ol class="ranking">
+      <ol class="ranking" v-loading="rankingLoading">
         <li v-for="article in articleRanking" :key="article.id" @click="toDetail(article.id)">
           <p class="no-choose ranking-hover">{{ article.title }}</p>
         </li>
@@ -188,7 +188,12 @@ const router = useRouter()
 const recommend = ref([])
 
 async function recommendData() {
-  let data = await getArticle(1, 6, '-is_recommend,-created_time')
+  const params = {
+    page: 1,
+    size: 6,
+    ordering: '-is_recommend,-created_time'
+  }
+  let data = await getArticle(params)
   recommend.value = data.results
   console.log("recommend", recommend.value)
 }
@@ -204,11 +209,20 @@ const ranking = ref([
 const isRanking = ref('阅读排行')
 // 排行列表-文章排行
 const articleRanking = ref([])
+// 排列列表-加载状态
+const rankingLoading = ref(false)
 // 排行列表-切换种类
 const handleCommand = (index) => {
+  rankingLoading.value = true
   isRanking.value = ranking.value[index].name
-  getArticle(1, 10, ranking.value[index].value).then((response) => {
+  const params = {
+    page: 1,
+    size: 10,
+    ordering: ranking.value[index].value
+  }
+  getArticle(params).then((response) => {
     articleRanking.value = response.results
+    rankingLoading.value = false
   })
 };
 // 排行列表-是否下拉状态
@@ -220,7 +234,12 @@ const dropdownChange = (value) => {
 }
 
 async function rankingData() {
-  let data = await getArticle(1, 10, '-view')
+  const params = {
+    page: 1,
+    size: 10,
+    order: '-view',
+  }
+  let data = await getArticle(params)
   articleRanking.value = data.results
   console.log("articleRanking", articleRanking.value)
 }
@@ -288,7 +307,7 @@ onMounted(() => {
   }
 
   .ranking {
-    padding-left: 20px;
+    padding-left: 25px;
     line-height: 28px;
 
     li {

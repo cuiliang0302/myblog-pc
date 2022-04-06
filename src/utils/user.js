@@ -25,7 +25,7 @@ function user() {
 				userName.value = store.state.userSession.username
 			}
 		}
-		// 获取用户头像
+		console.log("userToken.value", userToken.value)
 	})
 	return {
 		isLogin, userId, userToken, userName

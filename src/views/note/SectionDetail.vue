@@ -86,7 +86,7 @@ import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElMessage, ElLoading} from 'element-plus'
-import {getSectionDetail, getContextSection, getCatalogueList, putSectionDetail} from "@/api/blog";
+import {getSectionDetail, getContextSection, getCatalogueList, patchSectionDetail} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -100,7 +100,7 @@ import {
   getSectionHistory,
   postReplySectionComment,
   postSectionComment, postSectionHistory,
-  putSectionComment, putSectionHistory
+  patchSectionComment, putSectionHistory
 } from "@/api/record";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
@@ -414,8 +414,9 @@ function comment(sectionID) {
     }
   }
   // 评论点赞事件
-  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
-    putSectionComment(messageId).then((response) => {
+  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", value => {
+    const params = {'like': value.like}
+    patchSectionComment(value.id,params).then((response) => {
       console.log(response)
       ElMessage({
         message: '点赞成功',
@@ -482,13 +483,14 @@ function action(sectionID, sectionData) {
   // 笔记点赞事件
   const likeClick = () => {
     console.log("爹收到点赞事件了")
-    sectionData.like = sectionData.like + 1
-    putSectionDetail(sectionID.value, sectionData).then((response) => {
+    const params = {'like': sectionData.like + 1}
+    patchSectionDetail(sectionID.value, params).then((response) => {
       console.log(response)
       ElMessage({
         message: '笔记点赞成功！',
         type: 'success',
       })
+      sectionData.like = params.like
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -516,7 +518,7 @@ function action(sectionID, sectionData) {
   })
   // 子组件添加/取消收藏事件
   const collectClick = () => {
-    if(isLogin.value === true){
+    if (isLogin.value === true) {
       console.log("当前收藏状态是", isCollect.value)
       isCollect.value = !isCollect.value
       CollectForm.user = userId.value
@@ -540,7 +542,7 @@ function action(sectionID, sectionData) {
         console.log(response)
         ElMessage.error(response.msg)
       });
-    }else {
+    } else {
       console.log("先登录")
       store.commit('setNextPath', router.currentRoute.value.fullPath)
       loginPopupRef.value.showPopup()

@@ -81,15 +81,19 @@ const article = reactive({
 })
 // 是否还有更多需要加载
 const noMore = computed(() => article.list.length < article.count);
-// 当前页码数
-const page = ref(0)
+// 文章请求参数
+const article_params = {
+  page: 1,
+  size: 5,
+  order: '-created_time',
+}
 // 是否可以执行加载中动画
 const loading = ref(true)
 // 加载下一页
 const load = () => {
   console.log("加载下一页了")
-  page.value++
-  getArticle(page.value, 5, '-created_time').then((response) => {
+  article_params.page = article_params.page + 1
+  getArticle(article_params).then((response) => {
     article.list.push(...response.results)
     article.count = response.count
     console.log(response.results)

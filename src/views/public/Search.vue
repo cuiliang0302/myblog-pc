@@ -128,6 +128,7 @@ const topColor = (topId) => {
 }
 // 点击搜索框展开热门搜索词
 const querySearch = (queryString, cb) => {
+  console.log(queryString)
   let hotListAll = []
   hotList.value.slice(0, 10).forEach(function (element, index) {
     hotListAll.push({'id': index + 1, 'value': element, 'color': topColor(index + 1)})
@@ -166,7 +167,15 @@ const searchFn = () => {
     background: 'rgba(0, 0, 0, 0.7)',
   })
   searchList.value = []
-  getSearch(key.value, searchKind.value, user_id).then((response) => {
+  const params = {
+    key: key.value,
+    kind: searchKind.value,
+    order: 'default'
+  }
+  if (user_id) {
+    params['user_id'] = user_id
+  }
+  getSearch(params).then((response) => {
     console.log(response)
     searchList.value = response
     setTimeout(() => {

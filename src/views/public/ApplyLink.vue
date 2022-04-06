@@ -115,7 +115,7 @@ const checkUrl = (rule, value, callback) => {
 }
 // 表单验证规则
 const rules = {
-  url: [{validator: checkUrl, trigger: 'blur',}],
+  url: [{required: true, validator: checkUrl, trigger: 'blur',}],
   name: [{required: true, message: '请输入网站名称', trigger: 'blur',}],
   describe: [{required: true, message: '请输入网站描述', trigger: 'blur',}],
   logo: [{required: true, message: '请上传网站logo', trigger: 'blur',}],

@@ -16,16 +16,16 @@ function navigation() {
 	// 切换导航栏模式
 	const setNavigation = (value) => {
 		store.commit('setNavigation', value)
-		console.log("执行切换导航栏样式事件：", navigationMode.value)
+		// console.log("执行切换导航栏样式事件：", navigationMode.value)
 		if (value === 'auto') {
-			console.log("当前是自动")
+			// console.log("当前是自动")
 		}
 		if (value === 'show') {
-			console.log("当前是显示")
+			// console.log("当前是显示")
 			navigationType.value = 'show'
 		}
 		if (value === 'hide') {
-			console.log("当前是隐藏")
+			// console.log("当前是隐藏")
 			navigationType.value = 'hide'
 		}
 	}
@@ -46,10 +46,10 @@ function navigation() {
 		let newTop = document.body.scrollTop || document.documentElement.scrollTop
 		if (navigationMode.value === 'auto') {
 			if (lastTop.value < newTop) {
-				console.log("向下滚动")
+				// console.log("向下滚动")
 				navigationType.value = 'hide'
 			} else {
-				console.log("向上滚动")
+				// console.log("向上滚动")
 				navigationType.value = 'show'
 			}
 			lastTop.value = newTop;

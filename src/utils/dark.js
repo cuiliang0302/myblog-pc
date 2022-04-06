@@ -11,10 +11,10 @@ function dark() {
 	// 切换暗黑模式
 	const setDark = (value) => {
 		store.commit('setDark', value)
-		console.log("执行切换开启暗黑模式事件：", isDark.value)
+		// console.log("执行切换开启暗黑模式事件：", isDark.value)
 		const el = ref(null)
 		if (isDark.value) {
-			console.log("要切换为暗黑模式")
+			// console.log("要切换为暗黑模式")
 			// console.log(darkList.value)
 			darkList.value.forEach((item, index) => {
 				// console.log(item.name, item.value, index)
@@ -22,7 +22,7 @@ function dark() {
 				index.value = item.value
 			})
 		} else {
-			console.log("要切换为明亮模式")
+			// console.log("要切换为明亮模式")
 			// console.log(lightList.value)
 			lightList.value.forEach((item, index) => {
 				// console.log(item.name, item.value, index)

@@ -38,7 +38,7 @@ import {
   getLeaveMessage,
   postLeaveMessage,
   postReplyLeaveMessage,
-  putLeaveMessage
+  patchLeaveMessage, getLeaveMessageDetail
 } from "@/api/record";
 import icon from "@/utils/icon";
 import user from "@/utils/user";
@@ -46,6 +46,7 @@ import {getSiteConfig} from "@/api/management";
 import {getUserinfoId} from "@/api/account";
 import store from "@/store";
 import {useRouter} from "vue-router";
+
 const router = useRouter()
 // 事件总线
 const internalInstance = getCurrentInstance();  //当前组件实例
@@ -120,10 +121,11 @@ const showLogin = () => {
 async function leaveMessageData() {
   messageList.value = await getLeaveMessage()
 }
+
 // 留言点赞事件
-if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", messageId => {
-  console.log(messageId)
-  putLeaveMessage(messageId).then((response) => {
+if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", (value) => {
+  const params = {'like': value.like}
+  patchLeaveMessage(value.id, params).then((response) => {
     console.log(response)
     ElMessage({
       message: '点赞成功！',

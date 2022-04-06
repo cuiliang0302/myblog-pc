@@ -9,7 +9,7 @@ function theme() {
 	// 切换主题色
 	const setTheme = (value) => {
 		store.commit('setTheme', value)
-		console.log("执行切换主题色事件：", themeValue.value)
+		// console.log("执行切换主题色事件：", themeValue.value)
 		const el = ref(null)
 		const primary_color = useCssVar('--el-color-primary', el)
 		primary_color.value = themeValue.value

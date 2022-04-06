@@ -42,7 +42,6 @@ const toDetail = (detailID) => {
 }
 // 生成文章摘要
 onMounted(() => {
-  console.log(props.section)
   props.section['abstract'] = props.section['body']
       .replace('>', "")
       .replace('[TOC]', "")

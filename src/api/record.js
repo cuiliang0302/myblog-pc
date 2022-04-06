@@ -1,27 +1,25 @@
 import index from './index'
+import {getArticleDetail} from "@/api/blog";
 
 // 获取搜索热词
 export function getSearchHot() {
 	return index.get('/record/searchHot/')
 }
 
-// 获取搜索词记录
-export function getSearchHistory(user_id) {
-	return index.get('/record/searchHistory/' + user_id + '/')
-}
-
 // 搜索文章
-export function getSearch(key, kind, user_id) {
-	if (user_id) {
-		return index.get('/record/search/?key=' + key + '&kind=' + kind + '&order=' + 'default' + '&user_id=' + user_id)
-	} else {
-		return index.get('/record/search/?key=' + key + '&kind=' + kind + '&order=' + 'default')
-	}
+export function getSearch(params) {
+	const url = '/record/search/'
+	return index.get(url, params)
 }
 
-// 获取留言数据
+// 获取全部留言数据
 export function getLeaveMessage() {
 	return index.get('/record/leaveMessage/')
+}
+
+// 获取单个留言数据
+export function getLeaveMessageDetail(id) {
+	return index.get('/record/leaveMessage/' + id + '/')
 }
 
 // 发表留言
@@ -30,9 +28,9 @@ export function postLeaveMessage(params) {
 }
 
 // 点赞留言
-export function putLeaveMessage(messageId) {
-	const url = '/record/leaveMessage/' + messageId + '/'
-	return index.put(url, NaN)
+export function patchLeaveMessage(id, params) {
+	const url = '/record/leaveMessage/' + id + '/'
+	return index.patch(url, params)
 }
 
 // 删除留言
@@ -61,9 +59,9 @@ export function deleteArticleComment(messageId) {
 }
 
 // 点赞文章评论
-export function putArticleComment(messageId) {
-	const url = '/record/articleComment/' + messageId + '/'
-	return index.put(url, NaN)
+export function patchArticleComment(id, params) {
+	const url = '/record/articleComment/' + id + '/'
+	return index.patch(url, params)
 }
 
 // 回复文章评论
@@ -87,9 +85,9 @@ export function deleteSectionComment(messageId) {
 }
 
 // 点赞笔记评论
-export function putSectionComment(messageId) {
-	const url = '/record/sectionComment/' + messageId + '/'
-	return index.put(url, NaN)
+export function patchSectionComment(id, params) {
+	const url = '/record/sectionComment/' + id + '/'
+	return index.patch(url, params)
 }
 
 // 回复笔记评论
@@ -152,8 +150,9 @@ export function getUserSectionComment(userId) {
 export function getStatistics(userId) {
 	return index.get('/record/statistics/?user=' + userId)
 }
+
 // 查询指定用户echarts数据统计
 export function getUserEcharts(params) {
 	const url = '/record/userEcharts/'
-	return index.get(url,params)
+	return index.get(url, params)
 }
