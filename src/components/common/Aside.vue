@@ -237,7 +237,7 @@ async function rankingData() {
   const params = {
     page: 1,
     size: 10,
-    order: '-view',
+    ordering: '-view',
   }
   let data = await getArticle(params)
   articleRanking.value = data.results

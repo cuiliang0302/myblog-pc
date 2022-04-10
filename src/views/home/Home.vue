@@ -85,19 +85,19 @@ const noMore = computed(() => article.list.length < article.count);
 const article_params = {
   page: 1,
   size: 5,
-  order: '-created_time',
+  ordering: '-created_time',
 }
 // 是否可以执行加载中动画
 const loading = ref(true)
 // 加载下一页
 const load = () => {
   console.log("加载下一页了")
-  article_params.page = article_params.page + 1
   getArticle(article_params).then((response) => {
     article.list.push(...response.results)
     article.count = response.count
     console.log(response.results)
     loading.value = false;
+    article_params.page = article_params.page + 1
   })
 }
 // 页面滚动事件
