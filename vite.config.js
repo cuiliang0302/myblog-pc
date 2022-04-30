@@ -23,6 +23,7 @@ export default defineConfig(({mode}) => {
 			include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],
 		},
 		build: {
+			minify: 'terser',
 			terserOptions: {
 				compress: {
 					//生产环境时移除console
@@ -30,6 +31,6 @@ export default defineConfig(({mode}) => {
 					drop_debugger: true,
 				},
 			},
-		}
+		},
 	}
 })

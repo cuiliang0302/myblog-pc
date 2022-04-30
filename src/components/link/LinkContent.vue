@@ -4,7 +4,7 @@
   </div>
   <el-row :gutter="20">
     <el-col :span="6" v-for="(item,index) in linkList" :key="index">
-      <el-card shadow="hover">
+      <el-card shadow="hover" class="link-card">
         <span @click="toLink(item.url)" class="pointer">
           <div class="link-title">
             <span><el-avatar :src="item.logo" :size="50"></el-avatar></span>
@@ -49,15 +49,18 @@ const toLink = (url) => {
   font-size: 25px;
   margin: 20px 0 15px 0;
 }
+.link-card{
+  margin-top: 15px;
+  .link-title {
+    display: flex;
+    align-items: center;
 
-.link-title {
-  display: flex;
-  align-items: center;
-
-  .name {
-    margin-left: 10px;
+    .name {
+      margin-left: 10px;
+    }
   }
 }
+
 
 p {
   margin: 15px 10px;
