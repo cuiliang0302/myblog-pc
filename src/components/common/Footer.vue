@@ -47,9 +47,6 @@ async function siteConfigData() {
 
 onMounted(() => {
   siteConfigData()
-  nextTick(()=>{
-    console.log(document.body.scrollHeight)
-  })
 })
 </script>
 
@@ -60,8 +57,6 @@ onMounted(() => {
 //  bottom: 0;
 //}
 footer {
-  position: sticky;
-  bottom: 0;
   border-top: 1px solid var(--el-border-color-base);
   width: 100%;
   background-color:var(--el-color-white);
