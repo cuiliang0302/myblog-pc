@@ -36,7 +36,7 @@ body, ol, ul, li, h1, h2, h3, p, form {
   padding-bottom: 20px;
   width: 1200px;
   margin: 0 auto;
-  min-height: 80vh;
+  min-height: calc(100vh - 170px);
 
   article {
     display: inline-block;
@@ -97,27 +97,32 @@ ul {
 .pointer {
   cursor: pointer
 }
+
 // 富文本编辑器暗黑模式适配
-.w-e-text-container{
-  background-color: var(--el-color-white)!important;
+.w-e-text-container {
+  background-color: var(--el-color-white) !important;
 }
-.w-e-toolbar{
-  background-color: var(--el-border-color-extra-light)!important;
-  z-index: 0!important;
+
+.w-e-toolbar {
+  background-color: var(--el-border-color-extra-light) !important;
+  z-index: 0 !important;
 }
+
 .w-e-toolbar .w-e-menu:hover {
-  background-color: var(--el-color-primary-light-9)!important;
+  background-color: var(--el-color-primary-light-9) !important;
 }
+
 // markdown暗黑模式适配
 .github-markdown-body {
-  table thead tr{
-    background-color: var(--el-background-color-base)!important;
+  table thead tr {
+    background-color: var(--el-background-color-base) !important;
   }
+
   table tbody tr {
-    background-color: var(--el-color-white)!important;
+    background-color: var(--el-color-white) !important;
   }
 
   table tbody tr:nth-child(2n) {
-    background-color: var(--el-background-color-base)!important;
+    background-color: var(--el-background-color-base) !important;
   }
 }
