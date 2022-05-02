@@ -290,10 +290,9 @@ router.beforeEach((to, from, next) => {
 		})
 		return next('/loginRegister')
 	} else {
-		return next()
+		next()
 	}
 	document.title = to.meta.title
-	next()
 })
 router.afterEach(() => {
 	Nprogress.done()
