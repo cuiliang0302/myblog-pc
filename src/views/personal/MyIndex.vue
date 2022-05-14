@@ -155,7 +155,7 @@ async function statisticsData() {
 
 // echarts明亮模式曲线颜色
 const echartsLight = ref([
-  "#3498db",
+  "#008dd4",
   "#f1c40f",
   "#2ecc71",
   "#f2b3c9",
@@ -185,22 +185,26 @@ const isDark = computed(() => store.state.dark)
 const bgc = ref()
 // echarts颜色
 const color = ref()
+// echarts文本颜色
+const text = ref()
 // 设置echarts主题色
 const setColor = () => {
   console.log(isDark.value)
   if (isDark.value === true) {
     bgc.value = '#141414'
     color.value = echartsDark.value
+    text.value = '#b2b2b2'
   } else {
     bgc.value = '#ffffff'
     color.value = echartsLight.value
+    text.value = '#2a2b2d'
   }
   console.log(bgc.value)
 }
 
 // 浏览趋势折线图
 async function trend() {
-  const query = {chart: 'trend',user:userId.value}
+  const query = {chart: 'trend', user: userId.value}
   const chartData = await getUserEcharts(query)
   console.log("trend", chartData)
   const date = []
@@ -238,7 +242,10 @@ async function trend() {
       }
     },
     legend: {
-      data: ['浏览文章数', '收藏文章数', '评论文章数', '浏览笔记数', '收藏笔记数', '评论笔记数']
+      data: ['浏览文章数', '收藏文章数', '评论文章数', '浏览笔记数', '收藏笔记数', '评论笔记数'],
+      textStyle: {
+        color: text.value
+      }
     },
     grid: {
       left: '3%',
@@ -330,7 +337,7 @@ async function trend() {
 
 // 浏览文章饼图
 async function article() {
-  const query = {chart: 'article',user:userId.value}
+  const query = {chart: 'article', user: userId.value}
   const chartData = await getUserEcharts(query)
   console.log("article", chartData)
   let myChart;
@@ -346,7 +353,10 @@ async function article() {
       trigger: 'item'
     },
     legend: {
-      type: 'scroll'
+      type: 'scroll',
+      textStyle: {
+        color: text.value
+      }
     },
     series: [
       {
@@ -372,7 +382,7 @@ async function article() {
 
 // 浏览笔记雷达图
 async function note() {
-  const query = {chart: 'note',user:userId.value}
+  const query = {chart: 'note', user: userId.value}
   const chartData = await getUserEcharts(query)
   console.log("note", chartData)
   const indicator = []
@@ -395,7 +405,10 @@ async function note() {
   myChart.setOption({
     color: color.value,
     legend: {
-      show: false
+      show: false,
+      textStyle: {
+        color: text.value
+      }
     },
     tooltip: {
       trigger: 'item'
@@ -424,7 +437,7 @@ async function note() {
 
 // 浏览时间柱形图
 async function time() {
-  const query = {chart: 'time',user:userId.value}
+  const query = {chart: 'time', user: userId.value}
   const chartData = await getUserEcharts(query)
   console.log("time", chartData)
   const time = []
@@ -456,7 +469,10 @@ async function time() {
       },
     },
     legend: {
-      data: ['浏览文章数', '浏览笔记数']
+      data: ['浏览文章数', '浏览笔记数'],
+      textStyle: {
+        color: text.value
+      }
     },
     grid: {
       left: '3%',
@@ -498,10 +514,11 @@ async function time() {
     myChart.resize();
   };
 }
+
 // 监听切换主题色事件
 watch(isDark, (newVal) => {
   console.log("切换颜色了")
-  console.log({ newVal })
+  console.log({newVal})
   setColor()
   trend()
   article()
