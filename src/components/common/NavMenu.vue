@@ -240,8 +240,10 @@ const logout = () => {
           type: 'success',
           message: '账号已成功退出，即将跳转至登录页',
         })
-        store.commit('setUserLocal', {})
-        store.commit('setUserSession', {})
+        localStorage.clear()
+        sessionStorage.clear()
+        // store.commit('setUserLocal', {})
+        // store.commit('setUserSession', {})
         router.replace('/loginRegister')
       })
       .catch(() => {
