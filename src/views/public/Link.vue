@@ -13,13 +13,14 @@
   <BackTop></BackTop>
 </template>
 
-<script setup>
+<script setup name="Link">
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import LinkContent from "@/components/link/LinkContent.vue"
-import {onMounted, reactive} from "vue";
+import {onActivated, onMounted, reactive} from "vue";
 import {getLink} from "@/api/management";
+import store from "@/store";
 
 const recommend = reactive(
     {
@@ -46,6 +47,9 @@ async function linkData() {
 
 onMounted(() => {
   linkData()
+})
+onActivated(() => {
+  store.commit('setMenuIndex', '')
 })
 </script>
 

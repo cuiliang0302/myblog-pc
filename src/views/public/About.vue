@@ -1,7 +1,7 @@
 <template>
-  <NavMenu :activeMenu="'6'"></NavMenu>
+  <NavMenu></NavMenu>
   <div class="page">
-      <div>
+    <div>
       <el-collapse v-model="activeNames">
         <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id">
           <MarkDown :text="item.body"></MarkDown>
@@ -13,7 +13,7 @@
   <BackTop></BackTop>
 </template>
 
-<script setup>
+<script setup name="About">
 import {
   ElCollapse,
   ElCollapseItem,
@@ -22,8 +22,9 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import MarkDown from "@/components/detail/MarkDown.vue"
 import BackTop from "@/components/common/BackTop.vue"
-import {onMounted, ref} from "vue";
+import {onActivated, onMounted, ref} from "vue";
 import {getAbout} from "@/api/management";
+import store from "@/store";
 // 关于页数据
 const about = ref([])
 
@@ -35,14 +36,17 @@ async function aboutData() {
 onMounted(() => {
   aboutData()
 })
+onActivated(() => {
+  store.commit('setMenuIndex', '6')
+})
 // 默认展开的数据
-const activeNames = ref([0, 1, 2, 3, 4, 5]);
+const activeNames = ref([1]);
 </script>
 
 <style lang="scss">
 .el-collapse-item__header {
-  font-size: 25px!important;
-  color: var(--el-color-primary)!important;
+  font-size: 25px !important;
+  color: var(--el-color-primary) !important;
   padding-left: 1em;
 }
 </style>

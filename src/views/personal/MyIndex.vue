@@ -126,7 +126,7 @@
   </el-row>
 </template>
 
-<script setup>
+<script setup name="MyIndex">
 // 引入用户信息模块
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";

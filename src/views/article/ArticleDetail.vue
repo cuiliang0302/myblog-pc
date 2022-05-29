@@ -1,7 +1,7 @@
 <template>
   <div v-title="articleData.title+'-'+sitename">
     <section class="detail">
-      <NavMenu :activeMenu="activeMenu"></NavMenu>
+      <NavMenu></NavMenu>
       <div class="detail-page">
         <div class="detail-left">
           <!--        这是左边部分-->
@@ -108,7 +108,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="ArticleDetail">
 import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import Footer from "@/components/common/Footer.vue"
@@ -146,7 +146,7 @@ const router = useRouter()
 // 引入用户信息模块
 let {userId, isLogin} = user();
 // 引入公共模块
-let {articleID, activeMenu, sitename, toDetail, toCategory} = publicFn()
+let {articleID, sitename, toDetail, toCategory} = publicFn()
 // 引入文章内容模块
 let {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData} = article()
 // 引入markdown模块
@@ -212,8 +212,6 @@ onBeforeRouteUpdate(async (to) => {
 function publicFn() {
   // 当前文章id
   const articleID = ref()
-  // 当前文章分类id
-  const activeMenu = ref()
   // 站点名称
   const sitename = ref('')
   //跳转文章列表
@@ -235,11 +233,13 @@ function publicFn() {
   onMounted(() => {
     siteConfigData()
   })
-  return {articleID, activeMenu, sitename, toDetail, toCategory}
+  return {articleID, sitename, toDetail, toCategory}
 }
 
 // 文章模块
 function article() {
+  // 当前文章分类id
+  const activeMenu = ref()
   // 文章详情数据
   const articleData = reactive({})
   // 文章上下篇
@@ -271,6 +271,7 @@ function article() {
       }
     }
     activeMenu.value = "2-" + articleData.category_id
+    store.commit('setMenuIndex', activeMenu)
   }
 
   // 获取文章上下篇
@@ -284,7 +285,6 @@ function article() {
     recommendList.value = await getGuessLike(DetailID)
     console.log("recommendList", recommendList.value)
   }
-
   return {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData}
 }
 

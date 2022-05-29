@@ -31,7 +31,7 @@
   </el-card>
 </template>
 
-<script setup>
+<script setup name="MyHistory">
 import {onMounted, ref} from "vue";
 import {getArticleHistory, getSectionHistory} from "@/api/record";
 import user from "@/utils/user";

@@ -1,6 +1,6 @@
 <!--归档页-->
 <template>
-  <NavMenu :activeMenu="'4'"></NavMenu>
+  <NavMenu></NavMenu>
   <div class="page">
     <div class="animate__animated animate__zoomIn">
       <el-collapse v-model="activeNames" @change="handleChange" accordion>
@@ -9,7 +9,8 @@
                           :name="index">
           <div class="timeline">
             <el-timeline>
-              <el-timeline-item v-for="(item,index) in articleList" :key="index" :timestamp="timeFull(item.created_time)"
+              <el-timeline-item v-for="(item,index) in articleList" :key="index"
+                                :timestamp="timeFull(item.created_time)"
                                 placement="top">
                 <div class="title">
                   <p class="article-title-hover" @click="router.push(`/detail/article/${item.id}`)">{{ item.title }}</p>
@@ -25,7 +26,7 @@
   <BackTop></BackTop>
 </template>
 
-<script setup>
+<script setup name="Classify">
 import {
   ElCollapse,
   ElCollapseItem,
@@ -37,10 +38,11 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onActivated, onMounted, ref} from "vue";
 import {getClassify, getClassifyArticle} from "@/api/blog";
 import timeFormat from "@/utils/timeFormat";
 import {useRouter} from "vue-router";
+import store from "@/store";
 
 const router = useRouter()
 // 文章日期完整显示
@@ -79,6 +81,9 @@ onMounted(async () => {
   await classifyData()
   console.log(classifyList.value[0])
   await classifyArticleData(classifyList.value[0].month)
+})
+onActivated(() => {
+  store.commit('setMenuIndex', '4')
 })
 </script>
 

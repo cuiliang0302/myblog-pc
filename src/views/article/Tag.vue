@@ -40,7 +40,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup name="Tag">
 import NavMenu from "@/components/common/NavMenu.vue";
 import ArticleItem from "@/components/common/ArticleItem.vue";
 import Aside from "@/components/common/Aside.vue"

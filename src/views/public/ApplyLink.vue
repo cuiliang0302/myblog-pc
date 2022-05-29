@@ -58,7 +58,7 @@
   <BackTop></BackTop>
 </template>
 
-<script setup>
+<script setup name="ApplyLink">
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"

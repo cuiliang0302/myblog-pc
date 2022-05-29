@@ -2,7 +2,7 @@
   <Loading :type="'tips'" :text="'正在调用'+platform_name+'平台登录，请稍候……'"/>
 </template>
 
-<script setup>
+<script setup name="OAuth">
 import {useRouter} from "vue-router";
 import {ElMessage} from 'element-plus'
 import {onMounted, reactive, ref} from "vue";

@@ -1,7 +1,7 @@
 <template>
   <transition enter-active-class="animate__animated animate__fadeInDown"
               leave-active-class="animate__animated animate__fadeOutUp" mode="in-out">
-  <header class="navigation-show" v-if="navigationType==='show'">
+    <header class="navigation-show" v-if="navigationType==='show'">
     <span v-show="props.kind==='front'" class="left">
       <el-image
           style="width: 40px; height: 40px"
@@ -9,8 +9,8 @@
           :fit="'fill'"></el-image>
       <span class="no-choose">{{ siteConfig.name }}</span>
     </span>
-    <span class="middle">
-      <el-menu :default-active="activeMenu" class="el-menu-demo" mode="horizontal">
+      <span class="middle">
+      <el-menu :default-active="menuIndex" class="el-menu-demo" mode="horizontal">
         <el-menu-item index="1" @click="router.push('/')">
           <MyIcon type="icon-home"/>
           首页
@@ -45,14 +45,14 @@
         </el-menu-item>
       </el-menu>
     </span>
-    <span class="right">
+      <span class="right">
       <el-tooltip class="item" effect="dark" content="设置" placement="bottom">
         <span class="setting hvr-grow" @click="drawer = true">
           <MyIcon type="icon-setting"/>
         </span>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="搜索" placement="bottom">
-        <span class="search hvr-grow" :style="{'color': (activeMenu==='7' ? 'var(--el-color-primary)':'')}"
+        <span class="search hvr-grow" :style="{'color': (menuIndex==='7' ? 'var(--el-color-primary)':'')}"
               @click="router.push('/search')">
           <MyIcon type="icon-search"/>
         </span>
@@ -77,13 +77,13 @@
         </div>
       </span>
     </span>
-    <el-drawer
-        title="系统设置"
-        v-model="drawer"
-        :direction="'rtl'"
-        :size="'25%'"
-        :before-close="handleClose" destroy-on-close
-    >
+      <el-drawer
+          title="系统设置"
+          v-model="drawer"
+          :direction="'rtl'"
+          :size="'25%'"
+          :before-close="handleClose" destroy-on-close
+      >
       <span>
         <el-divider></el-divider>
         <div class="display">
@@ -133,15 +133,15 @@
         </div>
         <el-divider></el-divider>
       </span>
-    </el-drawer>
-  </header>
+      </el-drawer>
+    </header>
   </transition>
   <div class="placeholder"></div>
 </template>
 
 <script setup>
 import {ElMessageBox, ElMessage} from 'element-plus'
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onActivated, onMounted, reactive, ref, watch} from "vue";
 import icon from '@/utils/icon'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
@@ -168,13 +168,7 @@ const props = defineProps({
     type: String,
     required: false,
     default: 'front'
-  },
-  // 导航菜单-当前选中的菜单
-  activeMenu: {
-    type: String,
-    required: false,
-    default: ''
-  },
+  }
 })
 //导航菜单-logo和name
 const siteConfig = reactive({
@@ -242,8 +236,6 @@ const logout = () => {
         })
         localStorage.clear()
         sessionStorage.clear()
-        // store.commit('setUserLocal', {})
-        // store.commit('setUserSession', {})
         router.replace('/loginRegister')
       })
       .catch(() => {
@@ -279,18 +271,7 @@ const asideMenuFold = ref(false)
 const asideMenuFoldChange = () => {
   store.commit('setAsideMenuFold', asideMenuFold.value)
 }
-onMounted(() => {
-  asideMenuFold.value = store.state.asideMenuFold
-  siteConfigData()
-  categoryData()
-  NoteData()
-  if (isLogin.value === true) {
-    getPhotoData()
-  }
-  isDark.value = store.state.dark
-  colorValue.value = store.state.theme
-  navValue.value = store.state.navigation
-})
+
 // 设置-默认主题色
 const colorValue = ref('')
 // 设置-切换主题色事件
@@ -307,6 +288,20 @@ const navChange = (value) => {
   console.log(value)
   setNavigation(value)
 }
+onMounted(() => {
+  asideMenuFold.value = store.state.asideMenuFold
+  siteConfigData()
+  categoryData()
+  NoteData()
+  if (isLogin.value === true) {
+    getPhotoData()
+  }
+  isDark.value = store.state.dark
+  colorValue.value = store.state.theme
+  navValue.value = store.state.navigation
+})
+// 当前激活的菜单id
+const menuIndex = computed(() => store.state.menuIndex)
 </script>
 
 <style scoped lang="scss">

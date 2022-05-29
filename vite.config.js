@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import {resolve} from "path";
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-
+import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 // https://vitejs.dev/config/
 export default defineConfig(({mode}) => {
 	process.env = {...process.env, ...loadEnv(mode, process.cwd())};
@@ -18,6 +18,7 @@ export default defineConfig(({mode}) => {
 			Components({
 				resolvers: [ElementPlusResolver()],
 			}),
+			VueSetupExtend()
 		],
 		optimizeDeps: {
 			include: ['@kangc/v-md-editor/lib/theme/vuepress.js'],

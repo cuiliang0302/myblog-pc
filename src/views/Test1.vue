@@ -1,6 +1,5 @@
 <template>
   <el-menu
-      :default-active="activeIndex"
       class="el-menu-demo"
       mode="horizontal"
   >

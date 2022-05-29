@@ -1,6 +1,6 @@
 <template>
   <section class="home">
-    <NavMenu :activeMenu="'1'"></NavMenu>
+    <NavMenu></NavMenu>
     <div class="page">
       <article class="animate__animated animate__fadeInLeft">
         <div class="carousel">
@@ -51,16 +51,17 @@
   </section>
 </template>
 
-<script setup>
+<script setup name="Home">
 import NavMenu from "@/components/common/NavMenu.vue";
 import Loading from "@/components/common/Loading.vue"
 import ArticleItem from "@/components/common/ArticleItem.vue";
 import Aside from "@/components/common/Aside.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
-import {computed, onMounted, onUnmounted, reactive, ref} from "vue";
+import {computed, onActivated, onMounted, onUnmounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
 import {getArticle} from "@/api/blog";
+import store from "@/store";
 //轮播图
 const carouselList = ref([])
 
@@ -126,6 +127,9 @@ onMounted(() => {
 onUnmounted(() => {
   // 组件卸载时，停止监听
   window.removeEventListener("scroll", scrollHandle, false)
+})
+onActivated(() => {
+  store.commit('setMenuIndex', '1')
 })
 </script>
 

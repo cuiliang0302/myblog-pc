@@ -1,5 +1,5 @@
 <template>
-  <NavMenu :activeMenu="'5'"></NavMenu>
+  <NavMenu></NavMenu>
   <div class="page">
     <el-card class="box-card animate__animated animate__zoomIn">
       <template #header>
@@ -24,7 +24,7 @@
   <LoginPopup ref="loginPopupRef"></LoginPopup>
 </template>
 
-<script setup>
+<script setup name="Message">
 import {ElMessage} from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
@@ -32,7 +32,7 @@ import BackTop from "@/components/common/BackTop.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue";
 import LoginPopup from "@/components/common/LoginPopup.vue"
-import {getCurrentInstance, onMounted, reactive, ref} from "vue";
+import {getCurrentInstance, onActivated, onMounted, reactive, ref} from "vue";
 import {
   deleteLeaveMessage,
   getLeaveMessage,
@@ -179,6 +179,9 @@ onMounted(() => {
   } else {
     getLogoData()
   }
+})
+onActivated(() => {
+  store.commit('setMenuIndex', '5')
 })
 </script>
 

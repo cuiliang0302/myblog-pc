@@ -1,5 +1,5 @@
-<template>
-  <NavMenu :activeMenu="'7'"></NavMenu>
+ <template>
+  <NavMenu></NavMenu>
   <section class="page">
     <div class="search-main animate__animated animate__zoomIn">
       <div class="search-title">
@@ -54,8 +54,8 @@
   <BackTop></BackTop>
 </template>
 
-<script setup>
-import {onMounted, ref} from "vue";
+<script setup name="Search">
+import {onActivated, onMounted, ref} from "vue";
 import NavMenu from "@/components/common/NavMenu.vue";
 import ArticleItem from "@/components/common/ArticleItem.vue";
 import SectionItem from "@/components/common/SectionItem.vue"
@@ -207,6 +207,9 @@ const search = () => {
 }
 onMounted(() => {
   searchKeyHotData()
+})
+onActivated(() => {
+  store.commit('setMenuIndex', '7')
 })
 </script>
 

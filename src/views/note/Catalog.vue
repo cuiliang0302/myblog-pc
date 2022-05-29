@@ -1,5 +1,5 @@
 <template>
-  <NavMenu :activeMenu="'3-'+router.currentRoute.value.params.id"></NavMenu>
+  <NavMenu></NavMenu>
   <div class="page" v-title="title+'-笔记目录'">
     <div class="catalog animate__animated animate__zoomIn">
       <el-tree :data="catalogList" @node-click="handleNodeClick"></el-tree>
@@ -9,7 +9,7 @@
   <BackTop></BackTop>
 </template>
 
-<script setup>
+<script setup name="Catalog">
 import {
   ElTree,
 } from 'element-plus'
@@ -17,8 +17,9 @@ import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onActivated, onMounted, ref} from "vue";
 import {getCatalogueList, getNoteDetail} from "@/api/blog";
+import store from "@/store";
 const router = useRouter()
 // 笔记名称
 const title = ref()
@@ -63,6 +64,9 @@ onBeforeRouteUpdate(async (to) => {
   console.log(to.params.id)
   await catalogueData(to.params.id)
 });
+onActivated(() => {
+  store.commit('setMenuIndex', '3-'+router.currentRoute.value.params.id)
+})
 </script>
 
 <style lang="scss">

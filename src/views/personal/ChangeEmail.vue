@@ -21,7 +21,7 @@
   </el-card>
 </template>
 
-<script setup>
+<script setup name="ChangeEmail">
 // 验证密码表单
 import {reactive, ref} from "vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"

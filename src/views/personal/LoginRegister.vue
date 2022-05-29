@@ -115,7 +115,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="LoginRegister">
 import icon from '@/utils/icon'
 import {onBeforeMount, onMounted, reactive, ref} from "vue";
 import {getBgiUrl} from "@/api/public";

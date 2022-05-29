@@ -1,7 +1,7 @@
 <template>
   <div v-title="sectionData.title+'-'+sitename">
     <section class="detail">
-      <NavMenu :activeMenu="activeMenu"></NavMenu>
+      <NavMenu></NavMenu>
       <div class="detail-page">
         <div :class="'detail-left animate__animated animate__'+ (catalogShow===true?'fadeIn':'fadeOut')">
           <el-tree v-if="catalogShow" accordion :data="catalogList" @node-click="handleNodeClick"
@@ -76,7 +76,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="SectionDetail">
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
@@ -110,7 +110,7 @@ let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 const router = useRouter()
 // 引入公共模块
-let {sectionID, activeMenu, toNote, sitename, toDetail} = publicFn()
+let {sectionID, toNote, sitename, toDetail} = publicFn()
 // 引入笔记内容模块
 let {sectionData, context, getSectionData, contextData} = section()
 // 引入笔记目录模块
@@ -187,8 +187,6 @@ onBeforeRouteUpdate(async (to) => {
 function publicFn() {
   // 当前笔记id
   const sectionID = ref()
-  // 当前导航栏id
-  const activeMenu = ref()
   //跳转笔记列表
   const toNote = (noteId) => {
     router.push({path: `/note/${noteId}`})
@@ -212,7 +210,7 @@ function publicFn() {
   onMounted(() => {
     siteConfigData()
   })
-  return {sectionID, activeMenu, toNote, sitename, toDetail}
+  return {sectionID, toNote, sitename, toDetail}
 }
 
 // 笔记目录模块
@@ -273,6 +271,8 @@ function catalog(sectionData) {
 
 // 笔记内容模块
 function section() {
+  // 当前导航栏id
+  const activeMenu = ref()
   // 笔记详情数据
   const sectionData = reactive({})
   // 笔记上下篇
@@ -302,6 +302,7 @@ function section() {
       }
     }
     activeMenu.value = "3-" + sectionData.note_id
+    store.commit('setMenuIndex', activeMenu)
   }
 
   // 获取笔记上下篇

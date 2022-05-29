@@ -38,6 +38,10 @@ const mutations = {
 	// 设置导航栏模式
 	setNavigation(state, value) {
 		state.navigation = value
+	},
+	// 设置导航栏当前激活的菜单id
+	setMenuIndex(state,value){
+		state.menuIndex = value
 	}
 }
 export default mutations

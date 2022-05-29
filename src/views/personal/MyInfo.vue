@@ -64,7 +64,7 @@
   </el-card>
 </template>
 
-<script setup>
+<script setup name="MyInfo">
 import {onMounted, reactive, ref} from "vue";
 import {getRegister, getUserinfoId, putUserinfoId} from "@/api/account";
 import {getAreaData} from "@/api/public";

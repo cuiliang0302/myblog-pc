@@ -32,10 +32,7 @@
   <div class="bg"></div>
 </template>
 
-<script>
-export default {
-  name: "404"
-}
+<script setup name="404">
 </script>
 
 <style lang="scss">

@@ -1,4 +1,4 @@
-FROM node:14.17.6 AS build
+FROM node:16.15.0 AS build
 COPY . /opt/myblog_pc
 RUN rm -rf /opt/myblog_pc/node_modules
 WORKDIR /opt/myblog_pc

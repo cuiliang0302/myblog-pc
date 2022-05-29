@@ -1,6 +1,6 @@
 <template>
   <section class="category">
-    <NavMenu :activeMenu="'2-'+router.currentRoute.value.params.id"></NavMenu>
+    <NavMenu></NavMenu>
     <div class="page">
       <article class="animate__animated animate__fadeInLeft">
         <div class="current-position">
@@ -40,16 +40,17 @@
   </section>
 </template>
 
-<script setup>
+<script setup name="Category">
 import NavMenu from "@/components/common/NavMenu.vue";
 import ArticleItem from "@/components/common/ArticleItem.vue";
 import Aside from "@/components/common/Aside.vue"
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import Pagination from "@/components/common/Pagination.vue"
-import {onMounted, reactive, ref} from "vue";
+import {onActivated, onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getArticle, getCategoryName} from "@/api/blog";
+import store from "@/store";
 
 const router = useRouter()
 // 当前文章分类id
@@ -102,6 +103,9 @@ onBeforeRouteUpdate(async (to) => {
   await categoryNameData(categoryID.value)
   await articleData(1, 10, categoryID.value)
 });
+onActivated(() => {
+  store.commit('setMenuIndex', '2-'+router.currentRoute.value.params.id)
+})
 </script>
 
 <style scoped lang="scss">

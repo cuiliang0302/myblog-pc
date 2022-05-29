@@ -98,7 +98,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="SetPassword">
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import icon from "@/utils/icon";
 import {onMounted, reactive, ref} from "vue";

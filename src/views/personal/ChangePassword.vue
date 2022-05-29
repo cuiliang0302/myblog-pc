@@ -21,7 +21,7 @@
   </el-card>
 </template>
 
-<script setup>
+<script setup name="ChangePassword">
 import {onMounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import user from "@/utils/user";

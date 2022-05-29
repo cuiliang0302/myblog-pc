@@ -33,7 +33,7 @@
   </el-card>
 </template>
 
-<script setup>
+<script setup name="MyComments">
 import timeFormat from "@/utils/timeFormat";
 import {onMounted, ref} from "vue";
 import {getUserArticleComment, getUserSectionComment} from "@/api/record";

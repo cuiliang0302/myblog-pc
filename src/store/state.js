@@ -18,7 +18,9 @@ const state = {
 	// 默认主题色
 	theme:'#409eff',
 	// 导航栏样式
-	navigation:'auto'
+	navigation:'auto',
+	// 当前激活的导航栏菜单id
+	menuIndex:'',
 }
 export default state
 

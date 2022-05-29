@@ -8,7 +8,7 @@
   </el-container>
 </template>
 
-<script setup>
+<script setup name="Personal">
 import NavMenu from "@/components/common/NavMenu.vue";
 import AsideMenu from "@/components/personal/AsideMenu.vue";
 import {computed} from "vue";
