@@ -315,7 +315,7 @@ header {
     width: 20%;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--el-border-color-base);
+    border-bottom: 1px solid var(--el-border-color);
     height: 60px;
 
     span {
@@ -332,7 +332,7 @@ header {
     width: 23%;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--el-border-color-base);
+    border-bottom: 1px solid var(--el-border-color);
     height: 60px;
     flex-direction: row-reverse;
     cursor: pointer;

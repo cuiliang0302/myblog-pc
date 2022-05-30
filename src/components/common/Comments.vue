@@ -181,7 +181,7 @@ ol {
         background-color: var(--el-border-color-extra-light);
         border-radius: 10px;
         margin-left: 15px;
-        border: 1px solid var(--el-border-color-base);
+        border: 1px solid var(--el-border-color);
         padding: 15px;
 
         p {
@@ -237,11 +237,11 @@ ol {
     margin-left: 40px;
 
     span > div {
-      background-color: var(--el-border-color-base) !important;
+      background-color: var(--el-border-color) !important;
     }
 
     span > div::before {
-      border-right: 9px solid var(--el-border-color-base) !important;
+      border-right: 9px solid var(--el-border-color) !important;
     }
   }
 }

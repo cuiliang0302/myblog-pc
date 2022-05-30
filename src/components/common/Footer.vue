@@ -61,7 +61,7 @@ onMounted(() => {
 //  bottom: 0;
 //}
 footer {
-  border-top: 1px solid var(--el-border-color-base);
+  border-top: 1px solid var(--el-border-color);
   width: 100%;
   background-color: var(--el-bg-color-overlay);
   height: 70px;

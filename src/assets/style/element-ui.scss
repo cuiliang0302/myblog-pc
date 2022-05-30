@@ -37,7 +37,7 @@
 }
 // 导航菜单下边框颜色
 .el-menu{
-  --el-menu-border-color:var(--el-border-color-base)!important;
+  --el-menu-border-color:var(--el-border-color)!important;
 }
 // 主要按钮主题色
 .el-button--primary{
@@ -54,7 +54,7 @@
 }
 // 远程搜索框
 .el-input-group__append, .el-input-group__prepend{
-  border: 1px solid var(--el-border-color-base)!important;
+  border: 1px solid var(--el-border-color)!important;
 }
 // 远程搜索框下拉选择
 .el-autocomplete__popper.el-popper[role=tooltip]{
@@ -75,5 +75,9 @@
 // 下拉菜单样式
 .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
   color:var(--el-color-primary)!important;
+}
+// el-collapse折叠菜单背景色
+.el-collapse{
+  background-color: var(--el-bg-color-overlay)!important;
 }
 

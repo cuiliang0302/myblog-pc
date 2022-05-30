@@ -578,7 +578,7 @@ function registerFn() {
           display: contents;
 
           .el-divider {
-            background-color: var(--el-border-color-base);
+            background-color: var(--el-border-color);
           }
 
           .other-logo {

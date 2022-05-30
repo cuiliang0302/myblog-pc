@@ -577,7 +577,7 @@ function action(articleID, articleData) {
           justify-content: center;
           align-items: center;
           color: var(--el-text-color-regular);
-          background-color: var(--el-bg-color);
+          background-color: var(--el-border-color);
           padding: 5px 0px;
           margin: 10px 30px;
           border-radius: 20px;
@@ -602,7 +602,7 @@ function action(articleID, articleData) {
           align-items: center;
           justify-content: center;
           color: var(--el-text-color-regular);
-          background-color: var(--el-bg-color);
+          background-color: var(--el-border-color);
           margin: 10px 30px;
           padding: 10px 10px;
           border-radius: 10px;
@@ -697,7 +697,7 @@ function action(articleID, articleData) {
       }
 
       h2 {
-        border-bottom: 1px solid var(--el-border-color-base);
+        border-bottom: 1px solid var(--el-border-color);
         padding: 10px 0;
         font-weight: normal;
       }

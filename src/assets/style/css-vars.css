@@ -1,0 +1,9 @@
+:root {
+    --el-background-color-base: #f3f6f9
+}
+
+html.dark {
+    /* 自定义深色背景颜色 */
+    --el-background-color-base: #000000
+}
+

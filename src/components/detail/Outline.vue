@@ -86,6 +86,7 @@ watch(
   .title-active {
     color: var(--el-text-color-primary);
     border-left: 2px solid var(--el-color-primary);
+    background-color: var(--el-bg-color);
   }
 }
 </style>
