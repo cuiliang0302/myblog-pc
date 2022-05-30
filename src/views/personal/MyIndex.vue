@@ -546,7 +546,7 @@ onMounted(() => {
   margin-bottom: 10px;
   text-align: center;
   border-radius: 5px;
-  color: var(--el-color-white);
+  color: var(--el-bg-color-overlay);
   position: relative;
 
   img {

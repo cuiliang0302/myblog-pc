@@ -159,7 +159,7 @@ onMounted(() => {
   > div {
     width: 40px;
     height: 40px;
-    background-color: var(--el-color-white);
+    background-color: var(--el-bg-color-overlay);
     border-radius: 20px;
     box-shadow: 0 0 6px rgb(0 0 0 / 12%);
     cursor: pointer;

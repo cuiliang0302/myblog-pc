@@ -48,7 +48,7 @@ const setDarkMode = (value)=>{
   console.log("切换暗黑模式事件")
   console.log(value)
   const el = ref(null)
-  const bg_color = useCssVar('--el-color-white', el)
+  const bg_color = useCssVar('--el-bg-color-overlay', el)
   const text_color = useCssVar('--el-text-color-primary', el)
   if (value){
     bg_color.value='#2b2b2b'

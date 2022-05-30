@@ -6,6 +6,7 @@ import mitt from 'mitt'
 import '@/assets/style/index.scss'
 import ElementPlus from '@/plugins/ElementPlus'
 import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import animate from "animate.css";
 import "@/assets/style/normalize.css";
 import "@/assets/style/hover-min.css";

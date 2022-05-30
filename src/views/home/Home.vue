@@ -136,7 +136,7 @@ onActivated(() => {
 <style scoped lang="scss">
 article {
   .carousel {
-    background-color: var(--el-color-white);
+    background-color: var(--el-bg-color-overlay);
   }
 
   .new {

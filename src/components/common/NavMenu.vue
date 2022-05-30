@@ -99,7 +99,6 @@
                 inactive-color="#f5f7fa"
                 active-text="深色模式"
                 inactive-text="浅色模式"
-                @change="setDarkMode"
             />
         </div>
         <el-divider></el-divider>
@@ -141,7 +140,7 @@
 
 <script setup>
 import {ElMessageBox, ElMessage} from 'element-plus'
-import {computed, onActivated, onMounted, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import icon from '@/utils/icon'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
@@ -154,7 +153,7 @@ import color from "@/utils/color"
 import theme from "@/utils/theme"
 import navigation from "@/utils/navigation";
 
-let {setDark} = dark()
+let {isDark} = dark()
 let {setTheme} = theme()
 let {navigationList, setNavigation, navigationType} = navigation()
 const router = useRouter()
@@ -258,13 +257,13 @@ let drawer = ref(false);
 const handleClose = () => {
   drawer.value = false
 };
-// 设置-显示模式默认值
-const isDark = ref(false)
-// 设置-切换是否设置暗黑模式
-const setDarkMode = () => {
-  console.log("菜单栏执行切换事件", isDark.value)
-  setDark(isDark.value)
-}
+// // 设置-显示模式默认值
+// const isDark = ref(false)
+// // 设置-切换是否设置暗黑模式
+// const setDarkMode = () => {
+//   console.log("菜单栏执行切换事件", isDark.value)
+//   setDark(isDark.value)
+// }
 // 设置-侧边菜单显示是否折叠
 const asideMenuFold = ref(false)
 // 设置-侧边菜单显示折叠切换事件
@@ -296,7 +295,6 @@ onMounted(() => {
   if (isLogin.value === true) {
     getPhotoData()
   }
-  isDark.value = store.state.dark
   colorValue.value = store.state.theme
   navValue.value = store.state.navigation
 })
@@ -310,7 +308,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--el-color-white);
+  background-color: var(--el-bg-color-overlay);
 
   .left {
     padding-left: 20px;

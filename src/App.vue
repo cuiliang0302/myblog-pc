@@ -57,7 +57,7 @@ onMounted(() => {
 
 .router-view {
   color: var(--el-text-color-primary);
-  background-color: var(--el-background-color-base);
+  background-color: var(--el-bg-color);
   transition: background 1s, color 0.6s;
   width: 100%;
   height: max-content;

@@ -72,7 +72,7 @@ onActivated(() => {
 <style lang="scss">
 .catalog {
   padding: 20px 10px;
-  background-color: var(--el-color-white);
+  background-color: var(--el-bg-color-overlay);
 
   .el-tree {
     .el-tree-node {

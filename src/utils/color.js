@@ -39,8 +39,8 @@ function color() {
 	}
 	// 明亮模式全局颜色
 	const lightList = ref([
-		{name: '--el-background-color-base', value: '#f5f7fa'},
-		{name: '--el-color-white', value: '#ffffff'},
+		{name: '--el-bg-color', value: '#f5f7fa'},
+		{name: '--el-bg-color-overlay', value: '#ffffff'},
 		{name: '--el-text-color-primary', value: '#303133'},
 		{name: '--el-text-color-regular', value: '#606266'},
 		{name: '--el-color-primary-light-9', value: '#ecf5ff'},
@@ -51,8 +51,8 @@ function color() {
 	])
 	// 暗黑模式全局颜色
 	const darkList = ref([
-		{name: '--el-background-color-base', value: '#000000'},
-		{name: '--el-color-white', value: '#141414'},
+		{name: '--el-bg-color', value: '#000000'},
+		{name: '--el-bg-color-overlay', value: '#141414'},
 		{name: '--el-text-color-primary', value: '#ffffff'},
 		{name: '--el-text-color-regular', value: '#d0d0d0'},
 		{name: '--el-color-primary-light-9', value: '#1f1f1f'},

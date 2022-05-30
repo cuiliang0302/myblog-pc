@@ -75,7 +75,7 @@ ul {
 
 // 您的位置面包屑
 .current-position {
-  background-color: var(--el-color-white);
+  background-color: var(--el-bg-color-overlay);
   padding: 20px;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@ ul {
 
 // 富文本编辑器暗黑模式适配
 .w-e-text-container {
-  background-color: var(--el-color-white) !important;
+  background-color: var(--el-bg-color-overlay) !important;
 }
 
 .w-e-toolbar {
@@ -115,14 +115,14 @@ ul {
 // markdown暗黑模式适配
 .github-markdown-body {
   table thead tr {
-    background-color: var(--el-background-color-base) !important;
+    background-color: var(--el-bg-color) !important;
   }
 
   table tbody tr {
-    background-color: var(--el-color-white) !important;
+    background-color: var(--el-bg-color-overlay) !important;
   }
 
   table tbody tr:nth-child(2n) {
-    background-color: var(--el-background-color-base) !important;
+    background-color: var(--el-bg-color) !important;
   }
 }

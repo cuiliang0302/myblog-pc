@@ -62,7 +62,7 @@ const toDetail = (detailID) => {
     width: 270px;
     padding: 3px;
     display: inline-block;
-    border: 1px solid var(--el-background-color-base);
+    border: 1px solid var(--el-bg-color);
     border-radius: 8px;
   }
 
