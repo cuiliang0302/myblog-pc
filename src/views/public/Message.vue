@@ -32,13 +32,13 @@ import BackTop from "@/components/common/BackTop.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue";
 import LoginPopup from "@/components/common/LoginPopup.vue"
-import {getCurrentInstance, onActivated, onMounted, reactive, ref} from "vue";
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
 import {
   deleteLeaveMessage,
   getLeaveMessage,
   postLeaveMessage,
   postReplyLeaveMessage,
-  patchLeaveMessage, getLeaveMessageDetail
+  patchLeaveMessage
 } from "@/api/record";
 import icon from "@/utils/icon";
 import user from "@/utils/user";
@@ -173,15 +173,13 @@ if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
   });
 });
 onMounted(() => {
+  store.commit('setMenuIndex', '5')
   leaveMessageData()
   if (isLogin.value === true) {
     getPhotoData()
   } else {
     getLogoData()
   }
-})
-onActivated(() => {
-  store.commit('setMenuIndex', '5')
 })
 </script>
 

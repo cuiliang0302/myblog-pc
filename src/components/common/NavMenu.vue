@@ -10,7 +10,7 @@
       <span class="no-choose">{{ siteConfig.name }}</span>
     </span>
       <span class="middle">
-      <el-menu :default-active="menuIndex" class="el-menu-demo" mode="horizontal">
+      <el-menu :default-active="menuIndex" :ellipsis="false" class="el-menu-demo" mode="horizontal">
         <el-menu-item index="1" @click="router.push('/')">
           <MyIcon type="icon-home"/>
           首页

@@ -87,7 +87,7 @@ async function articleData(page, size, categoryID) {
 
 // 分页-页面跳转
 const changePage = (pageSize, pageNumber) => {
-  console.log("categoryID",categoryID.value)
+  console.log("categoryID", categoryID.value)
   window.scrollTo({top: 0})
   console.log(pageSize, pageNumber)
   articleData(pageNumber, pageSize, categoryID.value)
@@ -104,7 +104,7 @@ onBeforeRouteUpdate(async (to) => {
   await articleData(1, 10, categoryID.value)
 });
 onActivated(() => {
-  store.commit('setMenuIndex', '2-'+router.currentRoute.value.params.id)
+  store.commit('setMenuIndex', '2-' + router.currentRoute.value.params.id)
 })
 </script>
 

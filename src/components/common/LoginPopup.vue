@@ -20,7 +20,7 @@
         <el-link class="register" type="info" @click="toRegister">没有账号？立即注册</el-link>
       </div>
     </div>
-    <template #title>
+    <template #header>
       <div class="login-title">
         <el-avatar
             :src=siteConfig.logo

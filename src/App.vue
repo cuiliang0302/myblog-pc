@@ -22,7 +22,8 @@ const locale = zhCn
 const includeList = ref([])
 const router = useRouter()
 watch(() => router, (newVal, oldVal) => {
-  if (newVal.currentRoute.value.meta && includeList.value.indexOf(newVal.currentRoute.value.name) === -1) {
+  console.log(newVal.currentRoute.value.meta)
+  if (newVal.currentRoute.value.meta.keepAlive && includeList.value.indexOf(newVal.currentRoute.value.name) === -1) {
     includeList.value.push(newVal.currentRoute.value.name);
     console.log("缓存的view", includeList.value);
   }
