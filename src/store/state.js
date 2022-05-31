@@ -21,6 +21,8 @@ const state = {
     navigation: 'auto',
     // 当前激活的导航栏菜单id
     menuIndex: '',
+    // 是否开启深色模式
+    isDark: false,
 }
 export default state
 

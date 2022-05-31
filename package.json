@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
-    "@element-plus/icons-vue": "^0.2.6",
+    "@element-plus/icons-vue": "^0.2.7",
     "@kangc/v-md-editor": "^2.3.8",
     "@vueuse/core": "^7.5.5",
     "dayjs": "^1.10.7",
@@ -19,7 +19,6 @@
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "qiniu-js": "^3.3.3",
-    "unplugin-vue-components": "^0.15.6",
     "vite-plugin-style-import": "^1.2.1",
     "vue": "^3.2.9",
     "vue-cropper": "^1.0.2",

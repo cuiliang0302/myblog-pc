@@ -21,10 +21,10 @@ let {setDark} = dark()
 const locale = zhCn
 const includeList = ref([])
 const router = useRouter()
-watch(() => router, (newVal, oldVal) => {
-  console.log(newVal.currentRoute.value.meta)
-  if (newVal.currentRoute.value.meta.keepAlive && includeList.value.indexOf(newVal.currentRoute.value.name) === -1) {
-    includeList.value.push(newVal.currentRoute.value.name);
+watch(() => router, (newValue) => {
+  console.log(newValue.currentRoute.value.meta)
+  if (newValue.currentRoute.value.meta.keepAlive && includeList.value.indexOf(newValue.currentRoute.value.name) === -1) {
+    includeList.value.push(newValue.currentRoute.value.name);
     console.log("缓存的view", includeList.value);
   }
 }, {deep: true})

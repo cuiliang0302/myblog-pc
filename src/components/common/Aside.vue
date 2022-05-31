@@ -25,7 +25,9 @@
         <el-dropdown @visible-change="dropdownChange" @command="handleCommand">
           <span class="no-choose">
             <span class="card-title no-choose">🔥 {{ isRanking }}
-              <i :class="isDropdown?'el-icon-caret-top':'el-icon-caret-bottom'+' el-icon--right'"></i>
+<!--              <i :class="isDropdown?'el-icon-caret-top':'el-icon-caret-bottom'+' el-icon&#45;&#45;right'"></i>-->
+              <el-icon v-if="isDropdown"><ArrowUp/></el-icon>
+              <el-icon v-else><ArrowDown/></el-icon>
             </span>
           </span>
           <template #dropdown>
@@ -164,15 +166,7 @@
 </template>
 
 <script setup>
-import {
-  ElCard,
-  ElImage,
-  ElDropdown,
-  ElDropdownMenu,
-  ElDropdownItem,
-  ElPopover,
-  ElAffix,
-} from 'element-plus'
+import {ArrowDown, ArrowUp} from '@element-plus/icons-vue'
 import Loading from "@/components/common/Loading.vue"
 import TagCloud from "@/components/TagCloud.vue";
 import {onMounted, reactive, ref} from "vue";

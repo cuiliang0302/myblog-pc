@@ -138,11 +138,7 @@ import dark from "@/utils/dark";
 import store from "@/store";
 
 let {userId} = user();
-let {isDark, setDark} = dark()
-watch(() => isDark.value, (newVal, oldVal) => {
-  console.log(newVal, oldVal)
-  console.log("换颜色了啊")
-})
+let {isDark} = dark()
 // 用户信息
 const userInfo = reactive({})
 
@@ -195,7 +191,7 @@ const text = ref()
 const setColor = () => {
   console.log(isDark.value)
   if (isDark.value === true) {
-    bgc.value = '#141414'
+    bgc.value = '#1d1e1f'
     color.value = echartsDark.value
     text.value = '#b2b2b2'
   } else {

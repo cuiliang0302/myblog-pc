@@ -61,8 +61,10 @@
         <el-dropdown v-if="isLogin" @visible-change="dropdownChange">
           <span class="no-choose">
             <el-avatar :src="photo"></el-avatar>
-            <p>{{ userName }}<i
-                :class="isDropdown?' el-icon-arrow-up'+' el-icon--right':' el-icon-arrow-down'+' el-icon--right'"></i></p>
+            <p>{{ userName }}
+              <el-icon v-if="isDropdown"><ArrowUp/></el-icon>
+              <el-icon v-else><ArrowDown/></el-icon>
+            </p>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -94,11 +96,12 @@
           </span>
             <el-switch
                 style="display: block"
-                v-model="isDark"
+                v-model="isDarkSwitch"
                 active-color="#303133"
                 inactive-color="#f5f7fa"
                 active-text="深色模式"
                 inactive-text="浅色模式"
+                @change="setDarkMode"
             />
         </div>
         <el-divider></el-divider>
@@ -142,6 +145,7 @@
 import {ElMessageBox, ElMessage} from 'element-plus'
 import {computed, onMounted, reactive, ref} from "vue";
 import icon from '@/utils/icon'
+import {ArrowDown, ArrowUp} from '@element-plus/icons-vue'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
 import {useRouter} from "vue-router";
@@ -152,11 +156,11 @@ import dark from "@/utils/dark";
 import color from "@/utils/color"
 import theme from "@/utils/theme"
 import navigation from "@/utils/navigation";
-
-let {isDark} = dark()
+let {isDark, setDark} = dark()
 let {setTheme} = theme()
 let {navigationList, setNavigation, navigationType} = navigation()
 const router = useRouter()
+
 let {MyIcon} = icon()
 // 引入用户信息模块
 let {isLogin, userId, userName} = user();
@@ -258,12 +262,12 @@ const handleClose = () => {
   drawer.value = false
 };
 // // 设置-显示模式默认值
-// const isDark = ref(false)
+const isDarkSwitch = ref(false)
 // // 设置-切换是否设置暗黑模式
-// const setDarkMode = () => {
-//   console.log("菜单栏执行切换事件", isDark.value)
-//   setDark(isDark.value)
-// }
+const setDarkMode = () => {
+  console.log("菜单栏执行切换事件", isDarkSwitch.value)
+  setDark(isDarkSwitch.value)
+}
 // 设置-侧边菜单显示是否折叠
 const asideMenuFold = ref(false)
 // 设置-侧边菜单显示折叠切换事件
@@ -422,10 +426,6 @@ header {
       width: 120px;
     }
   }
-}
-
-.anticon {
-  padding-right: 5px;
 }
 
 .placeholder {

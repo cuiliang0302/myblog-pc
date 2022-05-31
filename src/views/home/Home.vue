@@ -34,7 +34,6 @@
             </ul>
             <p class="isLoading" v-if="loading" v-loading="loading"
                element-loading-text="玩命加载中"
-               element-loading-spinner="el-icon-loading"
                element-loading-background="#ffffff"></p>
             <p v-if="!noMore && article.count">
               <el-divider>我是有底线的</el-divider>
@@ -90,6 +89,17 @@ const article_params = {
 }
 // 是否可以执行加载中动画
 const loading = ref(true)
+// 加载中svg
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `
 // 加载下一页
 const load = () => {
   console.log("加载下一页了")

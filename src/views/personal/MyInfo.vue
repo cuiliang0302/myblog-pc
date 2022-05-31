@@ -222,7 +222,8 @@ onMounted(() => {
 .photo-btn {
   position: absolute;
   top: 50%;
-  transform: translate(25%, -50%);
+  transform: translate(0, -50%);
+  margin-left: 120px;
 }
 
 .change-btn {

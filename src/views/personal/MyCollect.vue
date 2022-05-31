@@ -97,7 +97,7 @@ onMounted(() => {
   margin: 10px 40px 0 40px;
 
   .title {
-    background-color: var(--el-bg-color);
+    background-color: var(--el-border-color);
     padding: 10px 15px;
     border-radius: 10px;
     margin-right: 30px;
@@ -111,7 +111,7 @@ onMounted(() => {
     border-bottom: 10px solid transparent;
     border-top: 10px solid transparent;
     border-left: 10px solid transparent;
-    border-right: 10px solid var(--el-bg-color);
+    border-right: 10px solid var(--el-border-color);
     content: " ";
     position: absolute;
     top: 40px;

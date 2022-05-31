@@ -725,9 +725,7 @@ function registerFn() {
 .container.right-panel-active .overlay-right {
   transform: translateX(0);
 }
-.el-input{
-  height: 40px;
-}
+
 .register-btn{
   margin: 20px auto;
 }
