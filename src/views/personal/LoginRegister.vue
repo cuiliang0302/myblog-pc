@@ -44,7 +44,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="registerSubmit" round>立即注册</el-button>
+              <el-button class="register-btn" type="primary" @click="registerSubmit" round>立即注册</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -71,10 +71,10 @@
               <VerifyImgBtn :isPassing="isPassing" @verifyPass="verifyPass" :btnType="btnType"></VerifyImgBtn>
             </el-form-item>
             <el-form-item class="login-setting">
-              <span class="remember"><el-checkbox v-model="remember" label="记住密码"></el-checkbox></span>
+              <span class="remember"><el-checkbox v-model="remember" label="保持登录"></el-checkbox></span>
               <span class="forget pointer" @click="router.push('/setPassword')">忘记密码</span>
             </el-form-item>
-            <el-form-item>
+            <el-form-item class="login-btn">
               <el-button type="primary" @click="loginSubmit" round>立即登录</el-button>
             </el-form-item>
           </el-form>
@@ -570,6 +570,14 @@ function registerFn() {
 
             .forget {
               float: right;
+              margin-left: 165px;
+            }
+
+          }
+
+          .login-btn {
+            button {
+              margin: 0 auto;
             }
           }
         }
@@ -717,5 +725,10 @@ function registerFn() {
 .container.right-panel-active .overlay-right {
   transform: translateX(0);
 }
-
+.el-input{
+  height: 40px;
+}
+.register-btn{
+  margin: 20px auto;
+}
 </style>

@@ -278,6 +278,7 @@ onMounted(() => {
   background-image: v-bind("bgiURL");
   width: 100vw;
   height: 100vh;
+  background-size: 100% 100%;
   display: block;
   position: relative;
   .container {
@@ -330,7 +331,7 @@ onMounted(() => {
       }
 
       .next-btn {
-        margin-top: 15px;
+        margin: 15px auto;
       }
     }
   }
@@ -352,6 +353,8 @@ onMounted(() => {
   animation-duration: 600ms;
   animation-timing-function: ease-in;
 }
-
+.el-input{
+  height: 40px;
+}
 
 </style>

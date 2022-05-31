@@ -42,7 +42,14 @@ const value1 = ref(true)
 let {isDark, setDark} = dark()
 watch(() => value1.value, (newVal, oldVal) => {
   console.log(newVal, oldVal)
+
   setDark(newVal)
+})
+// debugger
+watch(() => isDark.value, (newVal, oldVal) => {
+  console.log('testwatch',newVal, oldVal)
+  // debugger
+  console.log("换颜色了啊")
 })
 onMounted(() => {
   value1.value = isDark.value

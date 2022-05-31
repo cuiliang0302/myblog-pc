@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="10">
     <el-col :span="12">
-      <el-card shadow="hover">
+      <el-card shadow="hover" class="my-info-card">
         <template #header>
           <div>
             <span>我的信息</span>
@@ -130,13 +130,19 @@
 // 引入用户信息模块
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {getStatistics} from "@/api/record";
 import {getUserEcharts} from "@/api/record";
 import * as echarts from 'echarts'
-import store from "@/store/index";
+import dark from "@/utils/dark";
+import store from "@/store";
 
 let {userId} = user();
+let {isDark, setDark} = dark()
+watch(() => isDark.value, (newVal, oldVal) => {
+  console.log(newVal, oldVal)
+  console.log("换颜色了啊")
+})
 // 用户信息
 const userInfo = reactive({})
 
@@ -179,8 +185,6 @@ const echartsDark = ref([
   '#5db0b3',
   '#1abc9c',
 ])
-// 是否开启暗黑模式
-const isDark = computed(() => store.state.dark)
 // echarts背景色
 const bgc = ref()
 // echarts颜色
@@ -201,7 +205,6 @@ const setColor = () => {
   }
   console.log(bgc.value)
 }
-
 // 浏览趋势折线图
 async function trend() {
   const query = {chart: 'trend', user: userId.value}
@@ -516,16 +519,18 @@ async function time() {
 }
 
 // 监听切换主题色事件
-watch(isDark, (newVal) => {
+watch(()=>isDark.value, (newVal) => {
   console.log("切换颜色了")
-  console.log({newVal})
+  console.log(newVal)
   setColor()
   trend()
   article()
   note()
   time()
-})
+},{deep:true})
 onMounted(() => {
+  store.commit('setMenuIndex', '')
+  console.log("dark",isDark.value)
   setColor()
   getUserinfo()
   statisticsData()
@@ -540,7 +545,9 @@ onMounted(() => {
 .el-card {
   margin-bottom: 10px;
 }
-
+.my-info-card{
+  height: 330px;
+}
 .number-count-card {
   height: 107px;
   margin-bottom: 10px;

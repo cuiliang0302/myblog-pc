@@ -3,6 +3,7 @@ import {useDark, useToggle} from '@vueuse/core'
 
 function dark() {
 	const isDark = useDark()
+	// debugger
 	console.log("当前dark状态是",isDark.value)
 	const toggleDark = useToggle(isDark)
 	const setDark = (value) => {

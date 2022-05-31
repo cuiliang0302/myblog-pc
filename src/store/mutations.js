@@ -27,10 +27,6 @@ const mutations = {
 	setAsideMenuFold(state, value) {
 		state.asideMenuFold = value
 	},
-	// 是否开启暗黑模式
-	setDark(state, value) {
-		state.dark = value
-	},
 	// 设置主题色
 	setTheme(state, value) {
 		state.theme = value

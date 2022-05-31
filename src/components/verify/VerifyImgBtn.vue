@@ -103,11 +103,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import "src/assets/style/index";
+.main {
+  width: 100%;
+}
 
 .verify-btn {
   width: 100%;
   color: var(--el-text-color-placeholder);
+  height: 40px;
 
   .btn-text {
     margin-left: 10px;
