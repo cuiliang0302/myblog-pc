@@ -28,8 +28,6 @@ export default defineConfig(({mode}) => {
 			terserOptions: {
 				compress: {
 					//生产环境时移除console
-					// drop_console: true,
-					// drop_debugger: true,
 					drop_console: process.env.VITE_DROP_CONSOLE,
 					drop_debugger: process.env.VITE_DROP_DEBUGGER
 				},
