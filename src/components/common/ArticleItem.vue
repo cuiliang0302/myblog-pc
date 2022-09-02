@@ -6,7 +6,7 @@
                 :fit="'fill'"
                 lazy>
         <template #placeholder>
-          <Loading type="'image'"></Loading>
+          <Loading type="image"></Loading>
         </template>
       </el-image>
     </span>

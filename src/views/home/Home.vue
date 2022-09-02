@@ -4,21 +4,29 @@
     <div class="page">
       <article class="animate__animated animate__fadeInLeft">
         <div class="carousel">
-          <el-carousel height="500px" :interval="5000">
-            <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
-              <el-image
-                  class="pointer"
-                  style="width: 900px; height: 500px"
-                  :src="carousel.img"
-                  :fit="'fill'"
-                  :key="carousel.id"
-                  @click="toCarousel(carousel.url)">
-                <template #placeholder>
-                  <Loading type="'image"></Loading>
-                </template>
-              </el-image>
-            </el-carousel-item>
-          </el-carousel>
+          <el-skeleton :loading="carouselLoading" animated>
+            <template #template>
+              <el-skeleton-item variant="image" style="width: 900px; height: 500px"/>
+            </template>
+            <template #default>
+              <el-carousel width="900px" height="500px" :interval="5000">
+                <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
+                  <el-image
+                      class="pointer"
+                      style="width: 900px; height: 500px"
+                      :src="carousel.img"
+                      :fit="'fill'"
+                      :key="carousel.id"
+                      @click="toCarousel(carousel.url)"
+                  >
+                    <template #placeholder>
+                      <Loading type="image"></Loading>
+                    </template>
+                  </el-image>
+                </el-carousel-item>
+              </el-carousel>
+            </template>
+          </el-skeleton>
         </div>
         <div class="new">
           <el-card class="box-card">
@@ -74,6 +82,8 @@ const toCarousel = (url) => {
   console.log(url)
   window.open(url)
 }
+// 轮播图加载动画是否开启
+const carouselLoading = ref(true)
 //最新文章列表
 const article = reactive({
   list: [],
@@ -133,6 +143,9 @@ onMounted(() => {
   load()
   // 监听滚动事件
   window.addEventListener("scroll", scrollHandle, false)
+  setTimeout(()=>{
+    carouselLoading.value = false
+  },2000)
 })
 onUnmounted(() => {
   // 组件卸载时，停止监听

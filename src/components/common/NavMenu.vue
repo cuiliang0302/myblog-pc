@@ -10,15 +10,15 @@
       <span class="no-choose">{{ siteConfig.name }}</span>
     </span>
       <span class="middle">
-      <el-menu :default-active="menuIndex" :ellipsis="false" class="el-menu-demo" mode="horizontal">
+      <el-menu :default-active="menuIndex" :ellipsis="false" mode="horizontal">
         <el-menu-item index="1" @click="router.push('/')">
           <MyIcon type="icon-home"/>
-          首页
+          <span class="menu-title">首页</span>
         </el-menu-item>
         <el-sub-menu index="2">
           <template #title>
             <MyIcon type="icon-article"/>
-            文章
+            <span class="menu-title">文章</span>
           </template>
           <el-menu-item v-for="category in categoryList" :key="category.id"
                         :index="'2-'+category.id" @click="toCategory(category.id)">{{ category.name }}</el-menu-item>
@@ -26,22 +26,22 @@
         <el-sub-menu index="3">
           <template #title>
             <MyIcon type="icon-note"/>
-            笔记
+            <span class="menu-title">笔记</span>
           </template>
           <el-menu-item v-for="note in noteList" :key="note.id" :index="'3-'+note.id"
                         @click="router.push(`/catalog/${note.id}`)">{{ note.name }}</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="4" @click="router.push('/classify')">
           <MyIcon type="icon-classify"/>
-          归档
+          <span class="menu-title">归档</span>
         </el-menu-item>
         <el-menu-item index="5" @click="router.push('/message')">
           <MyIcon type="icon-message"/>
-          留言板
+          <span class="menu-title">留言板</span>
         </el-menu-item>
         <el-menu-item index="6" @click="router.push('/about')">
           <MyIcon type="icon-about"/>
-          关于
+          <span class="menu-title">关于</span>
         </el-menu-item>
       </el-menu>
     </span>
@@ -156,6 +156,7 @@ import dark from "@/utils/dark";
 import color from "@/utils/color"
 import theme from "@/utils/theme"
 import navigation from "@/utils/navigation";
+
 let {isDark, setDark} = dark()
 let {setTheme} = theme()
 let {navigationList, setNavigation, navigationType} = navigation()
@@ -261,7 +262,8 @@ let drawer = ref(false);
 const handleClose = () => {
   drawer.value = false
 };
-// // 设置-显示模式默认值
+// 设置-显示模式默认值
+
 const isDarkSwitch = ref(false)
 // // 设置-切换是否设置暗黑模式
 const setDarkMode = () => {
@@ -301,6 +303,7 @@ onMounted(() => {
   }
   colorValue.value = store.state.theme
   navValue.value = store.state.navigation
+  isDarkSwitch.value = store.state.isDark
 })
 // 当前激活的菜单id
 const menuIndex = computed(() => store.state.menuIndex)
@@ -329,6 +332,10 @@ header {
 
   .middle {
     flex: 1;
+
+    .menu-title {
+      margin-left: 4px;
+    }
   }
 
   .right {

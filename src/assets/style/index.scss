@@ -124,4 +124,10 @@ ul {
   table tbody tr:nth-child(2n) {
     background-color: var(--el-bg-color) !important;
   }
+  div[class*=v-md-pre-wrapper-] {
+    background-color: var(--el-bg-color-page) !important;
+  }
+  div[class*=v-md-pre-wrapper-].line-numbers-mode:after{
+    background-color: var(--el-border-color) !important;
+  }
 }
