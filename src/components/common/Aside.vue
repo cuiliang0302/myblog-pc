@@ -122,7 +122,7 @@
                 <div>
                    <el-image
                        style="width: 210px; height: 210px"
-                       :src="info.vx_public"
+                       :src="info.vx_public_img"
                        :fit="'fill'"></el-image>
                 </div>
                 <template #reference>
