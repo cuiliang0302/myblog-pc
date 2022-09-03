@@ -25,7 +25,7 @@
         <el-dropdown @visible-change="dropdownChange" @command="handleCommand">
           <span class="no-choose">
             <span class="card-title no-choose">🔥 {{ isRanking }}
-<!--              <i :class="isDropdown?'el-icon-caret-top':'el-icon-caret-bottom'+' el-icon&#45;&#45;right'"></i>-->
+              <!--              <i :class="isDropdown?'el-icon-caret-top':'el-icon-caret-bottom'+' el-icon&#45;&#45;right'"></i>-->
               <el-icon v-if="isDropdown"><ArrowUp/></el-icon>
               <el-icon v-else><ArrowDown/></el-icon>
             </span>
@@ -82,7 +82,7 @@
           <span>
               <el-popover
                   placement="top-start"
-                  :width="215"
+                  :width="235"
                   trigger="hover"
               >
                 <div>
@@ -99,7 +99,7 @@
           <span>
             <el-popover
                 placement="top-start"
-                :width="215"
+                :width="235"
                 trigger="hover"
             >
                 <div>
@@ -112,10 +112,45 @@
                   <MyIcon type="icon-wechat"/>
                 </template>
               </el-popover>
-
           </span>
-          <span><a :href="info.github" target="_blank"><MyIcon type="icon-github"/></a></span>
-          <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
+          <span>
+            <el-popover
+                placement="top-start"
+                :width="235"
+                trigger="hover"
+            >
+                <div>
+                   <el-image
+                       style="width: 210px; height: 210px"
+                       :src="info.vx_public"
+                       :fit="'fill'"></el-image>
+                </div>
+                <template #reference>
+                  <MyIcon type="icon-vx-public"/>
+                </template>
+              </el-popover>
+          </span>
+          <el-tooltip
+              effect="dark"
+              content="RSS订阅"
+              placement="top"
+          >
+            <span><a :href="info.rss" target="_blank"><MyIcon type="icon-rss"/></a></span>
+          </el-tooltip>
+          <el-tooltip
+              effect="dark"
+              content="GitHub仓库"
+              placement="top"
+          >
+            <span><a :href="info.github" target="_blank"><MyIcon type="icon-github-logo"/></a></span>
+          </el-tooltip>
+          <el-tooltip
+              effect="dark"
+              content="码云仓库"
+              placement="top"
+          >
+            <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
+          </el-tooltip>
         </div>
       </div>
     </el-card>
@@ -365,7 +400,7 @@ onMounted(() => {
       justify-content: center;
 
       span {
-        margin: 10px 7px 0 7px;
+        margin: 10px 3px 0 3px;
 
         .anticon {
           font-size: 30px !important;
