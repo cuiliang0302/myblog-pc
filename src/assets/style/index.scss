@@ -130,4 +130,7 @@ ul {
   div[class*=v-md-pre-wrapper-].line-numbers-mode:after{
     background-color: var(--el-border-color) !important;
   }
+  div[class*=v-md-pre-wrapper-] .hljs-params{
+    color: red;
+  }
 }
