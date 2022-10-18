@@ -104,11 +104,17 @@ ul {
 
 .w-e-toolbar {
   background-color: var(--el-border-color-extra-light) !important;
-  z-index: 0 !important;
+  //z-index: 0 !important;
 }
 
 .w-e-toolbar .w-e-menu:hover {
   background-color: var(--el-color-primary-light-9) !important;
+}
+.w-e-panel-container {
+  background-color: var(--el-bg-color) !important;
+}
+.w-e-panel-container .w-e-active{
+  background-color: var(--el-color-primary) !important;
 }
 
 // markdown暗黑模式适配
