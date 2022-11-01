@@ -189,6 +189,7 @@ const color = ref()
 const text = ref()
 // 设置echarts主题色
 const setColor = () => {
+  console.log("判断是否是深色模式了")
   console.log(isDark.value)
   if (isDark.value === true) {
     bgc.value = '#1d1e1f'

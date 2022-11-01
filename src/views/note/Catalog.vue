@@ -35,6 +35,7 @@ const catalogList = ref([])
 // 获取笔记目录数据
 async function catalogueData(catalogueID) {
   let data = await getCatalogueList(catalogueID)
+  console.log("开始获取笔记目录了啊")
   console.log(data)
   catalogList.value = data.map((i, index) => {
     return {
@@ -56,11 +57,13 @@ async function titleData(catalogueID) {
   title.value = note_data.name
 }
 onMounted(async () => {
+  console.log("onmounted了啊")
   let catalogueID = router.currentRoute.value.params.id
   await catalogueData(catalogueID)
   await titleData(catalogueID)
 })
 onBeforeRouteUpdate(async (to) => {
+  console.log("onbefore了啊")
   console.log(to.params.id)
   await catalogueData(to.params.id)
 });

@@ -84,7 +84,7 @@ const router = createRouter({
             component: () => import('@/views/note/Catalog.vue'),
             meta: {
                 title: '笔记目录',
-                keepAlive: true,
+                keepAlive: false,
                 isAuth: false
             }
         },

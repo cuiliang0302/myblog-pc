@@ -30,6 +30,7 @@ watch(() => router, (newValue) => {
 }, {deep: true})
 onMounted(() => {
   const is_dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  console.log("app判断是否为dark:", is_dark)
   setDark(is_dark)
   if (document.body.clientWidth <= 1200) {
     ElMessageBox.alert('检测到您使用移动设备访问，点击确定后跳转至移动版网站', {
