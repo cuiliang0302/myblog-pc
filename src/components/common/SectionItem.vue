@@ -60,6 +60,7 @@ onMounted(() => {
 
   .describe {
     margin-left: 10px;
+    width: 100%;
 
     h2 {
       color: var(--el-text-color-primary);

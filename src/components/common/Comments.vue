@@ -6,7 +6,8 @@
       <span>
         <div>
           <p>
-            <span class="username">{{ item.username }}</span>
+            <span v-if="item.username==='admin'" class="admin">博主</span>
+            <span v-else class="username">{{ item.username }}</span>
             <span class="time-ago">{{ timeAgo(item.time) }}</span>
           </p>
           <p class="content" v-html=item.content></p>
@@ -192,6 +193,25 @@ ol {
           margin-right: 40px;
           color: var(--el-color-primary);
           cursor: pointer;
+        }
+
+        .admin {
+          color: var(--el-color-primary); /*设置文字颜色*/
+          font-weight: bolder; /*设置字体粗细*/
+          -webkit-animation: flicker 2s infinite; /*设置动画*/
+          margin-right: 30px;
+        }
+
+        @-webkit-keyframes flicker { /*创建admin呼吸效果动画*/
+          0% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+          100% {
+            opacity: 1;
+          }
         }
 
         .content {
