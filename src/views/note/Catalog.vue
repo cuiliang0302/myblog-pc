@@ -20,6 +20,7 @@ import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {onActivated, onMounted, ref} from "vue";
 import {getCatalogueList, getNoteDetail} from "@/api/blog";
 import store from "@/store";
+
 const router = useRouter()
 // 笔记名称
 const title = ref()
@@ -51,16 +52,19 @@ async function catalogueData(catalogueID) {
     }
   })
 }
+
 // 获取笔记名称
 async function titleData(catalogueID) {
   let note_data = await getNoteDetail(catalogueID)
   title.value = note_data.name
 }
+
 onMounted(async () => {
   console.log("onmounted了啊")
   let catalogueID = router.currentRoute.value.params.id
   await catalogueData(catalogueID)
   await titleData(catalogueID)
+  store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
 })
 onBeforeRouteUpdate(async (to) => {
   console.log("onbefore了啊")
@@ -68,7 +72,8 @@ onBeforeRouteUpdate(async (to) => {
   await catalogueData(to.params.id)
 });
 onActivated(() => {
-  store.commit('setMenuIndex', '3-'+router.currentRoute.value.params.id)
+  store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
+  console.log("setMenuIndex", '3-' + router.currentRoute.value.params.id)
 })
 </script>
 
