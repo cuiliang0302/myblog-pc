@@ -65,5 +65,9 @@ const toLink = (url) => {
 p {
   margin: 15px 10px;
   line-height: 25px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  overflow: hidden;
 }
 </style>

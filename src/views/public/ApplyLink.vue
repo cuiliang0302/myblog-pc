@@ -107,9 +107,9 @@ const checkUrl = (rule, value, callback) => {
     return callback(new Error('请输入网站地址'))
   }
   const pattern = /[a-zA-z]+:\/\/[^\s]*/
-  if(pattern.test(value)){
+  if (pattern.test(value)) {
     callback()
-  }else {
+  } else {
     callback(new Error('请输入正确的网站地址'))
   }
 }
@@ -117,7 +117,8 @@ const checkUrl = (rule, value, callback) => {
 const rules = {
   url: [{required: true, validator: checkUrl, trigger: 'blur',}],
   name: [{required: true, message: '请输入网站名称', trigger: 'blur',}],
-  describe: [{required: true, message: '请输入网站描述', trigger: 'blur',}],
+  describe: [{required: true, message: '请输入网站描述', trigger: 'blur'},
+    {min: 10, max: 40, message: '网站描述内容长度为10-40位', trigger: 'blur'}],
   logo: [{required: true, message: '请上传网站logo', trigger: 'blur',}],
 }
 
