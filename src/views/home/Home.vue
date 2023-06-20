@@ -79,7 +79,11 @@ async function CarouselData() {
 
 // 点击轮播图跳转
 const toCarousel = (url) => {
-  console.log(url)
+  // console.log(url)
+  // console.log(window.umami.track)
+  // window.umami.track('Signup button');
+  // window.umami.track('test-button', { name: 'newsletter', id: 123 });
+  // console.log("点了啊")
   window.open(url)
 }
 // 轮播图加载动画是否开启
@@ -128,9 +132,7 @@ const scrollHandle = () => {
   const clientHeight = document.documentElement.clientHeight
   const distance = scrollHeight - scrollTop - clientHeight
   if (distance <= 400 && noMore.value) {
-    console.log("满足加载下一页了")
     if (!loading.value) {
-      console.log("执行加载下一页")
       loading.value = true;
       setTimeout(() => {
         load()
@@ -146,6 +148,13 @@ onMounted(() => {
   setTimeout(()=>{
     carouselLoading.value = false
   },2000)
+  // 加载umami统计
+  // let script = document.createElement('script');
+  // script.type = 'text/javascript';
+  // script.src = 'https://umami.cuiliangblog.cn/script.js';
+  // script.setAttribute('data-website-id', "9447ca81-4839-4b2d-a0e3-f795515a2f3b")
+  // script.setAttribute('data-auto-track', "false")
+  // document.body.appendChild(script)
 })
 onUnmounted(() => {
   // 组件卸载时，停止监听

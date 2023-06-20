@@ -28,3 +28,4 @@ app.directive('title', {
 		document.title = binding.value
 	}
 })
+

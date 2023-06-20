@@ -161,19 +161,23 @@
       <div class="statistics">
         <div>
           <MyIcon type="icon-uptime"/>
-          运行时间：{{ statistics.uptime }}天
+          网站运行时长：{{ statistics.uptime }}天
         </div>
         <div>
           <MyIcon type="icon-pv"/>
-          总访问量：{{ statistics.pv }}次
+          24小时访问量：{{ statistics.pv }}次
         </div>
         <div>
           <MyIcon type="icon-uv"/>
-          访问人数：{{ statistics.uv }}次
+          24小时访客数：{{ statistics.uv }}人
         </div>
         <div>
           <MyIcon type="icon-ip"/>
-          访问IP数：{{ statistics.ip }}个
+          24小时回访数：{{ statistics.bounces }}人
+        </div>
+        <div>
+          <MyIcon type="icon-page-time"/>
+          每页访问时长：{{ statistics.page_time }}秒
         </div>
         <div>
           <MyIcon type="icon-article"/>

@@ -289,12 +289,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     Nprogress.start()
     // to 访问的路径 from 从哪来 next 响应路径
-    // 百度统计API跳转
-    if (to.path) {
-        if (window._hmt) {
-            window._hmt.push(['_trackPageview', '/#' + to.fullPath])
-        }
-    }
     if (to.meta.isAuth === true && JSON.stringify(store.state.userSession) === '{}') {
         ElMessage({
             message: '您还未登录，即将跳转至登录页',
@@ -302,6 +296,11 @@ router.beforeEach((to, from, next) => {
         })
         return next('/loginRegister')
     } else {
+        // this.$script().then(() => {
+        //     // 文件加载完成后的操作
+        //     console.log(window)
+        // })
+        // window.umami.trackView(to.path, null, '9447ca81-4839-4b2d-a0e3-f795515a2f3b')
         next()
     }
     document.title = to.meta.title
