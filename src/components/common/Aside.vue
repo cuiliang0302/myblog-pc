@@ -176,6 +176,10 @@
           24小时回访数：{{ statistics.bounces }}人
         </div>
         <div>
+          <MyIcon type="icon-online-user"/>
+          当前在线人数：{{ statistics.active }}人
+        </div>
+        <div>
           <MyIcon type="icon-page-time"/>
           每页访问时长：{{ statistics.page_time }}秒
         </div>
