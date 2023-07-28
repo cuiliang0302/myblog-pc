@@ -20,9 +20,9 @@
           </span>
       </div>
     </el-card>
-<!--    万维广告位-->
-    <el-card class="card-hover">
-      <div class="wwads-cn wwads-vertical" data-id="259" style="max-width:200px"></div>
+    <!--    万维广告位-->
+    <el-card class="card-hover advertising">
+      <div class="wwads-cn wwads-vertical" data-id="259"></div>
     </el-card>
     <el-card class="card-hover">
       <template #header>
@@ -433,6 +433,19 @@ onMounted(() => {
 
       .anticon {
         margin-right: 5px;
+      }
+    }
+  }
+}
+// 广告样式
+.advertising {
+  div {
+    max-width: 238px;
+    background-color: var(--el-bg-color-overlay);
+
+    .wwads-content {
+      a {
+        color: var(--el-text-color-regular) !important;
       }
     }
   }
