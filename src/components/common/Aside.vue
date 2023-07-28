@@ -181,7 +181,7 @@
         </div>
         <div>
           <MyIcon type="icon-page-time"/>
-          每页访问时长：{{ statistics.page_time }}秒
+          平均访问时长：{{ statistics.page_time }}秒/页
         </div>
         <div>
           <MyIcon type="icon-article"/>
