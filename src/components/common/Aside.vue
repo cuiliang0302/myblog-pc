@@ -20,6 +20,10 @@
           </span>
       </div>
     </el-card>
+<!--    万维广告位-->
+    <el-card class="card-hover">
+      <div class="wwads-cn wwads-vertical" data-id="259" style="max-width:200px"></div>
+    </el-card>
     <el-card class="card-hover">
       <template #header>
         <el-dropdown @visible-change="dropdownChange" @command="handleCommand">
