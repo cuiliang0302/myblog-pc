@@ -142,3 +142,7 @@ ul {
     color: red;
   }
 }
+// 广告栏字体适配深色模式
+.wwads-text {
+  color: var(--el-text-color-regular) !important;
+}
