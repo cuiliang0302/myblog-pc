@@ -446,7 +446,7 @@ onMounted(() => {
     padding-top: 0;
     margin-top: 0;
   }
-  .wwads-text {
+  .wwads-content .wwads-text, .wwads-horizontal .wwads-text {
     color: var(--el-text-color-regular) !important;
   }
 }
