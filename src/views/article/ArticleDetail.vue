@@ -718,16 +718,9 @@ function action(articleID, articleData) {
 }
 // 万维广告位
 .advertising {
-  //position: fixed;
-  //bottom: 10px;
-  //width: 270px;
-  //right: 5px;
-  //div {
-  //  max-width: 200px;
-  //  background-color: var(--el-bg-color-overlay);
-  //  padding-top: 0;
-  //  margin-top: 0;
-  //
-  //}
+  position: fixed;
+  bottom: 15px;
+  left: 10px;
+  width: 200px;
 }
 </style>
