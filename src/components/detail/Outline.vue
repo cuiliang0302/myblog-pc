@@ -13,8 +13,6 @@
       <el-empty description="该文章暂无大纲"></el-empty>
     </div>
   </div>
-  <!--    万维广告位-->
-  <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
 </template>
 
 <script setup>
@@ -90,18 +88,5 @@ watch(
     border-left: 2px solid var(--el-color-primary);
     background-color: var(--el-bg-color);
   }
-}
-.advertising {
-  //position: fixed;
-  //bottom: 10px;
-  //width: 270px;
-  //right: 5px;
-  //div {
-  //  max-width: 200px;
-  //  background-color: var(--el-bg-color-overlay);
-  //  padding-top: 0;
-  //  margin-top: 0;
-  //
-  //}
 }
 </style>

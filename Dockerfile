@@ -1,7 +1,7 @@
 FROM node:16.15.0 AS build
 COPY . /opt/myblog_pc
 WORKDIR /opt/myblog_pc
-RUN npm install --registry https://registry.npm.taobao.org && npm run build
+RUN npm install --registry http://mirrors.cloud.tencent.com/npm/ && npm run build
 
 FROM nginx:1.20.1
 COPY --from=build /opt/myblog_pc/dist /opt/myblog_pc/dist

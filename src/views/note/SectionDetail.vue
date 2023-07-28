@@ -7,6 +7,7 @@
           <el-tree v-if="catalogShow" accordion :data="catalogList" @node-click="handleNodeClick"
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
                    :current-node-key="current" ref="treeRef"></el-tree>
+          <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
         </div>
         <div class="detail-center">
           <div class="current-position">
@@ -711,5 +712,19 @@ function action(sectionID, sectionData) {
     padding: 20px 10px;
     background-color: var(--el-bg-color-overlay);
   }
+}
+// 万维广告位
+.advertising {
+  //position: fixed;
+  //bottom: 10px;
+  //width: 270px;
+  //right: 5px;
+  //div {
+  //  max-width: 200px;
+  //  background-color: var(--el-bg-color-overlay);
+  //  padding-top: 0;
+  //  margin-top: 0;
+  //
+  //}
 }
 </style>
