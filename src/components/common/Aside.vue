@@ -445,10 +445,9 @@ onMounted(() => {
     background-color: var(--el-bg-color-overlay);
     padding-top: 0;
     margin-top: 0;
-
-    .wwads-text {
-        color: var(--el-text-color-regular) !important;
-      }
+  }
+  .wwads-text {
+    color: var(--el-text-color-regular) !important;
   }
 }
 
