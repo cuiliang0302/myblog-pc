@@ -462,7 +462,6 @@ function action(articleID, articleData) {
   let {userId, isLogin} = user();
   // 文章点赞事件
   const likeClick = () => {
-    console.log("收到点赞事件了")
     const params = {id: articleID.value, 'kind': 'article'}
     postLike(params).then((response) => {
       console.log(response)

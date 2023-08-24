@@ -484,7 +484,6 @@ function action(sectionID, sectionData) {
   let {userId, isLogin} = user();
   // 笔记点赞事件
   const likeClick = () => {
-    console.log("收到点赞事件了")
     const params = {id: sectionID.value, 'kind': 'section'}
     postLike(params).then((response) => {
       console.log(response)
