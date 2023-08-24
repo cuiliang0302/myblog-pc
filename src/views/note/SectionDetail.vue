@@ -87,7 +87,7 @@ import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElMessage, ElLoading} from 'element-plus'
-import {getSectionDetail, getContextSection, getCatalogueList, patchSectionDetail} from "@/api/blog";
+import {getSectionDetail, getContextSection, getCatalogueList, postLike} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -418,7 +418,7 @@ function comment(sectionID) {
   // 评论点赞事件
   if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", value => {
     const params = {'like': value.like}
-    patchSectionComment(value.id,params).then((response) => {
+    patchSectionComment(value.id, params).then((response) => {
       console.log(response)
       ElMessage({
         message: '点赞成功',
@@ -484,15 +484,15 @@ function action(sectionID, sectionData) {
   let {userId, isLogin} = user();
   // 笔记点赞事件
   const likeClick = () => {
-    console.log("爹收到点赞事件了")
-    const params = {'like': sectionData.like + 1}
-    patchSectionDetail(sectionID.value, params).then((response) => {
+    console.log("收到点赞事件了")
+    const params = {id: sectionID.value, 'kind': 'section'}
+    postLike(params).then((response) => {
       console.log(response)
       ElMessage({
         message: '笔记点赞成功！',
         type: 'success',
       })
-      sectionData.like = params.like
+      sectionData.like = sectionData.like + 1
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -713,6 +713,7 @@ function action(sectionID, sectionData) {
     background-color: var(--el-bg-color-overlay);
   }
 }
+
 // 万维广告位
 .advertising {
   position: fixed;

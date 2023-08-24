@@ -121,7 +121,7 @@ import Outline from "@/components/detail/Outline.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElLoading, ElMessage} from 'element-plus'
-import {getArticleDetail, getContextArticle, getGuessLike, patchArticleDetail} from "@/api/blog";
+import {getArticleDetail, getContextArticle, getGuessLike, postLike} from "@/api/blog";
 import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
@@ -287,6 +287,7 @@ function article() {
     recommendList.value = await getGuessLike(DetailID)
     console.log("recommendList", recommendList.value)
   }
+
   return {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData}
 }
 
@@ -461,15 +462,15 @@ function action(articleID, articleData) {
   let {userId, isLogin} = user();
   // 文章点赞事件
   const likeClick = () => {
-    console.log("爹收到点赞事件了")
-    const params = {like: articleData.like + 1}
-    patchArticleDetail(articleID.value, params).then((response) => {
+    console.log("收到点赞事件了")
+    const params = {id: articleID.value, 'kind': 'article'}
+    postLike(params).then((response) => {
       console.log(response)
       ElMessage({
         message: '文章点赞成功！',
         type: 'success',
       })
-      articleData.like = params.like
+      articleData.like = articleData.like + 1
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -716,6 +717,7 @@ function action(articleID, articleData) {
     background-color: var(--el-bg-color-overlay);
   }
 }
+
 // 万维广告位
 .advertising {
   position: fixed;
