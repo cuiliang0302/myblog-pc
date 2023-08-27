@@ -190,7 +190,8 @@ function publicFn() {
   const sectionID = ref()
   //跳转笔记列表
   const toNote = (noteId) => {
-    router.push({path: `/note/${noteId}`})
+    // console.log(noteId)
+    router.push({path: `/catalog/${noteId}`})
   }
   // 站点名称
   const sitename = ref('')
