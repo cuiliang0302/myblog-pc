@@ -1,4 +1,4 @@
-FROM node:16.15.0 AS build
+FROM node:14.19.1 AS build
 COPY . /opt/myblog_pc
 WORKDIR /opt/myblog_pc
 RUN npm install --registry https://mirrors.huaweicloud.com/repository/npm/ && npm run build
