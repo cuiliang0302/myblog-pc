@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :locale="locale">
+  <el-config-provider>
     <div class="router-view">
       <router-view v-slot="{ Component }">
         <keep-alive :include="includeList">
@@ -11,14 +11,12 @@
 </template>
 
 <script setup>
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {onMounted, ref, watch} from "vue";
 import {ElMessageBox} from 'element-plus'
 import dark from "@/utils/dark";
 import {useRouter} from "vue-router";
 
 let {setDark} = dark()
-const locale = zhCn
 const includeList = ref([])
 const router = useRouter()
 watch(() => router, (newValue) => {
