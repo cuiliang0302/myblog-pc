@@ -13,7 +13,7 @@ const router = createRouter({
             name: 'Home',
             component: () => import('@/views/home/Home.vue'),
             meta: {
-                title: '崔亮的博客-专注devops自动化运维，传播优秀it运维技术文章',
+                title: '崔亮的博客-专注运维开发技术，传播更多原创运维与开发技术文章',
                 keepAlive: true,
                 isAuth: false
             }
