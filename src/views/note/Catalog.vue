@@ -57,6 +57,7 @@ async function catalogueData(catalogueID) {
 async function titleData(catalogueID) {
   let note_data = await getNoteDetail(catalogueID)
   title.value = note_data.name
+  console.log(title.value)
 }
 
 onMounted(async () => {
@@ -70,6 +71,7 @@ onBeforeRouteUpdate(async (to) => {
   console.log("onbefore了啊")
   console.log(to.params.id)
   await catalogueData(to.params.id)
+  await titleData(to.params.id)
 });
 onActivated(() => {
   store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)

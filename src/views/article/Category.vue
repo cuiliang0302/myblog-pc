@@ -51,7 +51,7 @@ import {onActivated, onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getArticle, getCategoryName} from "@/api/blog";
 import store from "@/store";
-
+// 文章分类名称
 const router = useRouter()
 // 当前文章分类id
 const categoryID = ref()
