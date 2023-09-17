@@ -17,7 +17,7 @@
                       :src="carousel.img"
                       :fit="'fill'"
                       :key="carousel.id"
-                      @click="toCarousel(carousel.url)"
+                      @click="toCarousel(carousel.url,carousel.title)"
                   >
                     <template #placeholder>
                       <Loading type="image"></Loading>
@@ -78,11 +78,12 @@ async function CarouselData() {
 }
 
 // 点击轮播图跳转
-const toCarousel = (url) => {
+const toCarousel = (url, title) => {
   console.log(url)
   console.log("umami", window.umami.track)
-  window.umami.track('Signup button');
-  // window.open(url)
+  console.log("点击轮播图：" + title)
+  window.umami.track("点击轮播图：" + title)
+  window.open(url)
 }
 // 轮播图加载动画是否开启
 const carouselLoading = ref(true)
