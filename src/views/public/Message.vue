@@ -1,24 +1,24 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
-    <el-card class="box-card animate__animated animate__zoomIn">
-      <template #header>
-        <div class="card-header">
-          <span class="card-title">📝 我要留言</span>
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span class="card-title">📝 我要留言</span>
+          </div>
+        </template>
+        <div class="input-field">
+          <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+          <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
+          <span><Editor ref="messageEditor"></Editor></span>
+          <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">留言</el-button></span>
+          <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
         </div>
-      </template>
-      <div class="input-field">
-        <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
-        <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
-        <span><Editor ref="messageEditor"></Editor></span>
-        <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">留言</el-button></span>
-        <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
-      </div>
-      <div class="comment-list">
-        <Comments :comments-list="messageList"></Comments>
-      </div>
-    </el-card>
-  </div>
+        <div class="comment-list">
+          <Comments :comments-list="messageList"></Comments>
+        </div>
+      </el-card>
+    </div>
   <Footer></Footer>
   <BackTop></BackTop>
   <LoginPopup ref="loginPopupRef"></LoginPopup>
