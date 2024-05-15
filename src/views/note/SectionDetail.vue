@@ -381,6 +381,7 @@ function comment(sectionID) {
   const messageForm = reactive({
     content: '',
     user: '',
+    url:'',
   })
   // 弹出登录框
   const showLogin = () => {
@@ -395,6 +396,7 @@ function comment(sectionID) {
     if (messageForm.content) {
       messageForm.user = userId.value
       messageForm['section_id'] = sectionID.value
+      messageForm['url'] = window.location.href
       console.log(messageForm)
       postSectionComment(messageForm).then((response) => {
         console.log(response)
@@ -435,6 +437,7 @@ function comment(sectionID) {
   // 留言回复事件
   if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
     replyForm['section_id'] = sectionID.value
+    replyForm['url'] = window.location.href
     console.log(replyForm)
     postReplySectionComment(replyForm).then((response) => {
       console.log(response)

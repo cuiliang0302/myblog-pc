@@ -73,6 +73,7 @@ watch(
   margin-left: 10px;
   height: 82vh;
   overflow: auto;
+  min-width: 200px;
 
   p {
     margin-left: 5px;
