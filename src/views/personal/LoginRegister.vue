@@ -105,7 +105,7 @@
           <div class="overlay-panel overlay-right">
             <div class="point">
               <h1>欢迎光临</h1>
-              <p>欢迎访问{{ sitename }}，并与我们一起开始旅程<br>若您还没有账号，请立即注册</p>
+              <p>欢迎访问{{ sitename }}，并与我一起交流学习<br>若您还没有账号，请立即注册或快速登录</p>
               <el-button @click="switchRegister" type="danger">切换注册</el-button>
             </div>
           </div>
