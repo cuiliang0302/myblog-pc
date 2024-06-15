@@ -685,12 +685,14 @@ function registerFn() {
   }
 
   .overlay-right {
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
     right: 0;
     transform: translateX(0);
     background-color: rgba(255, 255, 255, 0.5);
   }
 
   .overlay-left {
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
     transform: translateX(0);
     background-color: rgba(255, 255, 255, 0.5);
   }
