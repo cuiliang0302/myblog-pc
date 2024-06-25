@@ -590,6 +590,8 @@ function action(sectionID, sectionData) {
       width: 15%;
 
       .el-tree {
+        height: 82vh;
+        overflow: auto;
         width: 15%;
         position: fixed;
         background-color: var(--el-background-color-base);
