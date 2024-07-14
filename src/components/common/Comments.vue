@@ -216,6 +216,7 @@ ol {
 
         .content {
           color: var(--el-text-color-primary);
+          line-height: 30px;
 
           :deep(img) {
             max-height: 150px;
