@@ -51,6 +51,9 @@ const router = useRouter()
 // 事件总线
 const internalInstance = getCurrentInstance();  //当前组件实例
 const $bus = internalInstance.appContext.config.globalProperties.$bus;
+// 页面刷新
+import { inject } from 'vue';
+const reload = inject("reload");
 // 引入用户信息模块
 let {userId, isLogin} = user();
 let {MyIcon} = icon()
@@ -100,6 +103,7 @@ const sendMessage = () => {
       messageForm.content = ''
       messageEditor.value.clear()
       leaveMessageData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -132,6 +136,7 @@ if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", (value) => {
       type: 'success',
     })
     leaveMessageData()
+    reload();
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)
@@ -148,6 +153,7 @@ if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
       type: 'success',
     })
     leaveMessageData()
+    reload();
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)
@@ -166,6 +172,7 @@ if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
       type: 'success',
     })
     leaveMessageData()
+    reload();
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)

@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref, watch,provide,nextTick} from "vue";
 import {ElMessageBox} from 'element-plus'
 import dark from "@/utils/dark";
 import {useRouter} from "vue-router";
@@ -20,6 +20,13 @@ let {setDark} = dark()
 const locale = zhCn
 const includeList = ref([])
 const router = useRouter()
+const isRouterActive = ref(true)
+provide('reload', () => {
+  isRouterActive.value = false
+  nextTick(() => {
+    isRouterActive.value = true
+  })
+})
 watch(() => router, (newValue) => {
   console.log(newValue.currentRoute.value.meta)
   if (newValue.currentRoute.value.meta.keepAlive && includeList.value.indexOf(newValue.currentRoute.value.name) === -1) {

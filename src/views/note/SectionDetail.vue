@@ -105,11 +105,13 @@ import {
 } from "@/api/record";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
+import { inject } from 'vue';
 // 引入用户信息模块
 let {userId, isLogin} = user();
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 const router = useRouter()
+const reload = inject("reload");
 // 引入公共模块
 let {sectionID, toNote, sitename, toDetail} = publicFn()
 // 引入笔记内容模块
@@ -407,6 +409,7 @@ function comment(sectionID) {
         messageForm.content = ''
         messageEditor.value.clear()
         getSectionCommentData()
+        reload();
       }).catch(response => {
         //发生错误时执行的代码
         console.log(response)
@@ -428,6 +431,7 @@ function comment(sectionID) {
         type: 'success',
       })
       getSectionCommentData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -446,6 +450,7 @@ function comment(sectionID) {
         type: 'success',
       })
       getSectionCommentData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -463,6 +468,7 @@ function comment(sectionID) {
         type: 'success',
       })
       getSectionCommentData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)

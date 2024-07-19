@@ -140,11 +140,12 @@ import {
 } from "@/api/record";
 import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
-
+import { inject } from 'vue';
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = color()
 const router = useRouter()
+const reload = inject("reload");
 // 引入用户信息模块
 let {userId, isLogin} = user();
 // 引入公共模块
@@ -380,6 +381,7 @@ function comment(articleID) {
         messageForm.content = ''
         messageEditor.value.clear()
         getArticleCommentData()
+        reload();
       }).catch(response => {
         //发生错误时执行的代码
         console.log(response)
@@ -401,6 +403,7 @@ function comment(articleID) {
         type: 'success',
       })
       getArticleCommentData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -418,6 +421,7 @@ function comment(articleID) {
         type: 'success',
       })
       getArticleCommentData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
@@ -435,8 +439,8 @@ function comment(articleID) {
         message: '评论删除成功！',
         type: 'success',
       })
-      console.log("删除完成了")
       getArticleCommentData()
+      reload();
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
