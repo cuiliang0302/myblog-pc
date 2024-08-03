@@ -150,3 +150,7 @@ ul {
   bottom: 80px!important;
   background-color: var(--el-bg-color-overlay)!important;
 }
+// 搜索页面切换按钮
+.el-input-group--prepend .el-input-group__prepend .el-select .el-select__wrapper {
+  height: 42px!important;
+}

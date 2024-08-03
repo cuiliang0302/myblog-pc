@@ -263,4 +263,5 @@ onActivated(() => {
     list-style: none;
   }
 }
+
 </style>

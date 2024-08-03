@@ -165,12 +165,14 @@ const router = createRouter({
             children: [
                 {
                     path: "",
+                    name: "PersonalDefault",
                     redirect: "/personal/myIndex",
                     isAuth: true,
                     keepAlive: false,
                 },
                 {
                     path: "statistics",
+                    name: "PersonalStatistics",
                     redirect: "/personal/myIndex",
                     isAuth: true,
                     keepAlive: false,
