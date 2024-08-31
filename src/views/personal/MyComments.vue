@@ -9,7 +9,8 @@
                               placement="top">
               <div class="title">
                 <p class="article-title-hover" @click="$router.push(`/detail/article/${item.id}`)">{{ item.name }}</p>
-                <span class="comment-body">评论内容：</span><el-tag><span v-html="item.content"></span></el-tag>
+                <span class="comment-body">评论内容：</span>
+                <span class="comment-tag"><el-tag><span v-html="item.content"></span></el-tag></span>
               </div>
             </el-timeline-item>
           </el-timeline>
@@ -114,9 +115,18 @@ onMounted(() => {
   margin-top: 30px;
   display: inline-block;
 }
+.comment-tag{
+  :deep(.el-tag__content){
+    white-space: normal;
+  }
+  :deep(img){
+    max-height: 70px!important;
+  }
+}
 .content{
   :deep(img) {
     max-height: 150px;
   }
 }
+
 </style>
