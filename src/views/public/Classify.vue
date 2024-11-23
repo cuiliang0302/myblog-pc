@@ -4,16 +4,19 @@
   <div class="page">
     <div class="animate__animated animate__zoomIn">
       <el-collapse v-model="activeNames" @change="handleChange" accordion>
-        <el-collapse-item v-for="(item,index) in classifyList" :key="index"
-                          :title="formatMonth(item.month)+' ('+item.count+'篇)'"
-                          :name="index">
+        <el-collapse-item v-for="(data,month) in classifyList" :key="month"
+                          :title="formatMonth(month)+' (文章'+data.article+'篇 笔记'+data.section+'篇)'"
+                          :name="month">
           <div class="timeline">
             <el-timeline>
               <el-timeline-item v-for="(item,index) in articleList" :key="index"
                                 :timestamp="timeFull(item.created_time)"
-                                placement="top">
+                                placement="top"
+                                size="large"
+                                :color="item.type==='section'?'#2ecc71':'#9b59b6'"
+                                :icon="item.type==='section'?List:Checked">
                 <div class="title">
-                  <p class="article-title-hover" @click="router.push(`/detail/article/${item.id}`)">{{ item.title }}</p>
+                  <p class="article-title-hover" @click="toDetail(item)">{{ item.title }}</p>
                 </div>
               </el-timeline-item>
             </el-timeline>
@@ -27,18 +30,19 @@
 </template>
 
 <script setup name="Classify">
+import {List, Checked} from '@element-plus/icons-vue'
 import {
   ElCollapse,
   ElCollapseItem,
   ElTimeline,
   ElTimelineItem,
-  ElCard,
+  ElMessage,
 } from 'element-plus'
 import NavMenu from "@/components/common/NavMenu.vue";
 import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 
-import {nextTick, onActivated, onMounted, ref} from "vue";
+import {onActivated, onMounted, reactive, ref} from "vue";
 import {getClassify, getClassifyArticle} from "@/api/blog";
 import timeFormat from "@/utils/timeFormat";
 import {useRouter} from "vue-router";
@@ -53,12 +57,21 @@ const formatMonth = (value) => {
 }
 // 默认展开的数据
 const activeNames = ref([0]);
-// 月份列表
-const classifyList = ref([])
+// 月份汇总列表
+const classifyList = reactive({})
 
 // 获取归档月份列表数据
-async function classifyData() {
-  classifyList.value = await getClassify()
+function classifyData() {
+  getClassify().then((response) => {
+    console.log(response)
+    Object.keys(response).forEach((key) => {
+      classifyList[key] = response[key];
+    });
+  }).catch(response => {
+    //发生错误时执行的代码
+    console.log(response)
+    ElMessage.error('获取归档数据失败！')
+  });
 }
 
 // 指定月份文章列表
@@ -73,14 +86,22 @@ async function classifyArticleData(month) {
 // 切换月份事件
 const handleChange = (val) => {
   console.log("切换了", val)
+  articleList.value = []
   if (val.length !== 0) {
-    classifyArticleData(classifyList.value[val].month)
+    classifyArticleData(val)
   }
 };
+// 跳转文章或笔记
+const toDetail = (value) => {
+  console.log(value)
+  if (value['type'] === 'article') {
+    router.push('/detail/article/' + value['id'])
+  } else {
+    router.push('/detail/section/' + value['id'])
+  }
+}
 onMounted(async () => {
   await classifyData()
-  console.log(classifyList.value[0])
-  await classifyArticleData(classifyList.value[0].month)
 })
 onActivated(() => {
   store.commit('setMenuIndex', '4')

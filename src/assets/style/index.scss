@@ -1,6 +1,6 @@
-@import "src/assets/style/element-ui.scss";
-@import "src/assets/style/transition.scss";
-@import "src/assets/style/hover.scss";
+@use "src/assets/style/element-ui.scss";
+@use "src/assets/style/transition.scss";
+@use "src/assets/style/hover.scss";
 //@import "src/assets/style/theme/element-dark.scss";
 body {
   margin: 0;

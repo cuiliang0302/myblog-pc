@@ -4,7 +4,7 @@ import router from '@/router';
 import store from '@/store';
 import mitt from 'mitt'
 import '@/assets/style/index.scss'
-import animate from "animate.css";
+import 'animate.css';
 import ElementPlus from '@/plugins/ElementPlus'
 // import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import 'dayjs/locale/zh-cn'
