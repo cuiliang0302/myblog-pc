@@ -54,7 +54,7 @@ const router = createRouter({
             component: () => import('@/views/article/Category.vue'),
             meta: {
                 title: '文章分类',
-                keepAlive: true,
+                keepAlive: false,
                 isAuth: false
             }
         },
