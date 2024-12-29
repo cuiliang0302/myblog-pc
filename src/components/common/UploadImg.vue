@@ -67,8 +67,7 @@
 import {reactive, ref} from 'vue'
 import icon from "@/utils/icon";
 import timeFormat from "@/utils/timeFormat";
-import 'vue-cropper/dist/index.css'
-import {VueCropper} from "vue-cropper";
+import { VueCropper }  from "vue-cropper";
 import qiniuUpload from "@/utils/qiniuUpload";
 import {ElMessage} from 'element-plus'
 
