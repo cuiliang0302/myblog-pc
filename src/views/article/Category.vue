@@ -94,11 +94,14 @@ const changePage = (pageSize, pageNumber) => {
 }
 
 onMounted(() => {
+  console.log("onMounted")
   categoryID.value = router.currentRoute.value.params.id
   categoryNameData(categoryID.value)
+  store.commit('setMenuIndex', '2-' + categoryID.value)
   articleData(1, 10, categoryID.value)
 })
 onBeforeRouteUpdate(async (to) => {
+  console.log("onBeforeRouteUpdate")
   categoryID.value = to.params.id
   await categoryNameData(categoryID.value)
   await articleData(1, 10, categoryID.value)
