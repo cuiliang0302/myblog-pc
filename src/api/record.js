@@ -13,8 +13,9 @@ export function getSearch(params) {
 }
 
 // 获取全部留言数据
-export function getLeaveMessage() {
-	return index.get('/record/leaveMessage/')
+export function getLeaveMessage(params) {
+	const url = '/record/leaveMessage/'
+	return index.get(url, params)
 }
 
 // 获取单个留言数据

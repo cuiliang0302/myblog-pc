@@ -1,5 +1,6 @@
 <!--评论回复组件-->
 <template>
+<!--  评论列表-->
   <ol class="comments" v-for="(item,index) in commentsList" :key="index">
     <li>
       <span><el-avatar :src="item.photo" :size="50"></el-avatar></span>
@@ -21,7 +22,7 @@
               </span>
             </span>
             <span>
-              <span v-if="isReply(item.user)===true" @click="replyMessage(item.id)">
+              <span v-if="isReply(item.user)===true" @click="replyMessage(item.id,item.root)">
                 <MyIcon type="icon-comment"/>回复
               </span>
               <span v-else class="no-choose"><MyIcon type="icon-comment"/>回复</span>
@@ -39,13 +40,17 @@
               </span>
               <span v-else class="no-choose"><MyIcon type="icon-delete"/>删除</span></span>
           </p>
+          <span class="reply-action" v-if="item.child_count > 0" @click="replyView(item.id)">
+            ——展开{{ item.child_count }}条回复<el-icon><ArrowDownBold/></el-icon>
+          </span>
         </div>
       </span>
     </li>
-    <div class="reply" v-if="item.child.length!==0">
+    <div class="reply">
       <Comments :commentsList="item.child"></Comments>
     </div>
   </ol>
+
   <el-dialog
       v-model="textareaShow"
       title="回复留言"
@@ -67,17 +72,18 @@ import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import user from "@/utils/user";
 import {ElMessage} from "element-plus";
+import {ArrowDownBold} from "@element-plus/icons-vue"
 
 let {MyIcon} = icon()
 const props = defineProps({
-  // 评论回复列表
+  // 评论列表
   commentsList: {
     type: Array,
-    required: true,
+    required: false,
     default: []
   },
 })
-const emit = defineEmits(['likeMessage', 'delMessage', 'replySend'])
+const emit = defineEmits(['likeMessage', 'delMessage', 'replySend', 'replyView'])
 // 事件总线
 const internalInstance = getCurrentInstance();
 const $bus = internalInstance.appContext.config.globalProperties.$bus;
@@ -96,6 +102,12 @@ const isLike = (messageId) => {
   }
   return false;
 }
+// 查看回复
+const replyView = (messageId) => {
+  console.log("查看回复了啊")
+  $bus.emit("replyView", messageId);
+  console.log(messageId)
+}
 // 留言评论点赞
 const likeMessage = (messageId, likeMessage) => {
   console.log("留言点赞了啊")
@@ -105,6 +117,7 @@ const likeMessage = (messageId, likeMessage) => {
     'like': likeMessage + 1
   }
   $bus.emit("likeMessage", value);
+  console.log(messageId)
 }
 // 回复输入框默认状态
 const textareaShow = ref(false)
@@ -114,14 +127,16 @@ const replyEditor = ref(null)
 const replyForm = reactive({
   content: '',
   user: '',
-  father: ''
+  father: '',
+  root: ''
 })
 // 点击留言评论回复事件
-const replyMessage = (father) => {
+const replyMessage = (father,root) => {
   console.log(father)
   textareaShow.value = true
   replyForm.father = father
   replyForm.user = userId.value
+  replyForm.root = root
 }
 // 发送评论留言回复事件
 const replySend = () => {
@@ -132,6 +147,8 @@ const replySend = () => {
     ElMessage("请输入内容！")
     return false
   } else {
+    console.log(replyForm)
+    console.log(replyForm.content)
     $bus.emit("replySend", replyForm);
     replyEditor.value.clear()
     replyForm.content = ''
@@ -252,6 +269,15 @@ ol {
         left: -9px;
       }
     }
+  }
+
+  .reply-action {
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .reply-action:hover {
+    color: var(--el-color-primary);
   }
 
   .reply {

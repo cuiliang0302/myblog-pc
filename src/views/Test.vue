@@ -1,72 +1,67 @@
 <template>
-  <h1>这是测试页</h1>
-  <div class="carousel">
-    <el-skeleton :loading="loading" animated>
-      <template #template>
-        <el-skeleton-item variant="image" style="width: 900px; height: 500px"/>
-      </template>
-      <template #default>
-        <el-carousel width="900px" height="500px" :interval="5000">
-          <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
-            <el-image
-                class="pointer"
-                style="width: 900px; height: 500px"
-                :src="carousel.img"
-                :fit="'fill'"
-                :key="carousel.id"
-            >
-              <template #placeholder>
-                <Loading type="image"></Loading>
-              </template>
-            </el-image>
-          </el-carousel-item>
-        </el-carousel>
-      </template>
-    </el-skeleton>
+  <div class="item" v-for="item in items" :key="item.id">
+    {{ item.content }}
   </div>
+  <div v-if="loading" class="loading">加载中...</div>
 </template>
-<script setup name="Test">
-import {nextTick, onMounted, ref} from "vue";
-import {getCarousel} from "@/api/management";
-//轮播图
-const carouselList = ref([])
 
-async function CarouselData() {
-  carouselList.value = await getCarousel()
-  console.log(carouselList.value)
+<script setup>
+import {ref, onMounted, onUnmounted} from "vue";
 
-}
+// 数据状态
+const items = ref([]); // 数据列表
+const loading = ref(false); // 加载状态
+const page = ref(1); // 当前分页
 
-const loading = ref(true)
+// 模拟获取数据
+const fetchData = async () => {
+  if (loading.value) return; // 防止重复加载
+  loading.value = true;
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // 模拟网络延迟
+  const newItems = Array.from({ length: 10 }, (_, i) => ({
+    id: (page.value - 1) * 10 + i + 1,  // 确保 ID 从 1 开始
+    content: `内容 ${((page.value - 1) * 10) + i + 1}`,  // 内容对应 ID
+  }));
+
+  items.value.push(...newItems);
+  loading.value = false;
+  page.value += 1; // 增加页数
+};
+
+
+// 处理页面滚动事件
+const handleScroll = () => {
+  const {scrollTop, clientHeight, scrollHeight} = document.documentElement;
+  if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
+    fetchData();
+  }
+};
+
+// 挂载和卸载滚动监听
 onMounted(() => {
-  CarouselData()
-  setTimeout(() => {
-    loading.value = false
-  }, 5000)
-})
+  fetchData(); // 初始化加载数据
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
-<style scoped lang="scss">
-.demonstration {
-  color: var(--el-text-color-secondary);
-}
 
-.el-carousel__item h3 {
-  color: #475669;
-  opacity: 0.75;
-  line-height: 150px;
+<style scoped>
+body {
   margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.item {
+  padding: 100px;
+  border-bottom: 1px solid #eee;
+}
+
+.loading {
   text-align: center;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.carousel {
-  width: 900px;
+  padding: 10px;
+  color: #999;
 }
 </style>

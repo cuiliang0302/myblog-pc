@@ -85,7 +85,7 @@ const toCarousel = (url, title) => {
   window.umami.track("点击轮播图：" + title)
   window.open(url)
 }
-// 轮播图加载动画是否开启
+// 加载动画是否开启
 const carouselLoading = ref(true)
 //最新文章列表
 const article = reactive({
