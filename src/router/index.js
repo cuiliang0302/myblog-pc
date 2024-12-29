@@ -268,22 +268,7 @@ const router = createRouter({
                 keepAlive: false,
                 isAuth: false
             }
-        },
-        {path: '/test1', component: () => import('@/views/Test1.vue')},
-        {
-            path: '/404',
-            name: '404',
-            component: () => import('@/views/404.vue'),
-            meta: {
-                title: '404-页面找不到',
-                keepAlive: true,
-                isAuth: false
-            }
-        },
-        {
-            path: '/:pathMatch(.*)',
-            redirect: '/404'
-        },
+        }
     ]
 })
 // 路由导航守卫
