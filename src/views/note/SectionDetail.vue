@@ -597,7 +597,8 @@ function action(sectionID, sectionData) {
 
       .el-tree {
         height: 82vh;
-        overflow: hidden;
+        overflow-x: hidden; /* 水平隐藏 */
+        overflow-y: auto; /* 垂直滚动 */
         width: 15%;
         position: fixed;
         background-color: var(--el-background-color-base);
