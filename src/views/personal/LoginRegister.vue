@@ -71,7 +71,7 @@
               <VerifyImgBtn :isPassing="isPassing" @verifyPass="verifyPass" :btnType="btnType"></VerifyImgBtn>
             </el-form-item>
             <el-form-item class="login-setting">
-              <span class="remember"><el-checkbox v-model="remember" label="保持登录"></el-checkbox></span>
+              <span class="remember"><el-checkbox v-model="remember" label="保持登录" :disabled="true"></el-checkbox></span>
               <span class="forget pointer" @click="router.push('/setPassword')">忘记密码</span>
             </el-form-item>
             <el-form-item class="login-btn">
