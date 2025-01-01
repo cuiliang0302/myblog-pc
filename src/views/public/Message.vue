@@ -152,6 +152,17 @@ function leaveMessageData() {
   })
 }
 
+// 刷新留言列表
+function leaveMessageDataRefresh() {
+  getLeaveMessage({'page': 1, 'size': 1000}).then(response => {
+    messageList.data = []
+    messageList.data.push(...response.results)
+  }).catch(error => {
+    console.log(error)
+    ElMessage.error("获取留言列表数据失败")
+  })
+}
+
 // 是否还有更多需要加载
 const noMore = computed(() => messageList.data.length !== messageList.count);
 // 处理页面滚动事件
@@ -188,7 +199,7 @@ if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", (value) => {
       message: '点赞成功！',
       type: 'success',
     })
-    leaveMessageData()
+    leaveMessageDataRefresh()
     reload();
   }).catch(response => {
     //发生错误时执行的代码
@@ -205,7 +216,7 @@ if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
       message: '回复成功！',
       type: 'success',
     })
-    leaveMessageData()
+    leaveMessageDataRefresh()
     reload();
   }).catch(response => {
     //发生错误时执行的代码
@@ -224,7 +235,7 @@ if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
       message: '留言删除成功！',
       type: 'success',
     })
-    leaveMessageData()
+    leaveMessageDataRefresh()
     reload();
   }).catch(response => {
     //发生错误时执行的代码
