@@ -72,7 +72,7 @@
               <VerifyImgBtn :isPassing="isPassing" @verifyPass="verifyPass" :btnType="btnType"></VerifyImgBtn>
             </el-form-item>
             <el-form-item class="login-setting">
-              <span class="remember"><el-checkbox v-model="remember" label="保持登录" :disabled="true"></el-checkbox></span>
+              <span class="remember"><el-checkbox v-model="keep_login" label="保持登录"></el-checkbox></span>
               <span class="forget pointer" @click="router.push('/setPassword')">忘记密码</span>
             </el-form-item>
             <el-form-item class="login-btn">
@@ -127,6 +127,7 @@ import {ElMessage} from 'element-plus'
 import {getOAuthID, getRegister, postCode, postLogin, postRegister} from "@/api/account";
 import {getSiteConfig} from "@/api/management";
 import useStore from "@/store";
+import {storeToRefs} from 'pinia'
 
 const {user,common} = useStore();
 const router = useRouter();
@@ -134,7 +135,7 @@ let {MyIcon} = icon()
 // 引入公共模块
 let {switchLogin, switchRegister, bgiURL, component, siteName} = publicFn()
 // 引入登录模块
-let {loginForm, loginRules, remember, isPassing, verifyPass, btnType, otherLogin} = loginFn()
+let {loginForm, loginRules, keep_login, isPassing, verifyPass, btnType, otherLogin} = loginFn()
 // 引入注册模块
 let {registerForm, registerRules, codeBtnDisabled, registerPass} = registerFn()
 // 登录表单对象
@@ -149,7 +150,7 @@ const loginSubmit = () => {
           message: '登录成功！',
           type: 'success',
         })
-        user.login(response.userid, response.token, response.username, remember.value)
+        user.login(response.userid, response.token, response.username, keep_login.value)
         router.push(common.next_path)
       }).catch(response => {
         //发生错误时执行的代码
@@ -270,7 +271,7 @@ function loginFn() {
     }]
   }
   // 是否记住密码
-  const remember = ref(true)
+  const {keep_login} = storeToRefs(user)
   // 滑块验证是否通过
   const isPassing = ref(false)
   // 滑块验证按钮样式
@@ -372,7 +373,7 @@ function loginFn() {
   // 初始化，获取用户是否记住密码状态
   onMounted(() => {
   })
-  return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
+  return {loginForm, keep_login, isPassing, verifyPass, btnType, otherLogin, loginRules}
 }
 
 // 注册模块

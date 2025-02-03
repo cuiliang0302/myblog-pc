@@ -5,7 +5,7 @@ const useUserStore = defineStore('user', {
     user_id: '',
     token: '',
     username: '',
-    keep_login: false,
+    keep_login: true,
     is_login: false,
   }),
   // 计算属性
