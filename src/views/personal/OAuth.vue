@@ -8,7 +8,9 @@ import {ElMessage} from 'element-plus'
 import {onMounted, reactive, ref} from "vue";
 import {postOAuthCallback} from "@/api/account";
 import Loading from "@/components/common/Loading.vue"
-import store from "@/store";
+import useStore from "@/store";
+
+const {common} = useStore();
 
 const router = useRouter()
 // 平台名称
@@ -28,10 +30,10 @@ const postCallback = () => {
       message: '登录成功！',
       type: 'success',
     })
-    store.commit('setKeepLogin', false)
-    store.commit('setUserSession', response)
-    console.log(store.state.nextPath)
-    router.push(store.state.nextPath)
+    //store.commit('setKeepLogin', false)
+    //store.commit('setUserSession', response)
+    // console.log(store.state.F)
+    router.push(common.next_path)
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)

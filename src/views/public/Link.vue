@@ -20,7 +20,8 @@ import BackTop from "@/components/common/BackTop.vue"
 import LinkContent from "@/components/link/LinkContent.vue"
 import {onActivated, onMounted, reactive} from "vue";
 import {getLink} from "@/api/management";
-import store from "@/store";
+import useStore from "@/store";
+const {common} = useStore();
 
 const recommend = reactive(
     {
@@ -49,7 +50,8 @@ onMounted(() => {
   linkData()
 })
 onActivated(() => {
-  store.commit('setMenuIndex', '')
+  common.setMenuIndex('')
+  //store.commit('setMenuIndex', '')
 })
 </script>
 

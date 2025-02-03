@@ -27,9 +27,8 @@ import {reactive, ref} from "vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {getRegister, postCode, putChangeEmail} from "@/api/account";
 import {ElMessage} from "element-plus";
-import user from "@/utils/user";
-// 引入用户信息模块
-let {userId,userName} = user();
+import useStore from "@/store";
+const {user} = useStore();
 // 表单对象
 const emailFormRef = ref(null)
 // 获取验证码表单
@@ -49,7 +48,7 @@ const codeBtnDisabled = ref(true)
 const pass = () => {
   console.log("通过验证了,开始获取验证码")
   codeForm.contact = emailForm.newEmail
-  codeForm.username = userName.value
+  codeForm.username = user.username
   postCode(codeForm).then((response) => {
     console.log(response)
     ElMessage({
@@ -95,7 +94,7 @@ const onSubmit = () => {
   console.log('submit!')
   emailFormRef.value.validate((valid) => {
     if (valid) {
-      putChangeEmail(userId.value, emailForm).then((response) => {
+      putChangeEmail(user.user_id, emailForm).then((response) => {
         console.log(response)
         ElMessage({
           message: '邮箱号修改成功！',

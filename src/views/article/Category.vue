@@ -50,7 +50,8 @@ import Pagination from "@/components/common/Pagination.vue"
 import {onActivated, onMounted, reactive, ref} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getArticle, getCategoryName} from "@/api/blog";
-import store from "@/store";
+import useStore from "@/store";
+const {common} = useStore();
 // 文章分类名称
 const router = useRouter()
 // 当前文章分类id
@@ -97,7 +98,8 @@ onMounted(() => {
   console.log("onMounted")
   categoryID.value = router.currentRoute.value.params.id
   categoryNameData(categoryID.value)
-  store.commit('setMenuIndex', '2-' + categoryID.value)
+  common.setMenuIndex('2-' + categoryID.value)
+  // store.commit('setMenuIndex', '2-' + categoryID.value)
   articleData(1, 10, categoryID.value)
 })
 onBeforeRouteUpdate(async (to) => {
@@ -107,7 +109,8 @@ onBeforeRouteUpdate(async (to) => {
   await articleData(1, 10, categoryID.value)
 });
 onActivated(() => {
-  store.commit('setMenuIndex', '2-' + router.currentRoute.value.params.id)
+  common.setMenuIndex('2-' + router.currentRoute.value.params.id)
+  // store.commit('setMenuIndex', '2-' + router.currentRoute.value.params.id)
 })
 </script>
 

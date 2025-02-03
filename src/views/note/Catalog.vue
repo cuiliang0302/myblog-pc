@@ -19,9 +19,9 @@ import BackTop from "@/components/common/BackTop.vue"
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {onActivated, onMounted, ref} from "vue";
 import {getCatalogueList, getNoteDetail} from "@/api/blog";
-import store from "@/store";
-
 const router = useRouter()
+import useStore from "@/store";
+const {common} = useStore();
 // 笔记名称
 const title = ref()
 // 点击跳转笔记详情页
@@ -65,7 +65,8 @@ onMounted(async () => {
   let catalogueID = router.currentRoute.value.params.id
   await catalogueData(catalogueID)
   await titleData(catalogueID)
-  store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
+  common.setMenuIndex('3-' + router.currentRoute.value.params.id)
+  // store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
 })
 onBeforeRouteUpdate(async (to) => {
   console.log("onbefore了啊")
@@ -74,7 +75,8 @@ onBeforeRouteUpdate(async (to) => {
   await titleData(to.params.id)
 });
 onActivated(() => {
-  store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
+  common.setMenuIndex('3-' + router.currentRoute.value.params.id)
+  // store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
   console.log("setMenuIndex", '3-' + router.currentRoute.value.params.id)
 })
 </script>

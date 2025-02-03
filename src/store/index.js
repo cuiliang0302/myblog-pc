@@ -1,19 +1,12 @@
-import {createStore} from 'vuex'
-import mutations from '@/store/mutations'
-import state from "@/store/state";
-import createVuexAlong from 'vuex-along'
+import useUserStore from '@/store/user'
+import useThemeStore from "@/store/theme";
+import useCommonStore from '@/store/common'
 
-export default createStore({
-    state,
-    mutations,
-    plugins: [
-        createVuexAlong({
-            local: {
-                list: ["userLocal", "keepLogin"],
-            },
-            session: {
-                list: ["outline", "outlineShow", "userSession", "nextPath", "asideMenuFold", "dark", "theme", "navigation", "menuIndex", "isDark"],
-            }
-        })
-    ]
-})
+// 统一导出useStore方法
+export default function useStore() {
+  return {
+    user: useUserStore(),
+    theme: useThemeStore(),
+    common: useCommonStore(),
+  }
+}

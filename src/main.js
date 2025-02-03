@@ -16,12 +16,12 @@ import "@/assets/style/hover-min.css";
 import 'nprogress/nprogress.css'
 import 'vue-loaders/dist/vue-loaders.css';
 import VueLoaders from 'vue-loaders';
-
+import pinia from '@/store/pinia'
 const app = createApp(App)
 //绑定事件总线
 app.config.globalProperties.$bus = new mitt();
+app.use(pinia)
 app.use(router)
-app.use(store)
 app.use(ElementPlus)
 app.use(VueLoaders)
 app.mount('#app')

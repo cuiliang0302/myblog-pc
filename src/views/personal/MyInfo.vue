@@ -6,7 +6,7 @@
                    @saveImg="saveImg"></UploadImg>
         <el-avatar :size="100" :src="userInfoForm.photo"></el-avatar>
         <span class="photo-btn">
-          <el-button size="medium" type="success">
+          <el-button size="default" type="success">
             <label class="pointer" for="uploads">更换头像</label>
           </el-button>
           <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
@@ -68,14 +68,13 @@
 import {onMounted, reactive, ref} from "vue";
 import {getRegister, getUserinfoId, putUserinfoId} from "@/api/account";
 import {getAreaData} from "@/api/public";
-import user from "@/utils/user";
 import UploadImg from "@/components/common/UploadImg.vue"
 import {ElMessage} from "element-plus";
 import timeFormat from "@/utils/timeFormat";
-
+import useStore from "@/store";
+const {user} = useStore();
 let {timeDate} = timeFormat()
-// 引入用户信息模块
-let {userId} = user();
+
 // 我的信息表单
 const userInfoForm = reactive({});
 // 表单对象
@@ -182,14 +181,14 @@ const changeDate = (value) => {
 }
 // 表单重置事件
 const reset = () => {
-  getUserinfo(userId.value)
+  getUserinfo(user.user_id)
 }
 // 表单提交事件
 const onSubmit = () => {
   console.log('submit!')
   userInfoFormRef.value.validate((valid) => {
     if (valid) {
-      putUserinfoId(userId.value, userInfoForm).then((response) => {
+      putUserinfoId(user.user_id, userInfoForm).then((response) => {
         console.log(response)
         ElMessage({
           message: '信息修改成功！',
@@ -206,7 +205,7 @@ const onSubmit = () => {
   })
 }
 onMounted(() => {
-  getUserinfo(userId.value)
+  getUserinfo(user.user_id)
   getArea()
 })
 </script>

@@ -35,10 +35,9 @@
 import timeFormat from "@/utils/timeFormat";
 import {onMounted, ref} from "vue";
 import {getArticleHistory, getSectionHistory} from "@/api/record";
-import user from "@/utils/user";
-let {timeFull} = timeFormat()
-// 引入用户信息模块
-let {userId} = user();
+import useStore from "@/store";
+const {user} = useStore();
+const {timeFull} = timeFormat()
 const activeName = ref('article')
 const handleClick = (tab) => {
   console.log(tab.props.name)
@@ -52,7 +51,7 @@ const collectList = ref([])
 
 // 获取文章浏览记录
 async function getArticleHistoryData() {
-  let collectHistory_data = await getArticleHistory(NaN, userId.value)
+  let collectHistory_data = await getArticleHistory(NaN, user.user_id)
   console.log(collectHistory_data)
   let collect_data = []
   for (let index in collectHistory_data) {
@@ -71,7 +70,7 @@ async function getArticleHistoryData() {
 
 // 获取笔记浏览记录
 async function getSectionHistoryData() {
-  let collectHistory_data = await getSectionHistory(NaN, userId.value)
+  let collectHistory_data = await getSectionHistory(NaN, user.user_id)
   console.log(collectHistory_data)
   let collect_data = []
   for (let index in collectHistory_data) {

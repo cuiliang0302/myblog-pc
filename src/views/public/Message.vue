@@ -8,10 +8,10 @@
         </div>
       </template>
       <div class="input-field">
-        <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+        <span v-if="user.isLoggedIn===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
         <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
         <span><Editor ref="messageEditor"></Editor></span>
-        <span v-if="isLogin===true"><el-button type="primary" round @click="sendMessage">留言</el-button></span>
+        <span v-if="user.isLoggedIn===true"><el-button type="primary" round @click="sendMessage">留言</el-button></span>
         <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
       </div>
       <div class="comment-list">
@@ -47,12 +47,12 @@ import {
   patchLeaveMessage, getLeaveMessageDetail
 } from "@/api/record";
 import icon from "@/utils/icon";
-import user from "@/utils/user";
 import {getSiteConfig} from "@/api/management";
 import {getUserinfoId} from "@/api/account";
-import store from "@/store";
 import {useRouter} from "vue-router";
+import useStore from "@/store";
 
+const {user,common} = useStore();
 const router = useRouter()
 // 事件总线
 const internalInstance = getCurrentInstance();  //当前组件实例
@@ -61,8 +61,6 @@ const $bus = internalInstance.appContext.config.globalProperties.$bus;
 import {inject} from 'vue';
 
 const reload = inject("reload");
-// 引入用户信息模块
-let {userId, isLogin} = user();
 let {MyIcon} = icon()
 // 登录弹窗对象
 const loginPopupRef = ref(null)
@@ -80,7 +78,7 @@ async function getLogoData() {
 
 // 获取用户头像
 async function getPhotoData() {
-  let data = await getUserinfoId(userId.value)
+  let data = await getUserinfoId(user.user_id)
   console.log(data)
   photo.value = data.photo
 }
@@ -107,7 +105,7 @@ const sendMessage = () => {
   messageForm.content = messageEditor.value.content
   console.log(messageForm.content)
   if (messageForm.content) {
-    messageForm.user = userId.value
+    messageForm.user = user.user_id
     postLeaveMessage(messageForm).then((response) => {
       console.log(response)
       ElMessage({
@@ -131,7 +129,8 @@ const sendMessage = () => {
 }
 // 弹出登录框
 const showLogin = () => {
-  store.commit('setNextPath', router.currentRoute.value.fullPath)
+  //store.commit('setNextPath', router.currentRoute.value.fullPath)
+  common.setNextPath(router.currentRoute.value.fullPath)
   loginPopupRef.value.showPopup()
 }
 
@@ -244,11 +243,12 @@ if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
   });
 });
 onMounted(() => {
-  store.commit('setMenuIndex', '5')
+  common.setMenuIndex('5')
+  // //store.commit('setMenuIndex', '5')
   leaveMessageData()
   // 监听滚动事件
   window.addEventListener("scroll", handleScroll);
-  if (isLogin.value === true) {
+  if (user.isLoggedIn === true) {
     getPhotoData()
   } else {
     getLogoData()

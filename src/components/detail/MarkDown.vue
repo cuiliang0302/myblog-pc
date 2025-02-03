@@ -8,7 +8,6 @@
 </template>
 
 <script setup>
-import store from "@/store";
 import {
   ElImageViewer,
 } from 'element-plus'
@@ -31,8 +30,11 @@ import css from 'highlight.js/lib/languages/css';
 import scss from 'highlight.js/lib/languages/scss';
 import xml from 'highlight.js/lib/languages/xml';
 import {ElMessage} from "element-plus";
-import {nextTick, onBeforeUnmount, onMounted, reactive, ref, watch} from "vue";
-
+import {nextTick, onMounted, reactive, ref, watch} from "vue";
+import useStore from "@/store";
+import {storeToRefs} from 'pinia'
+const {common} = useStore();
+const {outline_list} = storeToRefs(common)
 hljs.registerLanguage('json', json);
 hljs.registerLanguage('python', python);
 hljs.registerLanguage('bash', bash);
@@ -102,8 +104,9 @@ async function getTitle() {
     indent: hTags.indexOf(el.tagName),
     height: el.offsetTop,
   }));
-  // console.log(titleList.value)
-  store.commit('setOutline', titleList.value)
+  console.log(titleList.value)
+  outline_list.value = titleList.value
+  // store.commit('setOutline', titleList.value)
 }
 
 // 监听markdown内容发生变化

@@ -64,12 +64,11 @@ import BackTop from "@/components/common/BackTop.vue"
 import icon from '@/utils/icon'
 import Fuse from 'fuse.js'
 import {getSearch, getSearchHot} from "@/api/record";
-import user from "@/utils/user";
-import store from "@/store";
 import {ElLoading, ElMessage} from "element-plus";
-// 引入用户信息模块
-let {userId, isLogin} = user();
-let {MyIcon} = icon()
+import useStore from "@/store";
+
+const {user,common} = useStore();
+const {MyIcon} = icon()
 // 搜索关键词
 const key = ref('')
 // 搜索类型选项
@@ -155,8 +154,8 @@ const handleSelect = (item) => {
 // 提交搜索请求
 const searchFn = () => {
   let user_id
-  if (isLogin.value) {
-    user_id = userId.value
+  if (user.isLoggedIn) {
+    user_id = user.user_id
   } else {
     user_id = NaN
   }
@@ -207,9 +206,11 @@ const search = () => {
 }
 onMounted(() => {
   searchKeyHotData()
+  common.setMenuIndex('7')
 })
 onActivated(() => {
-  store.commit('setMenuIndex', '7')
+
+  // //store.commit('setMenuIndex', '7')
 })
 </script>
 

@@ -70,11 +70,12 @@
 import {reactive, ref, getCurrentInstance} from "vue";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
-import user from "@/utils/user";
 import {ElMessage} from "element-plus";
 import {ArrowDownBold} from "@element-plus/icons-vue"
+import useStore from "@/store";
 
-let {MyIcon} = icon()
+const {user} = useStore();
+const {MyIcon} = icon()
 const props = defineProps({
   // 评论列表
   commentsList: {
@@ -87,8 +88,6 @@ const emit = defineEmits(['likeMessage', 'delMessage', 'replySend', 'replyView']
 // 事件总线
 const internalInstance = getCurrentInstance();
 const $bus = internalInstance.appContext.config.globalProperties.$bus;
-// 引入用户信息模块
-let {userId, isLogin} = user();
 // 时间显示几天前
 let {timeAgo} = timeFormat()
 // 已点赞列表
@@ -135,7 +134,7 @@ const replyMessage = (father,root) => {
   console.log(father)
   textareaShow.value = true
   replyForm.father = father
-  replyForm.user = userId.value
+  replyForm.user = user.user_id
   replyForm.root = root
 }
 // 发送评论留言回复事件
@@ -157,7 +156,7 @@ const replySend = () => {
 }
 // 判断是否可回复留言
 const isReply = (userID) => {
-  if (isLogin.value === true && userId.value !== userID) {
+  if (user.isLoggedIn === true && user.user_id !== userID) {
     return true
   } else {
     return false
@@ -165,7 +164,7 @@ const isReply = (userID) => {
 }
 // 判断评论留言能否删除
 const isDelete = (userID) => {
-  if (isLogin.value === false || userID !== userId.value) {
+  if (user.isLoggedIn === false || userID !== user.user_id) {
     return false
   } else {
     return true

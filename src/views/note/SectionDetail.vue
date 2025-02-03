@@ -1,5 +1,5 @@
 <template>
-  <div v-title="sectionData.title+'-'+sitename">
+  <div v-title="sectionData.title+'-'+siteName">
     <section class="detail">
       <NavMenu></NavMenu>
       <div class="detail-page">
@@ -53,10 +53,10 @@
           <div class="comments detail-card" id="comment">
             <h2>📝 评论交流</h2>
             <div class="input-field">
-              <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+              <span v-if="user.isLoggedIn===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
               <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
               <span><Editor ref="messageEditor"></Editor></span>
-              <span v-if="isLogin===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
+              <span v-if="user.isLoggedIn===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
               <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
             </div>
             <div class="comment-list">
@@ -103,17 +103,17 @@ import {
   postSectionComment, postSectionHistory,
   patchSectionComment, putSectionHistory
 } from "@/api/record";
-import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import { inject } from 'vue';
-// 引入用户信息模块
-let {userId, isLogin} = user();
+import useStore from "@/store";
+import {storeToRefs} from 'pinia'
+const {user,common} = useStore();
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 const router = useRouter()
 const reload = inject("reload");
 // 引入公共模块
-let {sectionID, toNote, sitename, toDetail} = publicFn()
+let {sectionID, toNote, siteName, toDetail} = publicFn()
 // 引入笔记内容模块
 let {sectionData, context, getSectionData, contextData} = section()
 // 引入笔记目录模块
@@ -152,7 +152,7 @@ onMounted(async () => {
     background: 'rgba(255, 255, 255, 0.3)',
   })
   window.scrollTo({top: 0})
-  store.commit('setOutline', '')
+  // store.commit('setOutline', '')
   sectionID.value = router.currentRoute.value.params.id
   await getSectionData(sectionID.value)
   loading.close()
@@ -164,7 +164,7 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
-  store.commit('setOutline', '')
+  // store.commit('setOutline', '')
 })
 onBeforeRouteUpdate(async (to) => {
   // 开启加载中动画
@@ -174,7 +174,7 @@ onBeforeRouteUpdate(async (to) => {
     background: 'rgba(255, 255, 255, 0.3)',
   })
   window.scrollTo({top: 0})
-  store.commit('setOutline', '')
+  // store.commit('setOutline', '')
   for (let key in context) {
     delete context[key];
   }
@@ -196,13 +196,13 @@ function publicFn() {
     router.push({path: `/catalog/${noteId}`})
   }
   // 站点名称
-  const sitename = ref('')
+  const siteName = ref('')
 
   // 获取站点名称
   async function siteConfigData() {
     let siteConfig_data = await getSiteConfig()
     // console.log(siteConfig_data)
-    sitename.value = siteConfig_data.name
+    siteName.value = siteConfig_data.name
   }
 
   // 点击跳转其他笔记事件
@@ -214,7 +214,7 @@ function publicFn() {
   onMounted(() => {
     siteConfigData()
   })
-  return {sectionID, toNote, sitename, toDetail}
+  return {sectionID, toNote, siteName, toDetail}
 }
 
 // 笔记目录模块
@@ -306,7 +306,8 @@ function section() {
       }
     }
     activeMenu.value = "3-" + sectionData.note_id
-    store.commit('setMenuIndex', activeMenu)
+    common.setMenuIndex(activeMenu.value)
+    // store.commit('setMenuIndex', activeMenu)
   }
 
   // 获取笔记上下篇
@@ -364,7 +365,7 @@ function comment(sectionID) {
 
   // 获取用户头像
   async function getPhotoData() {
-    let data = await getUserinfoId(userId.value)
+    let data = await getUserinfoId(user.user_id)
     console.log(data)
     photo.value = data.photo
   }
@@ -387,7 +388,8 @@ function comment(sectionID) {
   })
   // 弹出登录框
   const showLogin = () => {
-    store.commit('setNextPath', router.currentRoute.value.fullPath)
+    common.setNextPath(router.currentRoute.value.fullPath)
+    // store.commit('setNextPath', router.currentRoute.value.fullPath)
     loginPopupRef.value.showPopup()
   }
 // 点击发表评论事件
@@ -396,7 +398,7 @@ function comment(sectionID) {
     messageForm.content = messageEditor.value.content
     console.log(messageForm.content)
     if (messageForm.content) {
-      messageForm.user = userId.value
+      messageForm.user = user.user_id
       messageForm['section_id'] = sectionID.value
       messageForm['url'] = window.location.href
       console.log(messageForm)
@@ -477,7 +479,7 @@ function comment(sectionID) {
   });
   onMounted(() => {
     getSectionCommentData()
-    if (isLogin.value === true) {
+    if (user.isLoggedIn === true) {
       getPhotoData()
     } else {
       getLogoData()
@@ -490,8 +492,6 @@ function comment(sectionID) {
 
 // 动作菜单模块
 function action(sectionID, sectionData) {
-  // 引入用户信息模块
-  let {userId, isLogin} = user();
   // 笔记点赞事件
   const likeClick = () => {
     const params = {id: sectionID.value, 'kind': 'section'}
@@ -514,8 +514,8 @@ function action(sectionID, sectionData) {
   // 获取笔记浏览记录（是否已收藏）
   async function getSectionHistoryData() {
     await nextTick()
-    if (isLogin.value === true) {
-      let res = await getSectionHistory(sectionID.value, userId.value)
+    if (user.isLoggedIn === true) {
+      let res = await getSectionHistory(sectionID.value, user.user_id)
       console.log(res)
       isCollect.value = res.is_collect
       console.log(isCollect.value)
@@ -529,10 +529,10 @@ function action(sectionID, sectionData) {
   })
   // 子组件添加/取消收藏事件
   const collectClick = () => {
-    if (isLogin.value === true) {
+    if (user.isLoggedIn === true) {
       console.log("当前收藏状态是", isCollect.value)
       isCollect.value = !isCollect.value
-      CollectForm.user = userId.value
+      CollectForm.user = user.user_id
       CollectForm.is_collect = isCollect.value
       CollectForm['section_id'] = sectionID
       putSectionHistory(CollectForm).then((response) => {
@@ -555,7 +555,8 @@ function action(sectionID, sectionData) {
       });
     } else {
       console.log("先登录")
-      store.commit('setNextPath', router.currentRoute.value.fullPath)
+      common.setNextPath(router.currentRoute.value.fullPath)
+      // store.commit('setNextPath', router.currentRoute.value.fullPath)
       loginPopupRef.value.showPopup()
     }
   }
@@ -567,9 +568,9 @@ function action(sectionID, sectionData) {
 
   // 添加笔记浏览记录
   async function postSectionHistoryData(section_id) {
-    if (isLogin.value === true) {
+    if (user.isLoggedIn === true) {
       sectionHistoryForm.section_id = section_id
-      sectionHistoryForm.user = userId.value
+      sectionHistoryForm.user = user.user_id
       console.log(sectionHistoryForm)
       let res = await postSectionHistory(sectionHistoryForm)
       console.log(res)

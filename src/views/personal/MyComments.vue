@@ -38,10 +38,9 @@
 import timeFormat from "@/utils/timeFormat";
 import {onMounted, ref} from "vue";
 import {getUserArticleComment, getUserSectionComment} from "@/api/record";
-import user from "@/utils/user";
-let {timeFull} = timeFormat()
-// 引入用户信息模块
-let {userId} = user();
+import useStore from "@/store";
+const {user} = useStore();
+const {timeFull} = timeFormat()
 const activeName = ref('article')
 const handleClick = (tab) => {
   console.log(tab.props.name)
@@ -55,7 +54,7 @@ const commentList = ref([])
 
 // 获取文章评论记录
 async function getArticleHistoryData() {
-  let articleComment_data = await getUserArticleComment(userId.value)
+  let articleComment_data = await getUserArticleComment(user.user_id)
   console.log(articleComment_data)
   commentList.value = articleComment_data.map((item) => {
     return {
@@ -69,7 +68,7 @@ async function getArticleHistoryData() {
 
 // 获取笔记评论记录
 async function getSectionHistoryData() {
-  let commentHistory_data = await getUserSectionComment(userId.value)
+  let commentHistory_data = await getUserSectionComment(user.user_id)
   console.log(commentHistory_data)
   commentList.value = commentHistory_data.map((item) => {
     return {

@@ -46,7 +46,8 @@ import {onActivated, onMounted, reactive, ref} from "vue";
 import {getClassify, getClassifyArticle} from "@/api/blog";
 import timeFormat from "@/utils/timeFormat";
 import {useRouter} from "vue-router";
-import store from "@/store";
+import useStore from "@/store";
+const {common} = useStore();
 
 const router = useRouter()
 // 文章日期完整显示
@@ -104,7 +105,8 @@ onMounted(async () => {
   await classifyData()
 })
 onActivated(() => {
-  store.commit('setMenuIndex', '4')
+  common.setMenuIndex('4')
+  //store.commit('setMenuIndex', '4')
 })
 </script>
 

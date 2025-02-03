@@ -68,7 +68,8 @@ import BackTop from "@/components/common/BackTop.vue"
 import {computed, onActivated, onMounted, onUnmounted, reactive, ref} from "vue";
 import {getCarousel} from "@/api/management";
 import {getArticle} from "@/api/blog";
-import store from "@/store";
+import useStore from "@/store";
+const {common} = useStore();
 //轮播图
 const carouselList = ref([])
 
@@ -154,14 +155,16 @@ onMounted(() => {
   script.setAttribute('data-website-id', "9447ca81-4839-4b2d-a0e3-f795515a2f3b")
   script.setAttribute('data-auto-track', "false")
   document.body.appendChild(script)
-  console.log("umami", window.umami.track)
+  // console.log("umami", window.umami.track)
 })
 onUnmounted(() => {
   // 组件卸载时，停止监听
   window.removeEventListener("scroll", scrollHandle, false)
 })
 onActivated(() => {
-  store.commit('setMenuIndex', '1')
+  common.setMenuIndex('1')
+  console.log()
+  // store.commit('setMenuIndex', '1')
 })
 </script>
 

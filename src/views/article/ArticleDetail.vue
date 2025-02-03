@@ -1,5 +1,5 @@
 <template>
-  <div v-title="articleData.title+'-'+sitename">
+  <div v-title="articleData.title+'-'+siteName">
     <section class="detail">
       <NavMenu></NavMenu>
       <div class="detail-page">
@@ -84,10 +84,10 @@
           <div class="comments detail-card" id="comment">
             <h2>📝 评论交流</h2>
             <div class="input-field">
-              <span v-if="isLogin===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
+              <span v-if="user.isLoggedIn===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
               <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
               <span><Editor ref="messageEditor"></Editor></span>
-              <span v-if="isLogin===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
+              <span v-if="user.isLoggedIn===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
               <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
             </div>
             <div class="comment-list">
@@ -128,7 +128,6 @@ import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import color from "@/utils/color";
-import store from "@/store";
 import {getSiteConfig} from "@/api/management";
 import {
   deleteArticleComment,
@@ -138,18 +137,17 @@ import {
   postReplyArticleComment,
   patchArticleComment, putArticleHistory
 } from "@/api/record";
-import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import { inject } from 'vue';
+import useStore from "@/store";
+const {user,common} = useStore();
+const router = useRouter()
+const reload = inject("reload");
 let {MyIcon} = icon()
 let {timeFull} = timeFormat()
 let {tagColor} = color()
-const router = useRouter()
-const reload = inject("reload");
-// 引入用户信息模块
-let {userId, isLogin} = user();
 // 引入公共模块
-let {articleID, sitename, toDetail, toCategory} = publicFn()
+let {articleID, siteName, toDetail, toCategory} = publicFn()
 // 引入文章内容模块
 let {articleData, context, recommendList, getArticleData, getContextData, getGuessLikeData} = article()
 // 引入markdown模块
@@ -177,7 +175,7 @@ onMounted(async () => {
     background: 'rgba(255, 255, 255, 0.3)',
   })
   window.scrollTo({top: 0})
-  store.commit('setOutline', '')
+  // store.commit('setOutline', '')
   articleID.value = router.currentRoute.value.params.id
   await getArticleData(articleID.value)
   loading.close()
@@ -198,7 +196,7 @@ onBeforeRouteUpdate(async (to) => {
   })
   window.scrollTo({top: 0})
   console.log(to)
-  store.commit('setOutline', '')
+  // store.commit('setOutline', '')
   for (let key in context) {
     delete context[key];
   }
@@ -216,7 +214,7 @@ function publicFn() {
   // 当前文章id
   const articleID = ref()
   // 站点名称
-  const sitename = ref('')
+  const siteName = ref('')
   //跳转文章列表
   const toCategory = (categoryId) => {
     router.push({path: `/category/${categoryId}`})
@@ -225,7 +223,7 @@ function publicFn() {
   // 获取站点名称
   async function siteConfigData() {
     let siteConfig_data = await getSiteConfig()
-    sitename.value = siteConfig_data.name
+    siteName.value = siteConfig_data.name
   }
 
   // 点击跳转其他文章事件
@@ -236,7 +234,7 @@ function publicFn() {
   onMounted(() => {
     siteConfigData()
   })
-  return {articleID, sitename, toDetail, toCategory}
+  return {articleID, siteName, toDetail, toCategory}
 }
 
 // 文章模块
@@ -274,7 +272,8 @@ function article() {
       }
     }
     activeMenu.value = "2-" + articleData.category_id
-    store.commit('setMenuIndex', activeMenu)
+    common.setMenuIndex(activeMenu.value)
+    // store.commit('setMenuIndex', activeMenu)
   }
 
   // 获取文章上下篇
@@ -338,7 +337,7 @@ function comment(articleID) {
 
   // 获取用户头像
   async function getPhotoData() {
-    let data = await getUserinfoId(userId.value)
+    let data = await getUserinfoId(user.user_id)
     console.log(data)
     photo.value = data.photo
   }
@@ -360,7 +359,8 @@ function comment(articleID) {
   })
   // 弹出登录框
   const showLogin = () => {
-    store.commit('setNextPath', router.currentRoute.value.fullPath)
+    common.setNextPath(router.currentRoute.value.fullPath)
+    // store.commit('setNextPath', router.currentRoute.value.fullPath)
     loginPopupRef.value.showPopup()
   }
   // 点击发表评论事件
@@ -369,7 +369,7 @@ function comment(articleID) {
     messageForm.content = messageEditor.value.content
     console.log(messageForm.content)
     if (messageForm.content) {
-      messageForm.user = userId.value
+      messageForm.user = user.user_id
       messageForm['article_id'] = articleID.value
       console.log(messageForm)
       postArticleComment(messageForm).then((response) => {
@@ -449,7 +449,7 @@ function comment(articleID) {
   });
   onMounted(() => {
     getArticleCommentData()
-    if (isLogin.value === true) {
+    if (user.isLoggedIn === true) {
       getPhotoData()
     } else {
       getLogoData()
@@ -462,8 +462,6 @@ function comment(articleID) {
 
 // 侧边栏动作模块
 function action(articleID, articleData) {
-  // 引入用户信息模块
-  let {userId, isLogin} = user();
   // 文章点赞事件
   const likeClick = () => {
     const params = {id: articleID.value, 'kind': 'article'}
@@ -486,8 +484,8 @@ function action(articleID, articleData) {
   // 获取文章浏览记录（是否已收藏）
   async function getArticleHistoryData() {
     await nextTick()
-    if (isLogin.value === true) {
-      let res = await getArticleHistory(articleID.value, userId.value)
+    if (user.isLoggedIn === true) {
+      let res = await getArticleHistory(articleID.value, user.user_id)
       console.log("查询是否已收藏", res.is_collect)
       isCollect.value = res.is_collect
       console.log(isCollect.value)
@@ -501,10 +499,10 @@ function action(articleID, articleData) {
   })
   // 子组件添加/取消收藏事件
   const collectClick = () => {
-    if (isLogin.value === true) {
+    if (user.isLoggedIn === true) {
       console.log("当前收藏状态是", isCollect.value)
       isCollect.value = !isCollect.value
-      CollectForm.user = userId.value
+      CollectForm.user = user.user_id
       CollectForm.is_collect = isCollect.value
       CollectForm['article_id'] = articleID
       putArticleHistory(CollectForm).then((response) => {
@@ -527,7 +525,8 @@ function action(articleID, articleData) {
       });
     } else {
       console.log("先登录")
-      store.commit('setNextPath', router.currentRoute.value.fullPath)
+      common.setNextPath(router.currentRoute.value.fullPath)
+      // store.commit('setNextPath', router.currentRoute.value.fullPath)
       loginPopupRef.value.showPopup()
     }
   }
@@ -539,9 +538,9 @@ function action(articleID, articleData) {
 
   // 添加文章浏览记录
   async function postArticleHistoryData(article_id) {
-    if (isLogin.value === true) {
+    if (user.isLoggedIn === true) {
       articleHistoryForm.article_id = article_id
-      articleHistoryForm.user = userId.value
+      articleHistoryForm.user = user.user_id
       console.log("添加文章浏览记录了")
       console.log("articleHistoryForm", articleHistoryForm)
       let res = await postArticleHistory(articleHistoryForm)

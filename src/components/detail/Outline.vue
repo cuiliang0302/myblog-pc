@@ -1,8 +1,8 @@
 <template>
   <div
-      :class="'outline  animate__animated animate__'+ (outlineShow===true?'fadeInRight':'fadeOutRight')">
-    <div v-if="titleList.length !== 0">
-      <p class="pointer" v-for="(anchor,index) in titleList" :key="anchor.lineIndex"
+      :class="'outline  animate__animated animate__'+ (outline_show===true?'fadeInRight':'fadeOutRight')">
+    <div v-if="outline_list.length !== 0">
+      <p class="pointer" v-for="(anchor,index) in outline_list" :key="anchor.lineIndex"
          :style="{ padding: `0px 0 0px ${anchor.indent * 15}px` }"
          @click="rollTo(anchor,index)" :class="index===heightTitle?'title-active':''"
       >
@@ -17,13 +17,14 @@
 
 <script setup>
 
-import {computed, ref, watch} from "vue";
-import store from "@/store";
+import {ref, watch} from "vue";
 import {
   ElTooltip,
   ElEmpty,
 } from 'element-plus'
-
+import useStore from "@/store";
+import {storeToRefs} from 'pinia'
+const {common} = useStore();
 const props = defineProps({
   // markdown屏幕滚动距离
   scrollTop: {
@@ -33,9 +34,11 @@ const props = defineProps({
   },
 })
 // 文章标题列表
-const titleList = computed(() => store.state.outline)
+const {outline_list} = storeToRefs(common)
+// const titleList = computed(() => store.state.outline)
 // 大纲是否显示
-const outlineShow = computed(() => store.state.outlineShow)
+const {outline_show} = storeToRefs(common)
+// const outlineShow = computed(() => store.state.outlineShow)
 // markdown-当前高亮的标题
 const heightTitle = ref(0)
 
@@ -51,9 +54,9 @@ const rollTo = (anchor, index) => {
 watch(
     () => props.scrollTop,
     (value) => {
-      if (titleList.value) {
+      if (outline_list.value) {
         const absList = [] // 各个h标签与当前距离绝对值
-        titleList.value.forEach((item) => {
+        outline_list.value.forEach((item) => {
           absList.push(Math.abs(item.height - value))
         })
         // 屏幕滚动距离与标题具体最近的index高亮

@@ -30,7 +30,8 @@
               </el-input>
             </el-form-item>
             <el-form-item prop="password1">
-              <el-input v-model="registerForm.password1" type="password" placeholder="请输入密码(数字+字符,8-16位)" show-password>
+              <el-input v-model="registerForm.password1" type="password" placeholder="请输入密码(数字+字符,8-16位)"
+                        show-password>
                 <template #prefix>
                   <MyIcon type="icon-password"/>
                 </template>
@@ -105,7 +106,7 @@
           <div class="overlay-panel overlay-right">
             <div class="point">
               <h1>欢迎光临</h1>
-              <p>欢迎访问{{ sitename }}，并与我一起交流学习<br>若您还没有账号，请立即注册或快速登录</p>
+              <p>欢迎访问{{ siteName }}，并与我一起交流学习<br>若您还没有账号，请立即注册或快速登录</p>
               <el-button @click="switchRegister" type="danger">切换注册</el-button>
             </div>
           </div>
@@ -124,13 +125,14 @@ import VerifyImgBtn from "@/components/verify/VerifyImgBtn.vue";
 import VerifyCodeBtn from "@/components/verify/VerifyCodeBtn.vue"
 import {ElMessage} from 'element-plus'
 import {getOAuthID, getRegister, postCode, postLogin, postRegister} from "@/api/account";
-import store from "@/store";
 import {getSiteConfig} from "@/api/management";
+import useStore from "@/store";
 
+const {user,common} = useStore();
 const router = useRouter();
 let {MyIcon} = icon()
 // 引入公共模块
-let {switchLogin, switchRegister, bgiURL, component, sitename} = publicFn()
+let {switchLogin, switchRegister, bgiURL, component, siteName} = publicFn()
 // 引入登录模块
 let {loginForm, loginRules, remember, isPassing, verifyPass, btnType, otherLogin} = loginFn()
 // 引入注册模块
@@ -147,16 +149,8 @@ const loginSubmit = () => {
           message: '登录成功！',
           type: 'success',
         })
-        if (remember.value) {
-          console.log('记住了')
-          store.commit('setKeepLogin', true)
-          store.commit('setUserLocal', response)
-        } else {
-          console.log('记不住')
-          store.commit('setKeepLogin', false)
-          store.commit('setUserSession', response)
-        }
-        router.push(store.state.nextPath)
+        user.login(response.userid, response.token, response.username, remember.value)
+        router.push(common.next_path)
       }).catch(response => {
         //发生错误时执行的代码
         console.log(response)
@@ -192,9 +186,9 @@ const registerSubmit = () => {
         loginForm.password = registerForm.password
         postLogin(loginForm).then((response) => {
           console.log(response)
-          store.commit('setKeepLogin', false)
-          store.commit('setUserSession', response)
-          router.push(store.state.nextPath)
+          // store.commit('setKeepLogin', false)
+          //store.commit('setUserSession', response)
+          router.push(common.next_path)
         }).catch(response => {
           //发生错误时执行的代码
           console.log(response)
@@ -226,12 +220,12 @@ function publicFn() {
   }
 
   // 站点名称
-  const sitename = ref('')
+  const siteName = ref('')
 
   // 获取站点名称
   async function getSiteConfigData() {
     let siteConfig_data = await getSiteConfig()
-    sitename.value = siteConfig_data.name
+    siteName.value = siteConfig_data.name
   }
 
   // 切换登录页事件
@@ -254,7 +248,7 @@ function publicFn() {
       component.value = router.currentRoute.value.query.component
     }
   })
-  return {switchLogin, switchRegister, bgiURL, component, sitename}
+  return {switchLogin, switchRegister, bgiURL, component, siteName}
 }
 
 // 登录模块
@@ -278,7 +272,7 @@ function loginFn() {
     }]
   }
   // 是否记住密码
-  const remember = ref(false)
+  const remember = ref(true)
   // 滑块验证是否通过
   const isPassing = ref(false)
   // 滑块验证按钮样式
@@ -377,6 +371,9 @@ function loginFn() {
       });
     }
   }
+  // 初始化，获取用户是否记住密码状态
+  onMounted(() => {
+  })
   return {loginForm, remember, isPassing, verifyPass, btnType, otherLogin, loginRules}
 }
 
@@ -685,14 +682,14 @@ function registerFn() {
   }
 
   .overlay-right {
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     right: 0;
     transform: translateX(0);
     background-color: rgba(255, 255, 255, 0.5);
   }
 
   .overlay-left {
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     transform: translateX(0);
     background-color: rgba(255, 255, 255, 0.5);
   }
@@ -728,7 +725,7 @@ function registerFn() {
   transform: translateX(0);
 }
 
-.register-btn{
+.register-btn {
   margin: 20px auto;
 }
 </style>

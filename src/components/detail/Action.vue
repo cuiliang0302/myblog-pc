@@ -6,7 +6,7 @@
       </div>
     </el-tooltip>
     <el-tooltip class="item" effect="dark" content="大纲" placement="left">
-      <div @click="setOutline" :class="[outlineShow===true?'action-active':'']+' detail-action-hover'">
+      <div @click="setOutline" :class="[outline_show===true?'action-active':'']+' detail-action-hover'">
         <MyIcon type="icon-outline"/>
       </div>
     </el-tooltip>
@@ -70,11 +70,12 @@ import {
 } from 'element-plus'
 import {ElMessage} from 'element-plus'
 import icon from "@/utils/icon";
-import {computed, onMounted, reactive, ref} from "vue";
-import store from "@/store";
+import {onMounted, reactive, ref} from "vue";
 import {getInfo} from "@/api/management";
-
-let {MyIcon} = icon()
+import useStore from "@/store";
+import {storeToRefs} from 'pinia'
+const {common} = useStore();
+const {MyIcon} = icon()
 const props = defineProps({
   // 组件类型
   detailType: {
@@ -97,14 +98,15 @@ const props = defineProps({
 })
 const emit = defineEmits(['setCatalog', 'likeClick','collectClick']);
 // 大纲是否显示
-const outlineShow = computed(() => store.state.outlineShow)
+const {outline_show} = storeToRefs(common)
 // 设置目录是否显示
 const setCatalog = () => {
   emit('setCatalog');
 }
 // 设置大纲是否显示
 const setOutline = () => {
-  store.commit('setOutlineShow')
+  outline_show.value = !outline_show.value;
+  // store.commit('setOutlineShow')
 }
 // 博主打赏信息
 const pay = reactive({

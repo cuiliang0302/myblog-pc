@@ -24,14 +24,12 @@
 <script setup name="ChangePassword">
 import {onMounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
-import user from "@/utils/user";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getUserinfoId, putChangePassword} from "@/api/account";
-import store from "@/store";
+import useStore from "@/store";
+const {user} = useStore();
 
 const router = useRouter()
-// 引入用户信息模块
-let {userId} = user();
 // 修改提交密码表单
 const passwordForm = reactive({
   oldPassword: '',
@@ -80,7 +78,7 @@ const onSubmit = () => {
     if (valid) {
       passwordForm.oldPassword = verifyForm.oldPassword
       passwordForm.newPassword = verifyForm.password2
-      putChangePassword(userId.value, passwordForm).then((response) => {
+      putChangePassword(user.user_id, passwordForm).then((response) => {
         console.log(response)
         ElMessage({
           message: '密码修改成功，即将跳转至登录页！',
@@ -88,7 +86,7 @@ const onSubmit = () => {
         })
         setTimeout(function () {
           router.replace('/loginRegister')
-          store.commit('setAsideMenuIndex','1')
+          // store.commit('setAsideMenuIndex','1')
         }, 1500)
       }).catch(response => {
         //发生错误时执行的代码
@@ -108,13 +106,13 @@ async function getUserinfo(userid) {
       confirmButtonText: 'OK',
       callback: () => {
         router.push('/personal/myIndex')
-        store.commit('setAsideMenuIndex', '1')
+        //store.commit('setAsideMenuIndex', '1')
       },
     })
   }
 }
 onMounted(() => {
-  getUserinfo(userId.value)
+  getUserinfo(user.user_id)
 })
 </script>
 

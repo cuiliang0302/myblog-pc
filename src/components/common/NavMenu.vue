@@ -1,7 +1,7 @@
 <template>
   <transition enter-active-class="animate__animated animate__fadeInDown"
               leave-active-class="animate__animated animate__fadeOutUp" mode="in-out">
-    <header class="navigation-show" v-if="navigationType==='show'">
+    <header class="navigation-show" v-if="isNavigationVisible===true">
     <span v-show="props.kind==='front'" class="left">
       <el-image
           style="width: 40px; height: 40px"
@@ -10,7 +10,7 @@
       <span class="no-choose">{{ siteConfig.name }}</span>
     </span>
       <span class="middle">
-      <el-menu :default-active="menuIndex" :ellipsis="false" mode="horizontal">
+      <el-menu :default-active="menu_index" :ellipsis="false" mode="horizontal">
         <el-menu-item index="1" @click="router.push('/')">
           <MyIcon type="icon-home"/>
           <span class="menu-title">首页</span>
@@ -47,21 +47,21 @@
     </span>
       <span class="right">
       <el-tooltip class="item" effect="dark" content="设置" placement="bottom">
-        <span class="setting hvr-grow" @click="drawer = true">
+        <span class="setting hvr-grow" @click="drawer_visible = true">
           <MyIcon type="icon-setting"/>
         </span>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="搜索" placement="bottom">
-        <span class="search hvr-grow" :style="{'color': (menuIndex==='7' ? 'var(--el-color-primary)':'')}"
+        <span class="search hvr-grow" :style="{'color': (menu_index==='7' ? 'var(--el-color-primary)':'')}"
               @click="router.push('/search')">
           <MyIcon type="icon-search"/>
         </span>
       </el-tooltip>
       <span class="user">
-        <el-dropdown v-if="isLogin" @visible-change="dropdownChange">
+        <el-dropdown v-if="user.isLoggedIn" @visible-change="dropdownChange">
           <span class="no-choose">
             <el-avatar :src="photo"></el-avatar>
-            <p>{{ userName }}
+            <p>{{ user.username }}
               <el-icon v-if="isDropdown"><ArrowUp/></el-icon>
               <el-icon v-else><ArrowDown/></el-icon>
             </p>
@@ -81,7 +81,7 @@
     </span>
       <el-drawer
           title="系统设置"
-          v-model="drawer"
+          v-model="drawer_visible"
           :direction="'rtl'"
           :size="'25%'"
           :before-close="handleClose" destroy-on-close
@@ -91,12 +91,12 @@
         <div class="display">
           <h4>显示模式</h4>
           <span>
-            <img :class="isDark===true?'':'img-active'" src="~@/assets/images/light.png" alt="">
-            <img :class="isDark===false?'':'img-active'" src="~@/assets/images/dark.png" alt="">
+            <img :class="is_dark===true?'':'img-active'" src="~@/assets/images/light.png" alt="">
+            <img :class="is_dark===false?'':'img-active'" src="~@/assets/images/dark.png" alt="">
           </span>
             <el-switch
                 style="display: block"
-                v-model="isDarkSwitch"
+                v-model="is_dark"
                 active-color="#303133"
                 inactive-color="#f5f7fa"
                 active-text="深色模式"
@@ -110,8 +110,8 @@
           <div>
             <el-tooltip v-for="(item,index) in themeList" :key="index"
                         effect="dark" :content="item.name" placement="top">
-              <span :style="{backgroundColor:item.value}" :class="(colorValue===item.value?'color-active ':'')"
-                    @click="colorChoose(item.value)"></span>
+              <span :style="{backgroundColor:item.value}" :class="(theme_color===item.value?'color-active ':'')"
+                    @click="colorChoose(item.name,item.value)"></span>
             </el-tooltip>
           </div>
          </div>
@@ -119,7 +119,7 @@
         <div v-if="props.kind==='front'" class="nav-style">
           <h4>导航菜单</h4>
           菜单显示模式：
-          <el-select v-model="navValue" @change="navChange">
+          <el-select v-model="navigation_mode" @change="navChange">
             <el-option
                 v-for="item in navigationList"
                 :key="item.value"
@@ -131,7 +131,7 @@
         <div v-else>
           <h4>侧边菜单</h4>
           是否折叠菜单：
-          <el-switch v-model="asideMenuFold" @change="asideMenuFoldChange"/>
+          <el-switch v-model="aside_menu_fold" @change="asideMenuFoldChange"/>
         </div>
         <el-divider></el-divider>
       </span>
@@ -143,29 +143,24 @@
 
 <script setup>
 import {ElMessageBox, ElMessage} from 'element-plus'
-import {computed, onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import icon from '@/utils/icon'
 import {ArrowDown, ArrowUp} from '@element-plus/icons-vue'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
 import {useRouter} from "vue-router";
-import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
-import store from "@/store/index";
-import dark from "@/utils/dark";
+import useStore from "@/store";
+import {storeToRefs} from 'pinia'
 import color from "@/utils/color"
-import theme from "@/utils/theme"
 import navigation from "@/utils/navigation";
 
-let {isDark, setDark} = dark()
-let {setTheme} = theme()
-let {navigationList, setNavigation, navigationType} = navigation()
+const {theme, common,user} = useStore()
+const {menu_index} = storeToRefs(common)
+const {isNavigationVisible, setNavigationMode,navigationList} = navigation()
 const router = useRouter()
-
-let {MyIcon} = icon()
-// 引入用户信息模块
-let {isLogin, userId, userName} = user();
-let {themeList} = color()
+const {MyIcon} = icon()
+const {themeList} = color()
 const props = defineProps({
   // 导航栏类型(前台后台)
   kind: {
@@ -251,62 +246,61 @@ const photo = ref()
 
 // 个人中心-获取用户头像
 async function getPhotoData() {
-  let data = await getUserinfoId(userId.value)
+  let data = await getUserinfoId(user.user_id)
   photo.value = data.photo
   console.log("photo:", photo.value)
 }
 
 //设置-菜单默认关闭
-let drawer = ref(false);
+const {drawer_visible} = storeToRefs(common)
 //设置-菜单关闭事件
 const handleClose = () => {
-  drawer.value = false
+  drawer_visible.value = false
 };
 // 设置-显示模式默认值
-
-const isDarkSwitch = ref(false)
-// // 设置-切换是否设置暗黑模式
+const {is_dark} = storeToRefs(theme)
+// 设置-切换是否设置暗黑模式
 const setDarkMode = () => {
-  console.log("菜单栏执行切换事件", isDarkSwitch.value)
-  setDark(isDarkSwitch.value)
+  console.log("菜单栏执行切换事件", is_dark.value)
+  theme.is_dark = is_dark.value
+  theme.applyDark()
 }
 // 设置-侧边菜单显示是否折叠
-const asideMenuFold = ref(false)
+const {aside_menu_fold} = storeToRefs(common)
 // 设置-侧边菜单显示折叠切换事件
-const asideMenuFoldChange = () => {
-  store.commit('setAsideMenuFold', asideMenuFold.value)
+const asideMenuFoldChange = (value) => {
+  console.log("点了啊")
+  console.log(value)
+  common.setAsideMenuFold (value)
+  // store.commit('setAsideMenuFold', asideMenuFold.value)
 }
 
 // 设置-默认主题色
-const colorValue = ref('')
+const {theme_color} = storeToRefs(theme)
 // 设置-切换主题色事件
-const colorChoose = (value) => {
-  colorValue.value = value
-  console.log(colorValue.value)
-  setTheme(colorValue.value)
+const colorChoose = (name, color) => {
+  console.log(name, color)
+  theme.toggleTheme(name, color)
 }
 // 设置-默认导航菜单样式
-const navValue = ref('')
+const {navigation_mode} = storeToRefs(theme)
 
 // 设置-导航菜单样式切换事件
 const navChange = (value) => {
-  console.log(value)
-  setNavigation(value)
+  console.log("开始切换了啊", value)
+  setNavigationMode(value)
 }
 onMounted(() => {
-  asideMenuFold.value = store.state.asideMenuFold
+  // asideMenuFold.value = store.state.asideMenuFold
   siteConfigData()
   categoryData()
   NoteData()
-  if (isLogin.value === true) {
+  if (user.isLoggedIn) {
     getPhotoData()
   }
-  colorValue.value = store.state.theme
-  navValue.value = store.state.navigation
-  isDarkSwitch.value = store.state.isDark
 })
 // 当前激活的菜单id
-const menuIndex = computed(() => store.state.menuIndex)
+// const menu_index = computed(() => store.state.menu_index)
 </script>
 
 <style scoped lang="scss">

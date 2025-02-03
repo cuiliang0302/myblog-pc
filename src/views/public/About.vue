@@ -20,7 +20,8 @@ import MarkDown from "@/components/detail/MarkDown.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import {onActivated, onMounted, ref} from "vue";
 import {getAbout} from "@/api/management";
-import store from "@/store";
+import useStore from "@/store";
+const {common} = useStore();
 // 关于页数据
 const about = ref([])
 
@@ -34,7 +35,8 @@ onMounted(() => {
 })
 onActivated(() => {
   console.log("执行onActivated")
-  store.commit('setMenuIndex', '6')
+  common.setMenuIndex('6')
+  //store.commit('setMenuIndex', '6')
 })
 // 默认展开的数据
 const activeNames = ref([1]);

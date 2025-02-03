@@ -1,9 +1,9 @@
 import axios from 'axios'
 import {ElMessage} from 'element-plus'
-import store from "@/store/index";
+import useStore from "@/store";
+const {user} = useStore();
 
 export function request(config) {
-	const token = store.state.userLocal.token || store.state.userSession.token
 	// 创建axios的实例
 	const instance = axios.create({
 		baseURL: import.meta.env.VITE_APP_BASE_URL,
@@ -11,8 +11,8 @@ export function request(config) {
 	})
 	// 请求拦截器配置
 	instance.interceptors.request.use(config => {
-		  if (token){
-			  config.headers.Authorization = 'Bearer ' + token
+		  if (user.token){
+			  config.headers.Authorization = 'Bearer ' + user.token
 		  }
 			return config
 		}, error => {
@@ -34,7 +34,7 @@ export function request(config) {
 					ElMessage.error('对不起，您暂无权限访问此接口，请登录重试！')
 					localStorage.clear()
 					sessionStorage.clear()
-					window.location.href="https://www.cuiliangblog.cn/loginRegister?component=Login";
+					window.location.href="/loginRegister?component=Login";
 					break
 				case 403:
 					ElMessage.error('对不起，您的身份信息已过期，请重新登录！')

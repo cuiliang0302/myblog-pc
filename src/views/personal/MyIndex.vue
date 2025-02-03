@@ -127,24 +127,19 @@
 </template>
 
 <script setup name="MyIndex">
-// 引入用户信息模块
-import user from "@/utils/user";
 import {getUserinfoId} from "@/api/account";
 import {onMounted, reactive, ref, watch} from "vue";
 import {getStatistics} from "@/api/record";
 import {getUserEcharts} from "@/api/record";
 import * as echarts from 'echarts'
-import dark from "@/utils/dark";
-import store from "@/store";
-
-let {userId} = user();
-let {isDark} = dark()
+import useStore from "@/store";
+const {common,user,theme} = useStore();
 // 用户信息
 const userInfo = reactive({})
 
 // 获取用户信息
 async function getUserinfo() {
-  Object.assign(userInfo, await getUserinfoId(userId.value));
+  Object.assign(userInfo, await getUserinfoId(user.user_id));
 }
 
 // 数据概览
@@ -152,7 +147,7 @@ const dataCount = reactive({})
 
 // 获取数据概览数据
 async function statisticsData() {
-  Object.assign(dataCount, await getStatistics(userId.value))
+  Object.assign(dataCount, await getStatistics(user.user_id))
 }
 
 // echarts明亮模式曲线颜色
@@ -190,8 +185,8 @@ const text = ref()
 // 设置echarts主题色
 const setColor = () => {
   console.log("判断是否是深色模式了")
-  console.log(isDark.value)
-  if (isDark.value === true) {
+  console.log()
+  if (theme.is_dark === true) {
     bgc.value = '#1d1e1f'
     color.value = echartsDark.value
     text.value = '#b2b2b2'
@@ -204,7 +199,7 @@ const setColor = () => {
 }
 // 浏览趋势折线图
 async function trend() {
-  const query = {chart: 'trend', user: userId.value}
+  const query = {chart: 'trend', user: user.user_id}
   const chartData = await getUserEcharts(query)
   console.log("trend", chartData)
   const date = []
@@ -224,7 +219,7 @@ async function trend() {
     section_comment.push(chartData[i].section_comment)
   }
   let myChart;
-  if (isDark.value) {
+  if (theme.is_dark === true) {
     myChart = echarts.init(document.getElementById("trend"), 'dark');
   } else {
     myChart = echarts.init(document.getElementById("trend"));
@@ -337,11 +332,11 @@ async function trend() {
 
 // 浏览文章饼图
 async function article() {
-  const query = {chart: 'article', user: userId.value}
+  const query = {chart: 'article', user: user.user_id}
   const chartData = await getUserEcharts(query)
   console.log("article", chartData)
   let myChart;
-  if (isDark.value) {
+  if (theme.is_dark === true) {
     myChart = echarts.init(document.getElementById("article"), 'dark');
   } else {
     myChart = echarts.init(document.getElementById("article"));
@@ -382,7 +377,7 @@ async function article() {
 
 // 浏览笔记雷达图
 async function note() {
-  const query = {chart: 'note', user: userId.value}
+  const query = {chart: 'note', user: user.user_id}
   const chartData = await getUserEcharts(query)
   console.log("note", chartData)
   const indicator = []
@@ -396,7 +391,7 @@ async function note() {
     data.push(chartData[i].data)
   }
   let myChart;
-  if (isDark.value) {
+  if (theme.is_dark === true) {
     myChart = echarts.init(document.getElementById("note"), 'dark');
   } else {
     myChart = echarts.init(document.getElementById("note"));
@@ -437,7 +432,7 @@ async function note() {
 
 // 浏览时间柱形图
 async function time() {
-  const query = {chart: 'time', user: userId.value}
+  const query = {chart: 'time', user: user.user_id}
   const chartData = await getUserEcharts(query)
   console.log("time", chartData)
   const time = []
@@ -449,7 +444,7 @@ async function time() {
     section.push(chartData[i].section)
   }
   let myChart;
-  if (isDark.value) {
+  if (theme.is_dark === true) {
     myChart = echarts.init(document.getElementById("time"), 'dark');
   } else {
     myChart = echarts.init(document.getElementById("time"));
@@ -516,7 +511,7 @@ async function time() {
 }
 
 // 监听切换主题色事件
-watch(()=>isDark.value, (newVal) => {
+watch(()=>theme.is_dark, (newVal) => {
   console.log("切换颜色了")
   console.log(newVal)
   setColor()
@@ -526,8 +521,9 @@ watch(()=>isDark.value, (newVal) => {
   time()
 },{deep:true})
 onMounted(() => {
-  store.commit('setMenuIndex', '')
-  console.log("dark",isDark.value)
+  //store.commit('setMenuIndex', '')
+  common.setMenuIndex('')
+  console.log("dark",theme.is_dark)
   setColor()
   getUserinfo()
   statisticsData()

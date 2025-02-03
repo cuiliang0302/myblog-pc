@@ -3,14 +3,14 @@
       :default-active="asideMenuIndex"
       class="el-menu-vertical-demo"
       :default-openeds="['2','3']"
-      :collapse="isCollapse"
+      :collapse="aside_menu_fold"
   >
     <span class="logo">
       <el-image
           style="width: 40px; height: 40px"
           :src="siteConfig.logo"
           :fit="'fill'"></el-image>
-      <span class="no-choose" v-show="isCollapse===false">{{ siteConfig.name }}</span>
+      <span class="no-choose" v-show="aside_menu_fold===false">{{ siteConfig.name }}</span>
     </span>
     <el-menu-item index="/personal/myIndex" @click="route.push('/personal/myIndex')">
       <el-icon>
@@ -63,17 +63,16 @@
 import {User as IconUser, Tickets, Operation} from '@element-plus/icons-vue'
 import {computed, onMounted, reactive, ref} from "vue";
 import {getSiteConfig} from "@/api/management";
-import store from "@/store";
 import {getUserinfoId, putUserinfoId} from "@/api/account";
-import user from "@/utils/user";
 import {useRouter} from "vue-router";
 import {ElMessage, ElMessageBox} from "element-plus";
 import icon from "@/utils/icon";
 const {MyIcon} = icon()
 const route = useRouter()
 const router = useRouter()
-// 引入用户信息模块
-const {userId} = user();
+import useStore from "@/store";
+import {storeToRefs} from 'pinia'
+const {common,user} = useStore();
 //导航菜单-logo和name
 const siteConfig = reactive({
   logo: '',
@@ -90,13 +89,13 @@ async function siteConfigData() {
 // 当前激活的id
 const asideMenuIndex = ref('/personal/myIndex')
 // 个人中心导航栏是否折叠
-const isCollapse = computed(() => store.state.asideMenuFold)
+const {aside_menu_fold} = storeToRefs(common)
 // 用户信息
 const userInfo = reactive({})
 
 // 获取用户信息
 async function getUserinfo() {
-  Object.assign(userInfo, await getUserinfoId(userId.value))
+  Object.assign(userInfo, await getUserinfoId(user.user_id))
 }
 
 // 设置是否接收邮件通知
@@ -118,7 +117,7 @@ const flowDialog = ref(false)
 const flowOpen = () => {
   console.log("点了开启了")
   userInfo.is_flow = true
-  putUserinfoId(userId.value, userInfo).then((response) => {
+  putUserinfoId(user.user_id, userInfo).then((response) => {
     console.log(response)
     ElMessage({
       message: '已开启新文章发布邮件通知！',
@@ -135,7 +134,7 @@ const flowOpen = () => {
 const flowClose = () => {
   console.log("点了关闭了")
   userInfo.is_flow = false
-  putUserinfoId(userId.value, userInfo).then((response) => {
+  putUserinfoId(user.user_id, userInfo).then((response) => {
     console.log(response)
     ElMessage({
       message: '已取消新文章发布邮件通知！',

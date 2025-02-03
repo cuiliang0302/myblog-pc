@@ -2,7 +2,8 @@
 import Nprogress from 'nprogress'
 import {createRouter, createWebHistory} from 'vue-router';
 import {ElMessage} from "element-plus";
-import store from "@/store";
+import useStore from "@/store";
+
 
 const router = createRouter({
     // history: createWebHashHistory(),  // hash模式，
@@ -275,12 +276,16 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     Nprogress.start()
     // to 访问的路径 from 从哪来 next 响应路径
-    if (to.meta.isAuth === true && JSON.stringify(store.state.userSession) === '{}') {
+    const {user} = useStore();
+    console.log(user.isLoggedIn)
+    console.log(to.meta.isAuth)
+    if (to.meta.isAuth === true && !user.isLoggedIn) {
         ElMessage({
             message: '您还未登录，即将跳转至登录页',
             type: 'warning',
         })
         return next('/loginRegister')
+        // next()
     } else {
         // this.$script().then(() => {
         //     // 文件加载完成后的操作
