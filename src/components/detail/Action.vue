@@ -105,8 +105,7 @@ const setCatalog = () => {
 }
 // 设置大纲是否显示
 const setOutline = () => {
-  outline_show.value = !outline_show.value;
-  // store.commit('setOutlineShow')
+  outline_show.value = !outline_show.value
 }
 // 博主打赏信息
 const pay = reactive({

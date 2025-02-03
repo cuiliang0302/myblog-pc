@@ -36,7 +36,6 @@ onMounted(() => {
 onActivated(() => {
   console.log("执行onActivated")
   common.setMenuIndex('6')
-  //store.commit('setMenuIndex', '6')
 })
 // 默认展开的数据
 const activeNames = ref([1]);

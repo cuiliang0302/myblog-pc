@@ -66,7 +66,6 @@ onMounted(async () => {
   await catalogueData(catalogueID)
   await titleData(catalogueID)
   common.setMenuIndex('3-' + router.currentRoute.value.params.id)
-  // store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
 })
 onBeforeRouteUpdate(async (to) => {
   console.log("onbefore了啊")

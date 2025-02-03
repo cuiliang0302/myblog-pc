@@ -129,7 +129,6 @@ const sendMessage = () => {
 }
 // 弹出登录框
 const showLogin = () => {
-  //store.commit('setNextPath', router.currentRoute.value.fullPath)
   common.setNextPath(router.currentRoute.value.fullPath)
   loginPopupRef.value.showPopup()
 }
