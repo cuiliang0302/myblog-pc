@@ -31,9 +31,6 @@ const postCallback = () => {
       type: 'success',
     })
     user.login(response.userid, response.token, response.username, user.keep_login)
-    //store.commit('setKeepLogin', false)
-    //store.commit('setUserSession', response)
-    // console.log(store.state.F)
     router.push(common.next_path)
   }).catch(response => {
     //发生错误时执行的代码

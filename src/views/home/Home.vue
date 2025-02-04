@@ -163,8 +163,6 @@ onUnmounted(() => {
 })
 onActivated(() => {
   common.setMenuIndex('1')
-  console.log()
-  // store.commit('setMenuIndex', '1')
 })
 </script>
 

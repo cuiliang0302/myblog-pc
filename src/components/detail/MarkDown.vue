@@ -106,7 +106,7 @@ async function getTitle() {
   }));
   console.log(titleList.value)
   outline_list.value = titleList.value
-  // store.commit('setOutline', titleList.value)
+  common.setOutlineList(outline_list.value)
 }
 
 // 监听markdown内容发生变化

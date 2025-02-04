@@ -45,12 +45,12 @@ const verifyForm = reactive({
 });
 // 密码正则校验
 const checkPasswordRegular = (rule, value, callback) => {
-  const pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
+  const pattern = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^\w\s])[\S]{8,}$/;
   if (pattern.test(value)) {
     callback()
   } else {
     console.log("没过去")
-    return callback(new Error("密码必须是数字+字符组合，8-16位长度！"))
+    return callback(new Error("密码必须是数字+字符+字符组合，8-16位长度！"))
   }
 }
 // 密码一致性校验
@@ -86,7 +86,6 @@ const onSubmit = () => {
         })
         setTimeout(function () {
           router.replace('/loginRegister')
-          // store.commit('setAsideMenuIndex','1')
         }, 1500)
       }).catch(response => {
         //发生错误时执行的代码
@@ -106,7 +105,6 @@ async function getUserinfo(userid) {
       confirmButtonText: 'OK',
       callback: () => {
         router.push('/personal/myIndex')
-        //store.commit('setAsideMenuIndex', '1')
       },
     })
   }

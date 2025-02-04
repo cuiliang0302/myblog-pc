@@ -99,7 +99,6 @@ onMounted(() => {
   categoryID.value = router.currentRoute.value.params.id
   categoryNameData(categoryID.value)
   common.setMenuIndex('2-' + categoryID.value)
-  // store.commit('setMenuIndex', '2-' + categoryID.value)
   articleData(1, 10, categoryID.value)
 })
 onBeforeRouteUpdate(async (to) => {
@@ -110,7 +109,6 @@ onBeforeRouteUpdate(async (to) => {
 });
 onActivated(() => {
   common.setMenuIndex('2-' + router.currentRoute.value.params.id)
-  // store.commit('setMenuIndex', '2-' + router.currentRoute.value.params.id)
 })
 </script>
 

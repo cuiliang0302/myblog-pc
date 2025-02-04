@@ -243,7 +243,6 @@ if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
 });
 onMounted(() => {
   common.setMenuIndex('5')
-  // //store.commit('setMenuIndex', '5')
   leaveMessageData()
   // 监听滚动事件
   window.addEventListener("scroll", handleScroll);

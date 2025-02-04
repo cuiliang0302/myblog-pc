@@ -152,7 +152,7 @@ onMounted(async () => {
     background: 'rgba(255, 255, 255, 0.3)',
   })
   window.scrollTo({top: 0})
-  // store.commit('setOutline', '')
+  common.setOutlineList('')
   sectionID.value = router.currentRoute.value.params.id
   await getSectionData(sectionID.value)
   loading.close()
@@ -164,7 +164,7 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', scroll())
-  // store.commit('setOutline', '')
+  common.setOutlineList('')
 })
 onBeforeRouteUpdate(async (to) => {
   // 开启加载中动画
@@ -174,7 +174,7 @@ onBeforeRouteUpdate(async (to) => {
     background: 'rgba(255, 255, 255, 0.3)',
   })
   window.scrollTo({top: 0})
-  // store.commit('setOutline', '')
+  common.setOutlineList('')
   for (let key in context) {
     delete context[key];
   }
@@ -307,7 +307,6 @@ function section() {
     }
     activeMenu.value = "3-" + sectionData.note_id
     common.setMenuIndex(activeMenu.value)
-    // store.commit('setMenuIndex', activeMenu)
   }
 
   // 获取笔记上下篇
@@ -389,7 +388,6 @@ function comment(sectionID) {
   // 弹出登录框
   const showLogin = () => {
     common.setNextPath(router.currentRoute.value.fullPath)
-    // store.commit('setNextPath', router.currentRoute.value.fullPath)
     loginPopupRef.value.showPopup()
   }
 // 点击发表评论事件
@@ -556,7 +554,6 @@ function action(sectionID, sectionData) {
     } else {
       console.log("先登录")
       common.setNextPath(router.currentRoute.value.fullPath)
-      // store.commit('setNextPath', router.currentRoute.value.fullPath)
       loginPopupRef.value.showPopup()
     }
   }

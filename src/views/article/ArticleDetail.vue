@@ -175,7 +175,7 @@ onMounted(async () => {
     background: 'rgba(255, 255, 255, 0.3)',
   })
   window.scrollTo({top: 0})
-  // store.commit('setOutline', '')
+  common.setOutlineList('')
   articleID.value = router.currentRoute.value.params.id
   await getArticleData(articleID.value)
   loading.close()
@@ -196,7 +196,7 @@ onBeforeRouteUpdate(async (to) => {
   })
   window.scrollTo({top: 0})
   console.log(to)
-  // store.commit('setOutline', '')
+  common.setOutlineList('')
   for (let key in context) {
     delete context[key];
   }
@@ -273,7 +273,6 @@ function article() {
     }
     activeMenu.value = "2-" + articleData.category_id
     common.setMenuIndex(activeMenu.value)
-    // store.commit('setMenuIndex', activeMenu)
   }
 
   // 获取文章上下篇
@@ -360,7 +359,6 @@ function comment(articleID) {
   // 弹出登录框
   const showLogin = () => {
     common.setNextPath(router.currentRoute.value.fullPath)
-    // store.commit('setNextPath', router.currentRoute.value.fullPath)
     loginPopupRef.value.showPopup()
   }
   // 点击发表评论事件
@@ -526,7 +524,6 @@ function action(articleID, articleData) {
     } else {
       console.log("先登录")
       common.setNextPath(router.currentRoute.value.fullPath)
-      // store.commit('setNextPath', router.currentRoute.value.fullPath)
       loginPopupRef.value.showPopup()
     }
   }

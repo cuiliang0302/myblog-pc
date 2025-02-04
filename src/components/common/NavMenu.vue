@@ -272,7 +272,6 @@ const asideMenuFoldChange = (value) => {
   console.log("点了啊")
   console.log(value)
   common.setAsideMenuFold (value)
-  // store.commit('setAsideMenuFold', asideMenuFold.value)
 }
 
 // 设置-默认主题色

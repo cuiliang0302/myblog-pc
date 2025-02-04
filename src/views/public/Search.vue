@@ -209,8 +209,7 @@ onMounted(() => {
   common.setMenuIndex('7')
 })
 onActivated(() => {
-
-  // //store.commit('setMenuIndex', '7')
+  common.setMenuIndex('7')
 })
 </script>
 

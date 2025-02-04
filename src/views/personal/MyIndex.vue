@@ -521,7 +521,6 @@ watch(()=>theme.is_dark, (newVal) => {
   time()
 },{deep:true})
 onMounted(() => {
-  //store.commit('setMenuIndex', '')
   common.setMenuIndex('')
   console.log("dark",theme.is_dark)
   setColor()

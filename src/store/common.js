@@ -33,6 +33,10 @@ const useCommonStore = defineStore('Common', {
     // 修改登录后跳转页面
     setNextPath(value){
       this.next_path = value
+    },
+    // 修改markdown目录内容
+    setOutlineList(value) {
+      this.outline_list = value
     }
   },
   // 开启数据持久化
