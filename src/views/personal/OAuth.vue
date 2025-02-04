@@ -10,7 +10,7 @@ import {postOAuthCallback} from "@/api/account";
 import Loading from "@/components/common/Loading.vue"
 import useStore from "@/store";
 
-const {common} = useStore();
+const {common,user} = useStore();
 
 const router = useRouter()
 // 平台名称
@@ -30,6 +30,7 @@ const postCallback = () => {
       message: '登录成功！',
       type: 'success',
     })
+    user.login(response.userid, response.token, response.username, user.keep_login)
     //store.commit('setKeepLogin', false)
     //store.commit('setUserSession', response)
     // console.log(store.state.F)
