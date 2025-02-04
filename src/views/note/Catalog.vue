@@ -75,7 +75,6 @@ onBeforeRouteUpdate(async (to) => {
 });
 onActivated(() => {
   common.setMenuIndex('3-' + router.currentRoute.value.params.id)
-  // store.commit('setMenuIndex', '3-' + router.currentRoute.value.params.id)
   console.log("setMenuIndex", '3-' + router.currentRoute.value.params.id)
 })
 </script>
