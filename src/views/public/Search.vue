@@ -1,4 +1,4 @@
- <template>
+<template>
   <NavMenu></NavMenu>
   <section class="page">
     <div class="search-main animate__animated animate__zoomIn">
@@ -35,6 +35,12 @@
       </span>
       </div>
     </div>
+    <div class="search-history" v-if="historyList.length > 0">
+      <el-tag v-for="(item,index) in historyList" :key="index" type="primary" round @click="historySearch(item)">{{
+          item
+        }}
+      </el-tag>
+    </div>
     <div v-show="searchList.length!==0" class="search-list animate__animated animate__fadeInUp">
       <el-card class="box-card">
         <ul v-if="searchKind==='article'">
@@ -63,11 +69,11 @@ import Footer from "@/components/common/Footer.vue"
 import BackTop from "@/components/common/BackTop.vue"
 import icon from '@/utils/icon'
 import Fuse from 'fuse.js'
-import {getSearch, getSearchHot} from "@/api/record";
+import {getSearch, getSearchHistory, getSearchHot} from "@/api/record";
 import {ElLoading, ElMessage} from "element-plus";
 import useStore from "@/store";
 
-const {user,common} = useStore();
+const {user, common} = useStore();
 const {MyIcon} = icon()
 // 搜索关键词
 const key = ref('')
@@ -86,6 +92,24 @@ async function searchKeyHotData() {
   hotList.value = await getSearchHot()
 }
 
+// 搜索记录
+let historyList = ref([])
+
+function searchKeyHistoryData() {
+  hotList.value = getSearchHot()
+  getSearchHistory(user.user_id).then((response) => {
+    console.log(response.keys)
+    historyList.value = response.keys
+  }).catch(response => {
+    //发生错误时执行的代码
+    console.log(response)
+  });
+}
+
+const historySearch = (value) => {
+  key.value = value
+  searchFn()
+}
 // 搜索热词颜色
 const topColor = (topId) => {
   let color = ''
@@ -159,6 +183,7 @@ const searchFn = () => {
   } else {
     user_id = NaN
   }
+  console.log(user_id)
   // 加载中动画
   const loading = ElLoading.service({
     lock: true,
@@ -207,6 +232,9 @@ const search = () => {
 onMounted(() => {
   searchKeyHotData()
   common.setMenuIndex('7')
+  if (user.isLoggedIn) {
+    searchKeyHistoryData()
+  }
 })
 onActivated(() => {
   common.setMenuIndex('7')
@@ -264,4 +292,13 @@ onActivated(() => {
   }
 }
 
+.search-history {
+  padding-top: 20px;
+  text-align: center;
+
+  :deep(.el-tag) {
+    margin: 0 2.5px;
+    cursor: pointer;
+  }
+}
 </style>
