@@ -150,7 +150,7 @@ const loginSubmit = () => {
           message: '登录成功！',
           type: 'success',
         })
-        user.login(response.userid, response.token, response.username, keep_login.value)
+        user.login(response.user_id, response.token, response.username)
         router.push(common.next_path)
       }).catch(response => {
         //发生错误时执行的代码

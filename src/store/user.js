@@ -23,18 +23,17 @@ const useUserStore = defineStore('user', {
   // 修改数据
   actions: {
     // 更改用户信息
-    login(user_id, token, username, keep_login) {
+    login(user_id, token, username) {
       this.user_id = user_id
       this.token = token
       this.username = username
-      this.keep_login = keep_login
       // 根据用户选择存储数据
-      const storage = keep_login ? localStorage : sessionStorage
+      const storage = this.keep_login ? localStorage : sessionStorage
       storage.setItem('user_id', user_id)
       storage.setItem('token', token)
       storage.setItem('username', username)
       // 清除另一个存储旧数据
-      const oldStorage = keep_login ? sessionStorage : localStorage
+      const oldStorage = this.keep_login ? sessionStorage : localStorage
       oldStorage.removeItem('user_id')
       oldStorage.removeItem('token')
       oldStorage.removeItem('username')
