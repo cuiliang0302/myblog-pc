@@ -88,13 +88,18 @@ const searchKind = ref('article')
 let hotList = ref([])
 
 // 获取搜索热词
-async function searchKeyHotData() {
-  hotList.value = await getSearchHot()
+function searchKeyHotData() {
+  getSearchHot().then((response) => {
+    console.log(response)
+    hotList.value = response
+  }).catch(response => {
+    //发生错误时执行的代码
+    console.log(response)
+  });
 }
 
 // 搜索记录
 let historyList = ref([])
-
 function searchKeyHistoryData() {
   hotList.value = getSearchHot()
   getSearchHistory(user.user_id).then((response) => {
