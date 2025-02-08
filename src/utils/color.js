@@ -4,12 +4,12 @@ import {ref} from "vue";
 function color() {
 	// 主题颜色变量组
 	const themeList = ref([
-		{name: '拂晓蓝(默认)', value: '#409eff'},
+		{name: '拂晓蓝', value: '#409eff'},
 		{name: '薄暮红', value: '#e74c3c'},
 		{name: '火山橘', value: '#e67e22'},
 		{name: '日暮黄', value: '#f1c40f'},
 		{name: '极光绿', value: '#16a085'},
-		{name: '酱紫', value: '#9b59b6'},
+		{name: '酱样紫', value: '#9b59b6'},
 	])
 	// 标签颜色变量组
 	const tagList = ref([
