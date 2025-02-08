@@ -320,6 +320,7 @@ header {
 
     span {
       margin-left: 20px;
+      color: var(--el-color-primary);
     }
   }
 
