@@ -28,7 +28,7 @@
       <el-menu-item index="/personal/myInfo" @click="route.push('/personal/myInfo')">修改信息</el-menu-item>
       <el-menu-item index="/personal/changePassword" @click="route.push('/personal/changePassword')">修改密码</el-menu-item>
       <el-menu-item index="/personal/changeEmail" @click="route.push('/personal/changeEmail')">更换邮箱</el-menu-item>
-      <el-menu-item index="/personal/changePhone" @click="route.push('/personal/changePhone')">更换手机</el-menu-item>
+<!--      <el-menu-item index="/personal/changePhone" @click="route.push('/personal/changePhone')">更换手机</el-menu-item>-->
       <el-menu-item index="flow" @click="changeFlow">订阅更新</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="3">

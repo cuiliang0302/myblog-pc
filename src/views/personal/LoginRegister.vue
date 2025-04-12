@@ -13,7 +13,7 @@
               </el-input>
             </el-form-item>
             <el-form-item prop="contact">
-              <el-input v-model="registerForm.contact" placeholder="请输入邮箱号/手机号">
+              <el-input v-model="registerForm.contact" placeholder="请输入邮箱号">
                 <template #prefix>
                   <MyIcon type="icon-email"/>
                 </template>
@@ -55,7 +55,7 @@
           <h1>用户登录</h1>
           <el-form class="loginForm" :model="loginForm" ref="loginRef" label-width="0" :rules="loginRules">
             <el-form-item prop="username">
-              <el-input v-model="loginForm.username" placeholder="请输入用户名/手机号/邮箱号">
+              <el-input v-model="loginForm.username" placeholder="请输入用户名/邮箱号">
                 <template #prefix>
                   <MyIcon type="icon-my"/>
                 </template>
@@ -261,7 +261,7 @@ function loginFn() {
   const loginRules = {
     username: [{
       required: true,
-      message: '请输入用户名/邮箱号/手机号',
+      message: '请输入用户名/邮箱号',
       trigger: 'blur',
     }],
     password: [{
@@ -412,7 +412,7 @@ function registerFn() {
   // 联系方式验证
   const checkContact = (rule, value, callback) => {
     if (!value) {
-      return callback(new Error('请输入邮箱号/手机号'))
+      return callback(new Error('请输入邮箱号'))
     }
     setTimeout(() => {
       getRegister(NaN, value).then((response) => {

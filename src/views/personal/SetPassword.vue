@@ -29,7 +29,7 @@
           <div v-show="step === 1" class="main-form">
             <el-form :model="verifyForm" ref="verifyRef" label-width="0" :rules="rules">
               <el-form-item prop="contact">
-                <el-input v-model="verifyForm.contact" placeholder="请输入手机号/邮箱号">
+                <el-input v-model="verifyForm.contact" placeholder="请输入邮箱号">
                   <template #prefix>
                     <MyIcon type="icon-email"/>
                   </template>
@@ -134,26 +134,26 @@ const verifyForm = reactive({
 const checkContact = (rule, value, callback) => {
   console.log("开始验证了")
   if (!value) {
-    return callback(new Error('请输入邮箱号/手机号'))
+    return callback(new Error('请输入邮箱号'))
   }
   const phone = /^1[0-9]\d{9}$/;
   const email = /^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$/
   if (!phone.test(value) && !email.test(value)) {
     console.log(value)
     console.log("格式验证没通过")
-    return callback(new Error('手机号/邮箱号格式错误！'))
+    return callback(new Error('邮箱号格式错误！'))
   }
   setTimeout(() => {
     getRegister(NaN, value).then((response) => {
       console.log(response)
       ElMessage({
-        message: '邮箱号/手机号未注册,请更换邮箱号/手机号',
+        message: '邮箱号未注册,请更换邮箱号',
         type: 'warning',
       })
-      callback(new Error('手机号/邮箱号不存在'))
+      callback(new Error('邮箱号不存在'))
     }).catch(response => {
       console.log(response)
-      console.log("手机号/邮箱号已存在")
+      console.log("邮箱号已存在")
       codeBtnDisabled.value = false
       callback()
     });
