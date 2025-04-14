@@ -35,30 +35,30 @@
         </span>
       </div>
       <template #footer>
-        <el-button size="medium" type="success">
+        <el-button size="default" type="success">
           <label class="pointer" for="uploads">更换图片</label>
         </el-button>
         <input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
                accept="image/png, image/jpeg, image/jpg" @change="uploadChange($event)">
         <el-button-group class="cropper-btn-group">
-          <el-button size="medium" type="primary" plain @click="changeScale(1)">
+          <el-button size="default" type="primary" plain @click="changeScale(1)">
             <MyIcon type="icon-amplification"/>
           </el-button>
-          <el-button size="medium" type="primary" plain @click="changeScale(-1)">
+          <el-button size="default" type="primary" plain @click="changeScale(-1)">
             <MyIcon type="icon-narrow"/>
           </el-button>
-          <el-button size="medium" type="primary" plain @click="changeReset()">
+          <el-button size="default" type="primary" plain @click="changeReset()">
             <MyIcon type="icon-reset"/>
           </el-button>
-          <el-button size="medium" type="primary" plain @click="changeRotate(1)">
+          <el-button size="default" type="primary" plain @click="changeRotate(1)">
             <MyIcon type="icon-clockwise-sense"/>
           </el-button>
-          <el-button size="medium" type="primary" plain @click="changeRotate(-1)">
+          <el-button size="default" type="primary" plain @click="changeRotate(-1)">
             <MyIcon type="icon-clockwise-dirction"/>
           </el-button>
         </el-button-group>
-        <el-button size="medium" @click="showCopper=false">取 消</el-button>
-        <el-button type="primary" @click="confirmFn" size="medium">确 定</el-button>
+        <el-button size="default" @click="showCopper=false">取 消</el-button>
+        <el-button type="primary" @click="confirmFn" size="default">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -67,6 +67,7 @@
 import {reactive, ref} from 'vue'
 import icon from "@/utils/icon";
 import timeFormat from "@/utils/timeFormat";
+import 'vue-cropper/dist/index.css'
 import { VueCropper }  from "vue-cropper";
 import qiniuUpload from "@/utils/qiniuUpload";
 import {ElMessage} from 'element-plus'
