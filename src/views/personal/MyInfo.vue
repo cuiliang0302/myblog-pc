@@ -23,14 +23,14 @@
         <el-radio v-model="userInfoForm.sex" label="1" size="large" border>男</el-radio>
         <el-radio v-model="userInfoForm.sex" label="2" size="large" border>女</el-radio>
       </el-form-item>
-      <el-form-item label="手机号：">
-        <el-input v-model="userInfoForm.phone" disabled style="width: 30%"></el-input>
-        <el-button class="change-btn" type="primary" plain>更换手机</el-button>
-      </el-form-item>
-      <el-form-item label="邮箱号：">
-        <el-input v-model="userInfoForm.email" disabled style="width: 30%"></el-input>
-        <el-button class="change-btn" type="primary" plain>更换邮箱</el-button>
-      </el-form-item>
+<!--      <el-form-item label="手机号：">-->
+<!--        <el-input v-model="userInfoForm.phone" disabled style="width: 30%"></el-input>-->
+<!--        <el-button class="change-btn" type="primary" plain>更换手机</el-button>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="邮箱号：">-->
+<!--        <el-input v-model="userInfoForm.email" disabled style="width: 30%"></el-input>-->
+<!--        <el-button class="change-btn" type="primary" plain>更换邮箱</el-button>-->
+<!--      </el-form-item>-->
       <el-form-item label="地区：" v-if="areaData.length>0">
         <el-cascader
             v-model="userInfoForm.area_code"

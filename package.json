@@ -18,10 +18,10 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.3.1",
     "pinia-plugin-persistedstate": "^4.2.0",
-    "qiniu-js": "^4.0.0-beta.6",
+    "qiniu-js": "^3.4.2",
     "vite-plugin-prismjs": "^0.0.11",
     "vue": "^3.5.13",
-    "vue-cropper": "^0.6.5",
+    "vue-cropper": "^1.1.4",
     "vue-loaders": "^4.1.4",
     "vue-router": "^4.5.0",
     "wangeditor": "^4.7.15"
