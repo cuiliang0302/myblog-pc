@@ -30,7 +30,7 @@ const postCallback = () => {
       message: '登录成功！',
       type: 'success',
     })
-    user.login(response.userid, response.token, response.username, user.keep_login)
+    user.login(response.user_id, response.token, response.username, user.keep_login)
     router.push(common.next_path)
   }).catch(response => {
     //发生错误时执行的代码
