@@ -177,6 +177,9 @@ onMounted(() => {
 
   .action-active {
     background-color: var(--el-color-primary);
+    span {
+      color:var(--el-background-color-base)
+    }
   }
 }
 

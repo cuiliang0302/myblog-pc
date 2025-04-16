@@ -1,6 +1,6 @@
 <!--评论回复组件-->
 <template>
-<!--  评论列表-->
+  <!--  评论列表-->
   <ol class="comments" v-for="(item,index) in commentsList" :key="index">
     <li>
       <span><el-avatar :src="item.photo" :size="50"></el-avatar></span>
@@ -111,6 +111,14 @@ const replyView = (messageId) => {
 const likeMessage = (messageId, likeMessage) => {
   console.log("留言点赞了啊")
   likeList.value.push(messageId)
+  console.log(props.commentsList)
+  const comment = props.commentsList.find((item) => item.id === messageId)
+  if (comment) {
+    comment.like = likeMessage + 1
+    console.log("更新成功:", comment)
+  } else {
+    console.log("未找到对应ID的评论")
+  }
   const value = {
     'id': messageId,
     'like': likeMessage + 1
@@ -130,7 +138,7 @@ const replyForm = reactive({
   root: ''
 })
 // 点击留言评论回复事件
-const replyMessage = (father,root) => {
+const replyMessage = (father, root) => {
   console.log(father)
   textareaShow.value = true
   replyForm.father = father

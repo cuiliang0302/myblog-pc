@@ -197,7 +197,7 @@ if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", (value) => {
       message: '点赞成功！',
       type: 'success',
     })
-    leaveMessageDataRefresh()
+    // leaveMessageDataRefresh()
     reload();
   }).catch(response => {
     //发生错误时执行的代码

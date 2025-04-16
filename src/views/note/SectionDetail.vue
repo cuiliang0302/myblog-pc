@@ -430,7 +430,7 @@ function comment(sectionID) {
         message: '点赞成功',
         type: 'success',
       })
-      getSectionCommentData()
+      // getSectionCommentData()
       reload();
     }).catch(response => {
       //发生错误时执行的代码
@@ -493,13 +493,14 @@ function action(sectionID, sectionData) {
   // 笔记点赞事件
   const likeClick = () => {
     const params = {id: sectionID.value, 'kind': 'section'}
+    sectionData.like = sectionData.like + 1
     postLike(params).then((response) => {
       console.log(response)
       ElMessage({
         message: '笔记点赞成功！',
         type: 'success',
       })
-      sectionData.like = sectionData.like + 1
+
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)

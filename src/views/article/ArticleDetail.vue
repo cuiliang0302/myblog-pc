@@ -87,7 +87,8 @@
               <span v-if="user.isLoggedIn===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
               <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
               <span><Editor ref="messageEditor"></Editor></span>
-              <span v-if="user.isLoggedIn===true"><el-button type="primary" round @click="clickSend">评论</el-button></span>
+              <span v-if="user.isLoggedIn===true"><el-button type="primary" round
+                                                             @click="clickSend">评论</el-button></span>
               <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
             </div>
             <div class="comment-list">
@@ -138,9 +139,10 @@ import {
   patchArticleComment, putArticleHistory
 } from "@/api/record";
 import {getUserinfoId} from "@/api/account";
-import { inject } from 'vue';
+import {inject} from 'vue';
 import useStore from "@/store";
-const {user,common} = useStore();
+
+const {user, common} = useStore();
 const router = useRouter()
 const reload = inject("reload");
 let {MyIcon} = icon()
@@ -400,7 +402,7 @@ function comment(articleID) {
         message: '点赞成功',
         type: 'success',
       })
-      getArticleCommentData()
+      // getArticleCommentData()
       reload();
     }).catch(response => {
       //发生错误时执行的代码
@@ -463,13 +465,14 @@ function action(articleID, articleData) {
   // 文章点赞事件
   const likeClick = () => {
     const params = {id: articleID.value, 'kind': 'article'}
+    articleData.like = articleData.like + 1
     postLike(params).then((response) => {
       console.log(response)
       ElMessage({
         message: '文章点赞成功！',
         type: 'success',
       })
-      articleData.like = articleData.like + 1
+
     }).catch(response => {
       //发生错误时执行的代码
       console.log(response)
