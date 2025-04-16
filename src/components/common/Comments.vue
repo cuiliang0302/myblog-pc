@@ -164,19 +164,11 @@ const replySend = () => {
 }
 // 判断是否可回复留言
 const isReply = (userID) => {
-  if (user.isLoggedIn === true && user.user_id !== userID) {
-    return true
-  } else {
-    return false
-  }
+  return user.isLoggedIn === true && user.user_id !== String(userID);
 }
 // 判断评论留言能否删除
 const isDelete = (userID) => {
-  if (user.isLoggedIn === false || userID !== user.user_id) {
-    return false
-  } else {
-    return true
-  }
+  return !(user.isLoggedIn === false || String(userID) !== user.user_id);
 }
 // 评论留言删除
 const delMessage = (messageId) => {

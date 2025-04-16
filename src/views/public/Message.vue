@@ -15,7 +15,7 @@
         <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
       </div>
       <div class="comment-list">
-        <Comments :commentsList="messageList.data"></Comments>
+        <Comments :commentsList="messageList.data" :key="refreshKey"></Comments>
       </div>
       <p class="isLoading" v-if="loading" v-loading="loading"
          element-loading-text="玩命加载中"
@@ -89,6 +89,8 @@ const messageList = reactive({
   count: 0,
   data: []
 })
+// 每次刷新时更新时间戳
+const refreshKey = ref(Date.now())
 // 加载留言动画
 const loading = ref(false);
 
@@ -114,7 +116,7 @@ const sendMessage = () => {
       })
       messageForm.content = ''
       messageEditor.value.clear()
-      leaveMessageData()
+      leaveMessageDataRefresh()
       reload();
     }).catch(response => {
       //发生错误时执行的代码
@@ -152,6 +154,7 @@ function leaveMessageData() {
 
 // 刷新留言列表
 function leaveMessageDataRefresh() {
+  refreshKey.value = Date.now()
   getLeaveMessage({'page': 1, 'size': 1000}).then(response => {
     messageList.data = []
     messageList.data.push(...response.results)
