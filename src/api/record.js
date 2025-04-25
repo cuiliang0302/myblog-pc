@@ -102,11 +102,11 @@ export function postReplySectionComment(params) {
 }
 
 // 获取文章浏览记录
-export function getArticleHistory(article, user) {
+export function getArticleHistory(article) {
   if (article) {
-    return index.get('/record/articleHistory/?article=' + article + '&user=' + user)
+    return index.get('/record/articleHistory/?article=' + article )
   } else {
-    return index.get('/record/articleHistory/?user=' + user)
+    return index.get('/record/articleHistory/')
   }
 }
 
@@ -122,11 +122,11 @@ export function putArticleHistory(params) {
 }
 
 // 获取笔记浏览记录
-export function getSectionHistory(section, user) {
+export function getSectionHistory(section) {
   if (section) {
-    return index.get('/record/sectionHistory/?section=' + section + '&user=' + user)
+    return index.get('/record/sectionHistory/?section=' + section )
   } else {
-    return index.get('/record/sectionHistory/?user=' + user)
+    return index.get('/record/sectionHistory/')
   }
 
 }
@@ -143,18 +143,18 @@ export function putSectionHistory(params) {
 }
 
 // 获取用户文章评论数据
-export function getUserArticleComment(userId) {
-  return index.get('/record/articleComment/?user=' + userId)
+export function getUserArticleComment() {
+  return index.get('/record/articleComment/')
 }
 
 // 获取用户笔记评论数据
 export function getUserSectionComment(userId) {
-  return index.get('/record/sectionComment/?user=' + userId)
+  return index.get('/record/sectionComment/')
 }
 
 // 获取用户统计数据
-export function getStatistics(userId) {
-  return index.get('/record/statistics/?user=' + userId)
+export function getStatistics() {
+  return index.get('/record/statistics/')
 }
 
 // 查询指定用户echarts数据统计

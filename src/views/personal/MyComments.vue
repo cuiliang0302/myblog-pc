@@ -54,7 +54,7 @@ const commentList = ref([])
 
 // 获取文章评论记录
 async function getArticleHistoryData() {
-  let articleComment_data = await getUserArticleComment(user.user_id)
+  let articleComment_data = await getUserArticleComment()
   console.log(articleComment_data)
   commentList.value = articleComment_data.map((item) => {
     return {
@@ -68,7 +68,7 @@ async function getArticleHistoryData() {
 
 // 获取笔记评论记录
 async function getSectionHistoryData() {
-  let commentHistory_data = await getUserSectionComment(user.user_id)
+  let commentHistory_data = await getUserSectionComment()
   console.log(commentHistory_data)
   commentList.value = commentHistory_data.map((item) => {
     return {

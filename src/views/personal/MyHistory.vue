@@ -52,7 +52,7 @@ const historyList = ref([])
 
 // 获取文章浏览记录
 async function getArticleHistoryData() {
-  let articleHistory_data = await getArticleHistory(NaN, user.user_id)
+  let articleHistory_data = await getArticleHistory(NaN)
   console.log(articleHistory_data)
   historyList.value = articleHistory_data.map((item) => {
     return {
@@ -64,7 +64,7 @@ async function getArticleHistoryData() {
 }
 // 获取笔记浏览记录
 async function getSectionHistoryData() {
-  let articleHistory_data = await getSectionHistory(NaN, user.user_id)
+  let articleHistory_data = await getSectionHistory(NaN)
   console.log(articleHistory_data)
   historyList.value = articleHistory_data.map((item) => {
     return {

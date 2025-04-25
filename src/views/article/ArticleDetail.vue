@@ -138,7 +138,7 @@ import {
   postReplyArticleComment,
   patchArticleComment, putArticleHistory
 } from "@/api/record";
-import {getUserinfoId} from "@/api/account";
+import {getUserinfo} from "@/api/account";
 import {inject} from 'vue';
 import useStore from "@/store";
 
@@ -337,10 +337,13 @@ function comment(articleID) {
   }
 
   // 获取用户头像
-  async function getPhotoData() {
-    let data = await getUserinfoId(user.user_id)
-    console.log(data)
-    photo.value = data.photo
+  const getPhotoData = async ()=> {
+    try{
+      let data = await getUserinfo()
+      console.log(data)
+      photo.value = data[0].photo
+    }catch(err){
+      ElMessage.error('获取用户头像失败')
   }
 
   // 评论列表
@@ -486,7 +489,7 @@ function action(articleID, articleData) {
   async function getArticleHistoryData() {
     await nextTick()
     if (user.isLoggedIn === true) {
-      let res = await getArticleHistory(articleID.value, user.user_id)
+      let res = await getArticleHistory(articleID.value)
       console.log("查询是否已收藏", res.is_collect)
       isCollect.value = res.is_collect
       console.log(isCollect.value)

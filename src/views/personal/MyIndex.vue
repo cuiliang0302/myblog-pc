@@ -127,27 +127,47 @@
 </template>
 
 <script setup name="MyIndex">
-import {getUserinfoId} from "@/api/account";
+import {getUserinfo} from "@/api/account";
 import {onMounted, reactive, ref, watch} from "vue";
 import {getStatistics} from "@/api/record";
 import {getUserEcharts} from "@/api/record";
 import * as echarts from 'echarts'
 import useStore from "@/store";
-const {common,user,theme} = useStore();
+import {ElMessage} from "element-plus";
+
+const {common, user, theme} = useStore();
 // 用户信息
 const userInfo = reactive({})
 
 // 获取用户信息
-async function getUserinfo() {
-  Object.assign(userInfo, await getUserinfoId(user.user_id));
+const getUserinfoData = async () => {
+  try {
+    let response = await getUserinfo()
+    Object.assign(userInfo, response[0]);
+  } catch (error) {
+    ElMessage({
+      message: '获取用户信息失败',
+      type: 'error',
+      plain: true,
+    })
+  }
 }
 
 // 数据概览
 const dataCount = reactive({})
 
 // 获取数据概览数据
-async function statisticsData() {
-  Object.assign(dataCount, await getStatistics(user.user_id))
+const statisticsData = async () => {
+  try {
+    let response = await getStatistics()
+    Object.assign(dataCount, response)
+  } catch (error) {
+    ElMessage({
+      message: '获取用户统计数据失败',
+      type: 'error',
+      plain: true,
+    })
+  }
 }
 
 // echarts明亮模式曲线颜色
@@ -197,9 +217,10 @@ const setColor = () => {
   }
   console.log(bgc.value)
 }
+
 // 浏览趋势折线图
 async function trend() {
-  const query = {chart: 'trend', user: user.user_id}
+  const query = {chart: 'trend'}
   const chartData = await getUserEcharts(query)
   console.log("trend", chartData)
   const date = []
@@ -332,7 +353,7 @@ async function trend() {
 
 // 浏览文章饼图
 async function article() {
-  const query = {chart: 'article', user: user.user_id}
+  const query = {chart: 'article'}
   const chartData = await getUserEcharts(query)
   console.log("article", chartData)
   let myChart;
@@ -377,7 +398,7 @@ async function article() {
 
 // 浏览笔记雷达图
 async function note() {
-  const query = {chart: 'note', user: user.user_id}
+  const query = {chart: 'note'}
   const chartData = await getUserEcharts(query)
   console.log("note", chartData)
   const indicator = []
@@ -432,7 +453,7 @@ async function note() {
 
 // 浏览时间柱形图
 async function time() {
-  const query = {chart: 'time', user: user.user_id}
+  const query = {chart: 'time'}
   const chartData = await getUserEcharts(query)
   console.log("time", chartData)
   const time = []
@@ -511,7 +532,7 @@ async function time() {
 }
 
 // 监听切换主题色事件
-watch(()=>theme.is_dark, (newVal) => {
+watch(() => theme.is_dark, (newVal) => {
   console.log("切换颜色了")
   console.log(newVal)
   setColor()
@@ -519,12 +540,12 @@ watch(()=>theme.is_dark, (newVal) => {
   article()
   note()
   time()
-},{deep:true})
+}, {deep: true})
 onMounted(() => {
   common.setMenuIndex('')
-  console.log("dark",theme.is_dark)
+  console.log("dark", theme.is_dark)
   setColor()
-  getUserinfo()
+  getUserinfoData()
   statisticsData()
   trend()
   article()
@@ -537,9 +558,11 @@ onMounted(() => {
 .el-card {
   margin-bottom: 10px;
 }
-.my-info-card{
+
+.my-info-card {
   height: 330px;
 }
+
 .number-count-card {
   height: 107px;
   margin-bottom: 10px;

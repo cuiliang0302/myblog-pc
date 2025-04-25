@@ -48,7 +48,7 @@ import {
 } from "@/api/record";
 import icon from "@/utils/icon";
 import {getSiteConfig} from "@/api/management";
-import {getUserinfoId} from "@/api/account";
+import {getUserinfo} from "@/api/account";
 import {useRouter} from "vue-router";
 import useStore from "@/store";
 
@@ -78,7 +78,7 @@ async function getLogoData() {
 
 // 获取用户头像
 async function getPhotoData() {
-  let data = await getUserinfoId(user.user_id)
+  let data = await getUserinfo(user.user_id)
   console.log(data)
   photo.value = data.photo
 }

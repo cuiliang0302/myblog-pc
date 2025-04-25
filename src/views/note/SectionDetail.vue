@@ -103,7 +103,7 @@ import {
   postSectionComment, postSectionHistory,
   patchSectionComment, putSectionHistory
 } from "@/api/record";
-import {getUserinfoId} from "@/api/account";
+import {getUserinfo} from "@/api/account";
 import { inject } from 'vue';
 import useStore from "@/store";
 import {storeToRefs} from 'pinia'
@@ -363,10 +363,16 @@ function comment(sectionID) {
   }
 
   // 获取用户头像
-  async function getPhotoData() {
-    let data = await getUserinfoId(user.user_id)
-    console.log(data)
-    photo.value = data.photo
+  const getPhotoData = async ()=> {
+    try{
+      let data = await getUserinfo()
+      console.log(data)
+      photo.value = data[0].photo
+    }catch(error){
+      console.log(error)
+      ElMessage.error('获取用户头像失败')
+    }
+
   }
 
   // 留言评论列表
@@ -514,7 +520,7 @@ function action(sectionID, sectionData) {
   async function getSectionHistoryData() {
     await nextTick()
     if (user.isLoggedIn === true) {
-      let res = await getSectionHistory(sectionID.value, user.user_id)
+      let res = await getSectionHistory(sectionID.value)
       console.log(res)
       isCollect.value = res.is_collect
       console.log(isCollect.value)

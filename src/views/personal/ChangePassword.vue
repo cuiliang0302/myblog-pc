@@ -25,7 +25,7 @@
 import {onMounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import {ElMessage, ElMessageBox} from "element-plus";
-import {getUserinfoId, putChangePassword} from "@/api/account";
+import {getUserinfo, putChangePassword} from "@/api/account";
 import useStore from "@/store";
 const {user} = useStore();
 
@@ -45,12 +45,12 @@ const verifyForm = reactive({
 });
 // 密码正则校验
 const checkPasswordRegular = (rule, value, callback) => {
-  const pattern = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^\w\s])[\S]{8,}$/;
+  const pattern =  /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
   if (pattern.test(value)) {
     callback()
   } else {
     console.log("没过去")
-    return callback(new Error("密码必须是数字+字符+字符组合，8-16位长度！"))
+    return callback(new Error("密码必须是数字+字母+字符组合，8-16位长度！"))
   }
 }
 // 密码一致性校验
@@ -78,7 +78,7 @@ const onSubmit = () => {
     if (valid) {
       passwordForm.oldPassword = verifyForm.oldPassword
       passwordForm.newPassword = verifyForm.password2
-      putChangePassword(user.user_id, passwordForm).then((response) => {
+      putChangePassword(passwordForm).then((response) => {
         console.log(response)
         ElMessage({
           message: '密码修改成功，即将跳转至登录页！',
@@ -97,11 +97,11 @@ const onSubmit = () => {
 }
 
 // 获取用户信息
-async function getUserinfo(userid) {
-  const userinfo_data = await getUserinfoId(userid)
-  console.log(userinfo_data.source)
-  if (userinfo_data.source !== '直接注册') {
-    ElMessageBox.alert('您的账号直接使用' + userinfo_data.source + '登录即可，无需修改密码！', '修改密码提示', {
+const getUserinfo = async ()=> {
+  const userinfo_data = await getUserinfo()
+  console.log(userinfo_data[0].source)
+  if (userinfo_data[0].source !== '直接注册') {
+    await ElMessageBox.alert('您的账号直接使用' + userinfo_data.source + '登录即可，无需修改密码！', '修改密码提示', {
       confirmButtonText: 'OK',
       callback: () => {
         router.push('/personal/myIndex')
@@ -110,7 +110,7 @@ async function getUserinfo(userid) {
   }
 }
 onMounted(() => {
-  getUserinfo(user.user_id)
+  getUserinfo()
 })
 </script>
 

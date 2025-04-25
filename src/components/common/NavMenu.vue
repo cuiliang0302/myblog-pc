@@ -149,7 +149,7 @@ import {ArrowDown, ArrowUp} from '@element-plus/icons-vue'
 import {getCategory, getNote} from "@/api/blog";
 import {getSiteConfig} from "@/api/management";
 import {useRouter} from "vue-router";
-import {getUserinfoId} from "@/api/account";
+import {getUserinfo} from "@/api/account";
 import useStore from "@/store";
 import {storeToRefs} from 'pinia'
 import color from "@/utils/color"
@@ -245,10 +245,18 @@ const logout = () => {
 const photo = ref()
 
 // 个人中心-获取用户头像
-async function getPhotoData() {
-  let data = await getUserinfoId(user.user_id)
-  photo.value = data.photo
-  console.log("photo:", photo.value)
+const getPhotoData = async () => {
+  try{
+    let data = await getUserinfo()
+    photo.value = data[0].photo
+    console.log("photo:", photo.value)
+  }catch (error) {
+    ElMessage({
+      message: '获取用户头像信息失败',
+      type: 'error',
+      plain: true,
+    })
+  }
 }
 
 //设置-菜单默认关闭

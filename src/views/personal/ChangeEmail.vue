@@ -94,7 +94,7 @@ const onSubmit = () => {
   console.log('submit!')
   emailFormRef.value.validate((valid) => {
     if (valid) {
-      putChangeEmail(user.user_id, emailForm).then((response) => {
+      putChangeEmail(emailForm).then((response) => {
         console.log(response)
         ElMessage({
           message: '邮箱号修改成功！',

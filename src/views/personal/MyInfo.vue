@@ -23,14 +23,14 @@
         <el-radio v-model="userInfoForm.sex" label="1" size="large" border>男</el-radio>
         <el-radio v-model="userInfoForm.sex" label="2" size="large" border>女</el-radio>
       </el-form-item>
-<!--      <el-form-item label="手机号：">-->
-<!--        <el-input v-model="userInfoForm.phone" disabled style="width: 30%"></el-input>-->
-<!--        <el-button class="change-btn" type="primary" plain>更换手机</el-button>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="邮箱号：">-->
-<!--        <el-input v-model="userInfoForm.email" disabled style="width: 30%"></el-input>-->
-<!--        <el-button class="change-btn" type="primary" plain>更换邮箱</el-button>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="手机号：">-->
+      <!--        <el-input v-model="userInfoForm.phone" disabled style="width: 30%"></el-input>-->
+      <!--        <el-button class="change-btn" type="primary" plain>更换手机</el-button>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="邮箱号：">-->
+      <!--        <el-input v-model="userInfoForm.email" disabled style="width: 30%"></el-input>-->
+      <!--        <el-button class="change-btn" type="primary" plain>更换邮箱</el-button>-->
+      <!--      </el-form-item>-->
       <el-form-item label="地区：" v-if="areaData.length>0">
         <el-cascader
             v-model="userInfoForm.area_code"
@@ -66,12 +66,13 @@
 
 <script setup name="MyInfo">
 import {onMounted, reactive, ref} from "vue";
-import {getRegister, getUserinfoId, putUserinfoId} from "@/api/account";
-import {getAreaData} from "@/api/public";
+import {getRegister, getUserinfo, putUserinfoId} from "@/api/account";
 import UploadImg from "@/components/common/UploadImg.vue"
 import {ElMessage} from "element-plus";
 import timeFormat from "@/utils/timeFormat";
 import useStore from "@/store";
+import {areaList} from '@vant/area-data';
+
 const {user} = useStore();
 let {timeDate} = timeFormat()
 
@@ -98,6 +99,9 @@ const checkUsername = (rule, value, callback) => {
 }
 // 异步校验网址
 const checkWeb = (rule, value, callback) => {
+  if (!value) {
+    return callback();
+  }
   const pattern = /[a-zA-z]+:\/\/[^\s]*/
   if (pattern.test(value)) {
     callback()
@@ -108,40 +112,42 @@ const checkWeb = (rule, value, callback) => {
 // 表单校验规则
 const rules = reactive({
   username: [{validator: checkUsername, trigger: 'blur'}],
-  web: [{validator: checkWeb, trigger: 'blur'}],
+  web: [{validator: checkWeb, trigger: 'blur', required: false,}],
 })
 
 // 获取用户信息
-async function getUserinfo(userid) {
-  const userinfo_data = await getUserinfoId(userid)
-  for (let i in userinfo_data) {
-    userInfoForm[i] = userinfo_data[i]
+const getUserinfo = async () => {
+  try {
+    const userinfo_data = await getUserinfo()
+    console.log(userinfo_data[0])
+    Object.assign(userInfoForm, userinfo_data[0])
+    oldUsername.value = userInfoForm.username
+    console.log(userInfoForm)
+  } catch (error) {
+    ElMessage.error('获取用户信息失败!')
   }
-  oldUsername.value = userInfoForm.username
-  console.log(userInfoForm)
+
 }
 
 // 地区数据
 const areaData = ref([])
 
 // 获取地区数据
-async function getArea() {
-  let data = await getAreaData()
-  for (let province in data.areaList.province_list) {
-    const province_obj = {}
-    province_obj.value = province
-    province_obj.label = data.areaList.province_list[province]
-    province_obj.children = []
-    for (let city in data.areaList.city_list) {
-      if (province_obj.value.substring(0, 2) === city.substring(0, 2)) {
-        const city_obj = {}
-        city_obj.value = city
-        city_obj.label = data.areaList.city_list[city]
-        province_obj.children.push(city_obj)
-      }
-    }
-    areaData.value.push(province_obj)
-  }
+const getArea = () => {
+  areaData.value = Object.entries(areaList.province_list).map(([provinceCode, provinceName]) => {
+    const children = Object.entries(areaList.city_list)
+        .filter(([cityCode]) => cityCode.startsWith(provinceCode.slice(0, 2)))
+        .map(([cityCode, cityName]) => ({
+          value: cityCode,
+          label: cityName
+        }));
+
+    return {
+      value: provinceCode,
+      label: provinceName,
+      children
+    };
+  });
 }
 
 // 地区级联选择器配置
@@ -181,7 +187,7 @@ const changeDate = (value) => {
 }
 // 表单重置事件
 const reset = () => {
-  getUserinfo(user.user_id)
+  getUserinfo()
 }
 // 表单提交事件
 const onSubmit = () => {
@@ -197,15 +203,13 @@ const onSubmit = () => {
       }).catch(response => {
         //发生错误时执行的代码
         console.log(response)
-        for (let i in response) {
-          ElMessage.error(response[i][0])
-        }
+        ElMessage.error('修改用户信息失败')
       });
     }
   })
 }
 onMounted(() => {
-  getUserinfo(user.user_id)
+  getUserinfo()
   getArea()
 })
 </script>
@@ -213,7 +217,8 @@ onMounted(() => {
 <style scoped lang="scss">
 .el-form {
   padding: 20px 50px 20px 0;
-  .form-btn{
+
+  .form-btn {
     margin-top: 50px;
   }
 }

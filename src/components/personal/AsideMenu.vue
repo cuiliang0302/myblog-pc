@@ -26,9 +26,10 @@
         <span class="menu-icon-text">账号管理</span>
       </template>
       <el-menu-item index="/personal/myInfo" @click="route.push('/personal/myInfo')">修改信息</el-menu-item>
-      <el-menu-item index="/personal/changePassword" @click="route.push('/personal/changePassword')">修改密码</el-menu-item>
+      <el-menu-item index="/personal/changePassword" @click="route.push('/personal/changePassword')">修改密码
+      </el-menu-item>
       <el-menu-item index="/personal/changeEmail" @click="route.push('/personal/changeEmail')">更换邮箱</el-menu-item>
-<!--      <el-menu-item index="/personal/changePhone" @click="route.push('/personal/changePhone')">更换手机</el-menu-item>-->
+      <!--      <el-menu-item index="/personal/changePhone" @click="route.push('/personal/changePhone')">更换手机</el-menu-item>-->
       <el-menu-item index="flow" @click="changeFlow">订阅更新</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="3">
@@ -63,16 +64,18 @@
 import {User as IconUser, Tickets, Operation} from '@element-plus/icons-vue'
 import {computed, onMounted, reactive, ref} from "vue";
 import {getSiteConfig} from "@/api/management";
-import {getUserinfoId, putUserinfoId} from "@/api/account";
+import {getUserinfo, putUserinfoId} from "@/api/account";
 import {useRouter} from "vue-router";
 import {ElMessage, ElMessageBox} from "element-plus";
 import icon from "@/utils/icon";
+
 const {MyIcon} = icon()
 const route = useRouter()
 const router = useRouter()
 import useStore from "@/store";
 import {storeToRefs} from 'pinia'
-const {common,user} = useStore();
+
+const {common, user} = useStore();
 //导航菜单-logo和name
 const siteConfig = reactive({
   logo: '',
@@ -94,8 +97,14 @@ const {aside_menu_fold} = storeToRefs(common)
 const userInfo = reactive({})
 
 // 获取用户信息
-async function getUserinfo() {
-  Object.assign(userInfo, await getUserinfoId(user.user_id))
+const getUserinfoData = async () => {
+  try {
+    const data = await getUserinfo()
+    Object.assign(userInfo, data[0])
+  } catch (err) {
+    console.log(err)
+    ElMessage.error('获取用户信息失败')
+  }
 }
 
 // 设置是否接收邮件通知
@@ -150,7 +159,7 @@ const flowClose = () => {
 onMounted(() => {
   asideMenuIndex.value = route.currentRoute.value.fullPath
   siteConfigData()
-  getUserinfo()
+  getUserinfoData()
 })
 </script>
 
@@ -178,7 +187,8 @@ onMounted(() => {
   margin-left: 10px;
   vertical-align: -3px;
 }
-.flow-icon{
+
+.flow-icon {
   font-size: 30px;
   margin-right: 5px;
   vertical-align: -10px;
