@@ -116,7 +116,7 @@ const rules = reactive({
 })
 
 // 获取用户信息
-const getUserinfo = async () => {
+const getUserinfoData = async () => {
   try {
     const userinfo_data = await getUserinfo()
     console.log(userinfo_data[0])
@@ -187,7 +187,7 @@ const changeDate = (value) => {
 }
 // 表单重置事件
 const reset = () => {
-  getUserinfo()
+  getUserinfoData()
 }
 // 表单提交事件
 const onSubmit = () => {
@@ -209,7 +209,7 @@ const onSubmit = () => {
   })
 }
 onMounted(() => {
-  getUserinfo()
+  getUserinfoData()
   getArea()
 })
 </script>

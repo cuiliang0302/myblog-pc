@@ -97,7 +97,7 @@ const onSubmit = () => {
 }
 
 // 获取用户信息
-const getUserinfo = async ()=> {
+const getUserinfoData = async ()=> {
   const userinfo_data = await getUserinfo()
   console.log(userinfo_data[0].source)
   if (userinfo_data[0].source !== '直接注册') {
@@ -110,7 +110,7 @@ const getUserinfo = async ()=> {
   }
 }
 onMounted(() => {
-  getUserinfo()
+  getUserinfoData()
 })
 </script>
 
