@@ -13,11 +13,7 @@ const useUserStore = defineStore('user', {
     isLoggedIn(state) {
       // 添加 Token 有效性验证
       console.log(state.token)
-      if (!state.token) {
-        return false
-      } else {
-        return true
-      }
+      return state.token;
     },
   },
   // 修改数据
