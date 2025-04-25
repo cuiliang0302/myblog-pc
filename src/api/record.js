@@ -7,8 +7,8 @@ export function getSearchHot() {
 }
 
 // 获取搜索记录
-export function getSearchHistory(user_id) {
-  return index.get('record/searchHistory/' + user_id)
+export function getSearchHistory() {
+  return index.get('/record/searchHistory/')
 }
 
 // 搜索文章

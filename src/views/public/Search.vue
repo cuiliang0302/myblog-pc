@@ -102,9 +102,9 @@ function searchKeyHotData() {
 let historyList = ref([])
 function searchKeyHistoryData() {
   hotList.value = getSearchHot()
-  getSearchHistory(user.user_id).then((response) => {
-    console.log(response.keys)
-    historyList.value = response.keys
+  getSearchHistory().then((response) => {
+    console.log(response)
+    historyList.value = response
   }).catch(response => {
     //发生错误时执行的代码
     console.log(response)
@@ -182,13 +182,6 @@ const handleSelect = (item) => {
 }
 // 提交搜索请求
 const searchFn = () => {
-  let user_id
-  if (user.isLoggedIn) {
-    user_id = user.user_id
-  } else {
-    user_id = NaN
-  }
-  console.log(user_id)
   // 加载中动画
   const loading = ElLoading.service({
     lock: true,
@@ -200,9 +193,6 @@ const searchFn = () => {
     key: key.value,
     kind: searchKind.value,
     order: 'default'
-  }
-  if (user_id) {
-    params['user_id'] = user_id
   }
   getSearch(params).then((response) => {
     console.log(response)
