@@ -398,7 +398,7 @@ header {
     }
 
     .img-active {
-      box-shadow: 0 2px 12px 0 #409EFF;
+      box-shadow: 0 2px 12px 0 var(--el-color-primary);
     }
   }
 
