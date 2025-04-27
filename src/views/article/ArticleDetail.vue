@@ -328,6 +328,8 @@ function comment(articleID) {
   const logo = ref()
   // 用户头像
   const photo = ref()
+  // 评论列表
+  const commentsList = ref([])
 
   // 获取网站logo
   async function getLogoData() {
@@ -345,84 +347,43 @@ function comment(articleID) {
     } catch (err) {
       ElMessage.error('获取用户头像失败')
     }
+  }
 
-    // 评论列表
-    const commentsList = ref([])
 
-    // 获取文章评论数据
-    async function getArticleCommentData() {
-      await nextTick()
-      commentsList.value = await getArticleComment(articleID.value)
-      console.log("commentsList", commentsList.value)
-    }
+  // 获取文章评论数据
+  async function getArticleCommentData() {
+    await nextTick()
+    commentsList.value = await getArticleComment(articleID.value)
+    console.log("commentsList", commentsList.value)
+  }
 
-    // 评论表单
-    const messageForm = reactive({
-      content: '',
-      user: '',
-    })
-    // 弹出登录框
-    const showLogin = () => {
-      common.setNextPath(router.currentRoute.value.fullPath)
-      loginPopupRef.value.showPopup()
-    }
-    // 点击发表评论事件
-    const clickSend = () => {
-      messageEditor.value.syncHTML()
-      messageForm.content = messageEditor.value.content
-      console.log(messageForm.content)
-      if (messageForm.content) {
-        messageForm.user = user.user_id
-        messageForm['article_id'] = articleID.value
-        console.log(messageForm)
-        postArticleComment(messageForm).then((response) => {
-          console.log(response)
-          ElMessage({
-            message: '评论成功！',
-            type: 'success',
-          })
-          messageForm.content = ''
-          messageEditor.value.clear()
-          getArticleCommentData()
-          reload();
-        }).catch(response => {
-          //发生错误时执行的代码
-          console.log(response)
-          for (let i in response) {
-            ElMessage.error(i + response[i][0])
-          }
-        });
-      } else {
-        ElMessage('请输入评论内容')
-      }
-    }
-    // 评论点赞事件
-    if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", value => {
-      const params = {'like': value.like}
-      patchArticleComment(value.id, params).then((response) => {
+  // 评论表单
+  const messageForm = reactive({
+    content: '',
+    user: '',
+  })
+  // 弹出登录框
+  const showLogin = () => {
+    common.setNextPath(router.currentRoute.value.fullPath)
+    loginPopupRef.value.showPopup()
+  }
+  // 点击发表评论事件
+  const clickSend = () => {
+    messageEditor.value.syncHTML()
+    messageForm.content = messageEditor.value.content
+    console.log(messageForm.content)
+    if (messageForm.content) {
+      messageForm.user = user.user_id
+      messageForm['article_id'] = articleID.value
+      console.log(messageForm)
+      postArticleComment(messageForm).then((response) => {
         console.log(response)
         ElMessage({
-          message: '点赞成功',
+          message: '评论成功！',
           type: 'success',
         })
-        // getArticleCommentData()
-        reload();
-      }).catch(response => {
-        //发生错误时执行的代码
-        console.log(response)
-        ElMessage.error(response.msg)
-      });
-    });
-    // 评论回复事件
-    if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
-      replyForm['article_id'] = articleID.value
-      console.log(replyForm)
-      postReplyArticleComment(replyForm).then((response) => {
-        console.log(response)
-        ElMessage({
-          message: '回复成功！',
-          type: 'success',
-        })
+        messageForm.content = ''
+        messageEditor.value.clear()
         getArticleCommentData()
         reload();
       }).catch(response => {
@@ -432,131 +393,170 @@ function comment(articleID) {
           ElMessage.error(i + response[i][0])
         }
       });
+    } else {
+      ElMessage('请输入评论内容')
+    }
+  }
+  // 评论点赞事件
+  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", value => {
+    const params = {'like': value.like}
+    patchArticleComment(value.id, params).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '点赞成功',
+        type: 'success',
+      })
+      // getArticleCommentData()
+      reload();
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
     });
-    // 评论删除事件
-    if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
-      deleteArticleComment(messageId).then((response) => {
-        console.log(response)
-        console.log("要开始删除了")
-        ElMessage({
-          message: '评论删除成功！',
-          type: 'success',
-        })
-        getArticleCommentData()
-        reload();
-      }).catch(response => {
-        //发生错误时执行的代码
-        console.log(response)
-        ElMessage.error(response.msg)
-      });
-    });
-    onMounted(() => {
+  });
+  // 评论回复事件
+  if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+    replyForm['article_id'] = articleID.value
+    console.log(replyForm)
+    postReplyArticleComment(replyForm).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '回复成功！',
+        type: 'success',
+      })
       getArticleCommentData()
-      if (user.isLoggedIn === true) {
-        getPhotoData()
-      } else {
-        getLogoData()
+      reload();
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      for (let i in response) {
+        ElMessage.error(i + response[i][0])
       }
-    })
-    return {
-      commentsList, getArticleCommentData, logo, photo, messageForm, showLogin, clickSend
+    });
+  });
+  // 评论删除事件
+  if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+    deleteArticleComment(messageId).then((response) => {
+      console.log(response)
+      console.log("要开始删除了")
+      ElMessage({
+        message: '评论删除成功！',
+        type: 'success',
+      })
+      getArticleCommentData()
+      reload();
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  });
+  onMounted(() => {
+    getArticleCommentData()
+    if (user.isLoggedIn === true) {
+      getPhotoData()
+    } else {
+      getLogoData()
+    }
+  })
+  return {
+    commentsList, logo, photo, messageForm, showLogin, clickSend
+  }
+}
+
+// 侧边栏动作模块
+function action(articleID, articleData) {
+  // 文章点赞事件
+  const likeClick = () => {
+    const params = {id: articleID.value, 'kind': 'article'}
+    articleData.like = articleData.like + 1
+    postLike(params).then((response) => {
+      console.log(response)
+      ElMessage({
+        message: '文章点赞成功！',
+        type: 'success',
+      })
+
+    }).catch(response => {
+      //发生错误时执行的代码
+      console.log(response)
+      ElMessage.error(response.msg)
+    });
+  }
+  // 文章收藏状态
+  const isCollect = ref(false)
+
+  // 获取文章浏览记录（是否已收藏）
+  async function getArticleHistoryData() {
+    await nextTick()
+    if (user.isLoggedIn === true) {
+      let res = await getArticleHistory(articleID.value)
+      console.log("查询是否已收藏", res.is_collect)
+      isCollect.value = res.is_collect
+      console.log(isCollect.value)
     }
   }
 
-// 侧边栏动作模块
-  function action(articleID, articleData) {
-    // 文章点赞事件
-    const likeClick = () => {
-      const params = {id: articleID.value, 'kind': 'article'}
-      articleData.like = articleData.like + 1
-      postLike(params).then((response) => {
+  // 添加/取消收藏表单
+  const CollectForm = reactive({
+    user: '',
+    is_collect: ''
+  })
+  // 子组件添加/取消收藏事件
+  const collectClick = () => {
+    if (user.isLoggedIn === true) {
+      console.log("当前收藏状态是", isCollect.value)
+      isCollect.value = !isCollect.value
+      CollectForm.user = user.user_id
+      CollectForm.is_collect = isCollect.value
+      CollectForm['article_id'] = articleID
+      putArticleHistory(CollectForm).then((response) => {
         console.log(response)
-        ElMessage({
-          message: '文章点赞成功！',
-          type: 'success',
-        })
-
+        if (response.is_collect === true) {
+          ElMessage({
+            message: '已添加收藏！',
+            type: 'success',
+          })
+        } else {
+          ElMessage({
+            message: '已取消收藏！',
+            type: 'success',
+          })
+        }
       }).catch(response => {
         //发生错误时执行的代码
         console.log(response)
         ElMessage.error(response.msg)
       });
+    } else {
+      console.log("先登录")
+      common.setNextPath(router.currentRoute.value.fullPath)
+      loginPopupRef.value.showPopup()
     }
-    // 文章收藏状态
-    const isCollect = ref(false)
+  }
+  // 添加文章浏览记录表单
+  const articleHistoryForm = reactive({
+    article_id: '',
+    user: ''
+  })
 
-    // 获取文章浏览记录（是否已收藏）
-    async function getArticleHistoryData() {
-      await nextTick()
-      if (user.isLoggedIn === true) {
-        let res = await getArticleHistory(articleID.value)
-        console.log("查询是否已收藏", res.is_collect)
-        isCollect.value = res.is_collect
-        console.log(isCollect.value)
-      }
+  // 添加文章浏览记录
+  async function postArticleHistoryData(article_id) {
+    if (user.isLoggedIn === true) {
+      articleHistoryForm.article_id = article_id
+      articleHistoryForm.user = user.user_id
+      console.log("添加文章浏览记录了")
+      console.log("articleHistoryForm", articleHistoryForm)
+      let res = await postArticleHistory(articleHistoryForm)
+      console.log(res)
     }
+  }
 
-    // 添加/取消收藏表单
-    const CollectForm = reactive({
-      user: '',
-      is_collect: ''
-    })
-    // 子组件添加/取消收藏事件
-    const collectClick = () => {
-      if (user.isLoggedIn === true) {
-        console.log("当前收藏状态是", isCollect.value)
-        isCollect.value = !isCollect.value
-        CollectForm.user = user.user_id
-        CollectForm.is_collect = isCollect.value
-        CollectForm['article_id'] = articleID
-        putArticleHistory(CollectForm).then((response) => {
-          console.log(response)
-          if (response.is_collect === true) {
-            ElMessage({
-              message: '已添加收藏！',
-              type: 'success',
-            })
-          } else {
-            ElMessage({
-              message: '已取消收藏！',
-              type: 'success',
-            })
-          }
-        }).catch(response => {
-          //发生错误时执行的代码
-          console.log(response)
-          ElMessage.error(response.msg)
-        });
-      } else {
-        console.log("先登录")
-        common.setNextPath(router.currentRoute.value.fullPath)
-        loginPopupRef.value.showPopup()
-      }
-    }
-    // 添加文章浏览记录表单
-    const articleHistoryForm = reactive({
-      article_id: '',
-      user: ''
-    })
-
-    // 添加文章浏览记录
-    async function postArticleHistoryData(article_id) {
-      if (user.isLoggedIn === true) {
-        articleHistoryForm.article_id = article_id
-        articleHistoryForm.user = user.user_id
-        console.log("添加文章浏览记录了")
-        console.log("articleHistoryForm", articleHistoryForm)
-        let res = await postArticleHistory(articleHistoryForm)
-        console.log(res)
-      }
-    }
-
-    onMounted(() => {
-      getArticleHistoryData()
-    })
-    return {
-      likeClick, isCollect, getArticleHistoryData, collectClick, postArticleHistoryData
-    }
+  onMounted(() => {
+    getArticleHistoryData()
+  })
+  return {
+    likeClick, isCollect, getArticleHistoryData, collectClick, postArticleHistoryData
   }
 }
 </script>
