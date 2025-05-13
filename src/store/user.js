@@ -11,9 +11,12 @@ const useUserStore = defineStore('user', {
   // 计算属性
   getters: {
     isLoggedIn(state) {
-      // 添加 Token 有效性验证
       console.log(state.token)
-      return state.token;
+      if (!state.token) {
+        return false
+      } else {
+        return true
+      }
     },
   },
   // 修改数据

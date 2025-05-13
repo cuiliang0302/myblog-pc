@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="comments detail-card" id="comment">
-            <h2>📝 评论交流</h2>
+            <h2>📝 评论交流{{user.isLoggedIn}}</h2>
             <div class="input-field">
               <span v-if="user.isLoggedIn===true"><el-avatar :size="50" :src="photo"></el-avatar></span>
               <span v-else><el-avatar :size="50" :src="logo"></el-avatar></span>
