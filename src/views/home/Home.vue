@@ -152,7 +152,7 @@ onMounted(() => {
   let script = document.createElement('script');
   script.type = 'text/javascript';
   script.src = 'https://umami.cuiliangblog.cn/script.js';
-  script.setAttribute('data-website-id', "9447ca81-4839-4b2d-a0e3-f795515a2f3b")
+  script.setAttribute('data-website-id', "148a1e4d-f683-4819-a172-7605346b75e7")
   script.setAttribute('data-auto-track', "false")
   document.body.appendChild(script)
   // console.log("umami", window.umami.track)
