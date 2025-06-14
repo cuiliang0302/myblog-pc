@@ -2,8 +2,8 @@
   <NavMenu></NavMenu>
   <div class="page">
     <div class="animate__animated animate__fadeInUp">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id">
+      <el-collapse v-model="activeNames" expand-icon-position="left">
+        <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id" >
           <MarkDown :text="item.body"></MarkDown>
 <!--          {{item.body}}-->
         </el-collapse-item>
@@ -43,12 +43,9 @@ const activeNames = ref([1]);
 </script>
 
 <style lang="scss">
-.el-collapse-icon-position-right .el-collapse-item__header{
-  padding-right: 0!important;
-  .el-collapse-item__title{
-    font-size: 25px !important;
-    color: var(--el-color-primary) !important;
-    margin-left: 0.5em;
-  }
+.el-collapse-item__title{
+  font-size: 25px !important;
+  color: var(--el-color-primary) !important;
+  margin-left: 0.5em;
 }
 </style>

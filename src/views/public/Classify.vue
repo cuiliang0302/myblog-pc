@@ -3,7 +3,7 @@
   <NavMenu></NavMenu>
   <div class="page">
     <div class="animate__animated animate__zoomIn">
-      <el-collapse v-model="activeNames" @change="handleChange" accordion>
+      <el-collapse v-model="activeNames" @change="handleChange" accordion expand-icon-position="left">
         <el-collapse-item v-for="(data,month) in classifyList" :key="month"
                           :title="formatMonth(month)+' (文章'+data.article+'篇 笔记'+data.section+'篇)'"
                           :name="month">
@@ -111,13 +111,10 @@ onActivated(() => {
 
 <style lang="scss">
 
-.el-collapse-icon-position-right .el-collapse-item__header{
-  padding-right: 0!important;
-  .el-collapse-item__title{
-    font-size: 25px !important;
-    color: var(--el-color-primary) !important;
-    margin-left: 0.5em;
-  }
+.el-collapse-item__title{
+  font-size: 20px !important;
+  color: var(--el-color-primary) !important;
+  margin-left: 0.5em;
 }
 
 .timeline {
