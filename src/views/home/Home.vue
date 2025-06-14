@@ -9,7 +9,7 @@
               <el-skeleton-item variant="image" style="width: 900px; height: 500px"/>
             </template>
             <template #default>
-              <el-carousel width="900px" height="500px" :interval="5000">
+              <el-carousel width="900px" height="500px" :interval="4000" motion-blur>
                 <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
                   <el-image
                       class="pointer"
