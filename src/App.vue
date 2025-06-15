@@ -61,11 +61,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-
 .router-view {
   color: var(--el-text-color-primary);
   background-color: var(--el-background-color-base);
-  transition: background 1s, color 0.6s;
+  //transition: background 1s, color 0.6s;
+  transition: background 0.3s ease;
   width: 100%;
   height: max-content;
   min-height: 100vh;

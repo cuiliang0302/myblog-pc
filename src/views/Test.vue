@@ -79,20 +79,6 @@ const toggleTheme = (e) => {
   mix-blend-mode: normal; /* 修复颜色混合问题 */
 }
 
-/* 主题变量 */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #213547;
-  background: var(--bg-color);
-  color: var(--text-color);
-  transition: background 0.3s ease; /* 平滑背景色过渡 */
-}
-
-:root.dark {
-  --bg-color: #1a1a1a;
-  --text-color: rgba(255, 255, 255, 0.87);
-}
-
 /* 添加页面过渡效果 */
 ::view-transition-old(root) {
   z-index: 1;

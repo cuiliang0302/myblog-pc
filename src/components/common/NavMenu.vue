@@ -102,6 +102,7 @@
                 active-text="深色模式"
                 inactive-text="浅色模式"
                 @change="setDarkMode"
+                :disabled="isAnimating"
             />
         </div>
         <el-divider></el-divider>
@@ -154,10 +155,11 @@ import useStore from "@/store";
 import {storeToRefs} from 'pinia'
 import color from "@/utils/color"
 import navigation from "@/utils/navigation";
+import {useDark, useToggle} from "@vueuse/core";
 
-const {theme, common,user} = useStore()
+const {theme, common, user} = useStore()
 const {menu_index} = storeToRefs(common)
-const {isNavigationVisible, setNavigationMode,navigationList} = navigation()
+const {isNavigationVisible, setNavigationMode, navigationList} = navigation()
 const router = useRouter()
 const {MyIcon} = icon()
 const {themeList} = color()
@@ -246,11 +248,11 @@ const photo = ref()
 
 // 个人中心-获取用户头像
 const getPhotoData = async () => {
-  try{
+  try {
     let data = await getUserinfo()
     photo.value = data[0].photo
     console.log("photo:", photo.value)
-  }catch (error) {
+  } catch (error) {
     ElMessage({
       message: '获取用户头像信息失败',
       type: 'error',
@@ -267,11 +269,68 @@ const handleClose = () => {
 };
 // 设置-显示模式默认值
 const {is_dark} = storeToRefs(theme)
+// 防止动画期间重复点击
+const isAnimating = ref(false)
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 // 设置-切换是否设置暗黑模式
-const setDarkMode = () => {
+const setDarkMode = (e) => {
   console.log("菜单栏执行切换事件", is_dark.value)
+  if (isAnimating.value) return
+
+  // 获取点击位置（同时支持鼠标和触摸事件）
+  const x = e.clientX || e.touches?.[0]?.clientX || window.innerWidth / 2
+  const y = e.clientY || e.touches?.[0]?.clientY || window.innerHeight / 2
+
+  // 计算扩散半径（覆盖最远角落）
+  const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+  )
+
+  // 动画定义
+  const clipPath = [
+    `circle(0px at ${x}px ${y}px)`,
+    `circle(${radius}px at ${x}px ${y}px)`
+  ]
+
+  // 不支持 View Transitions API 的浏览器
+  if (!document.startViewTransition) {
+    toggleDark()
+    return
+  }
+
+  isAnimating.value = true
+  const isDarkBefore = isDark.value
+
+  const transition = document.startViewTransition(() => {
+    toggleDark()
+  })
+
+  transition.ready.then(() => {
+    // 统一在新视图上执行动画
+    document.documentElement.animate(
+        {
+          clipPath: isDarkBefore ? [...clipPath].reverse() : clipPath
+        },
+        {
+          duration: 600,
+          easing: 'ease-in-out',
+          pseudoElement: '::view-transition-new(root)'
+        }
+    )
+  })
+
+  // 动画结束后重置状态
+  transition.finished.finally(() => {
+    isAnimating.value = false
+  })
+
+
+
   theme.is_dark = is_dark.value
-  theme.applyDark()
+  // theme.applyDark()
+
 }
 // 设置-侧边菜单显示是否折叠
 const {aside_menu_fold} = storeToRefs(common)
@@ -279,7 +338,7 @@ const {aside_menu_fold} = storeToRefs(common)
 const asideMenuFoldChange = (value) => {
   console.log("点了啊")
   console.log(value)
-  common.setAsideMenuFold (value)
+  common.setAsideMenuFold(value)
 }
 
 // 设置-默认主题色
