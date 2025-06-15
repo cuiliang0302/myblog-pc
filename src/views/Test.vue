@@ -1,61 +1,104 @@
 <template>
-  <div class="page">
-  <div class="demo-collapse">
-    <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item title="Consistency" name="1">
-        <div>
-          Consistent with real life: in line with the process and logic of real
-          life, and comply with languages and habits that the users are used to;
-        </div>
-        <div>
-          Consistent within interface: all elements should be consistent, such
-          as: design style, icons and texts, position of elements, etc.
-        </div>
-      </el-collapse-item>
-      <el-collapse-item title="Feedback" name="2">
-        <div>
-          Operation feedback: enable the users to clearly perceive their
-          operations by style updates and interactive effects;
-        </div>
-        <div>
-          Visual feedback: reflect current state by updating or rearranging
-          elements of the page.
-        </div>
-      </el-collapse-item>
-      <el-collapse-item title="Efficiency" name="3">
-        <div>
-          Simplify the process: keep operating process simple and intuitive;
-        </div>
-        <div>
-          Definite and clear: enunciate your intentions clearly so that the
-          users can quickly understand and make decisions;
-        </div>
-        <div>
-          Easy to identify: the interface should be straightforward, which helps
-          the users to identify and frees them from memorizing and recalling.
-        </div>
-      </el-collapse-item>
-      <el-collapse-item title="Controllability" name="4">
-        <div>
-          Decision making: giving advices about operations is acceptable, but do
-          not make decisions for the users;
-        </div>
-        <div>
-          Controlled consequences: users should be granted the freedom to
-          operate, including canceling, aborting or terminating current
-          operation.
-        </div>
-      </el-collapse-item>
-    </el-collapse>
-  </div>
+  <div>
+    <p>当前主题：{{ isDark ? '暗黑模式' : '亮色模式' }}</p>
+    <el-button
+        type="primary"
+        @click="toggleTheme"
+        :disabled="isAnimating"> <!-- 防止动画期间重复点击 -->
+      {{ isAnimating ? '切换中...' : '切换主题' }}
+    </el-button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useDark, useToggle } from '@vueuse/core'
 
-const activeNames = ref(['1'])
-const handleChange = (val) => {
-  console.log(val)
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+const isAnimating = ref(false) // 防止动画期间重复点击
+
+const toggleTheme = (e) => {
+  if (isAnimating.value) return
+
+  // 获取点击位置（同时支持鼠标和触摸事件）
+  const x = e.clientX || e.touches?.[0]?.clientX || window.innerWidth / 2
+  const y = e.clientY || e.touches?.[0]?.clientY || window.innerHeight / 2
+
+  // 计算扩散半径（覆盖最远角落）
+  const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+  )
+
+  // 动画定义
+  const clipPath = [
+    `circle(0px at ${x}px ${y}px)`,
+    `circle(${radius}px at ${x}px ${y}px)`
+  ]
+
+  // 不支持 View Transitions API 的浏览器
+  if (!document.startViewTransition) {
+    toggleDark()
+    return
+  }
+
+  isAnimating.value = true
+  const isDarkBefore = isDark.value
+
+  const transition = document.startViewTransition(() => {
+    toggleDark()
+  })
+
+  transition.ready.then(() => {
+    // 统一在新视图上执行动画
+    document.documentElement.animate(
+        {
+          clipPath: isDarkBefore ? [...clipPath].reverse() : clipPath
+        },
+        {
+          duration: 600,
+          easing: 'ease-in-out',
+          pseudoElement: '::view-transition-new(root)'
+        }
+    )
+  })
+
+  // 动画结束后重置状态
+  transition.finished.finally(() => {
+    isAnimating.value = false
+  })
 }
 </script>
+
+<style>
+/* 全局样式确保生效 */
+::view-transition-new(root),
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal; /* 修复颜色混合问题 */
+}
+
+/* 主题变量 */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #213547;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease; /* 平滑背景色过渡 */
+}
+
+:root.dark {
+  --bg-color: #1a1a1a;
+  --text-color: rgba(255, 255, 255, 0.87);
+}
+
+/* 添加页面过渡效果 */
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+</style>
