@@ -41,6 +41,12 @@ export default ({mode}) => {
         },
       },
     },
+    server: {
+      // 端口号
+      port: 3000,
+      // 监听所有地址
+      host: '0.0.0.0',
+    },
     define: {
       // enable hydration mismatch details in production build
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true'
