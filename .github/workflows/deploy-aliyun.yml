@@ -71,10 +71,8 @@ jobs:
             docker stop ${{ env.APP_NAME }} || true
             docker rm ${{ env.APP_NAME }} || true
             docker run -d --name ${{ env.APP_NAME }} \
-              -p ${{ env.APP_PORT }}:8000 \
+              -p ${{ env.APP_PORT }}:80 \
               --restart always \
-              --link redis \
-              -v /opt/myblog_api/envs:/opt/DRF/envs \
               $IMAGE_REF
 
             echo "======END======"
