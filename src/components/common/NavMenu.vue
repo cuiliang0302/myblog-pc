@@ -206,6 +206,9 @@ async function NoteData() {
 
 // 跳转至登录页
 const toLogin = () => {
+  console.log("开始登录了啊")
+  console.log(router.currentRoute.value.fullPath)
+  common.setNextPath(router.currentRoute.value.fullPath)
   router.push({path: '/loginRegister', query: {component: 'Login'}})
 }
 // 跳转至注册页
