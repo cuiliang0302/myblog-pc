@@ -1,13 +1,14 @@
 <template>
   <div v-title="sectionData.title+'-'+siteName">
     <section class="detail">
+      <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
       <NavMenu></NavMenu>
       <div class="detail-page">
         <div :class="'detail-left animate__animated animate__'+ (catalogShow===true?'fadeInLeft':'fadeOutLeft')">
           <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
                    :current-node-key="current" ref="treeRef"></el-tree>
-          <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
+
         </div>
         <div class="detail-center animate__animated animate__fadeInUp">
           <div class="current-position">

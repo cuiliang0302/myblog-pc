@@ -1,12 +1,13 @@
 <template>
   <div v-title="articleData.title+'-'+siteName">
     <section class="detail">
+      <!--    万维广告位-->
+      <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
       <NavMenu></NavMenu>
       <div class="detail-page">
         <div class="detail-left animate__animated animate__fadeInLeft">
           <!--        这是左边部分-->
-          <!--    万维广告位-->
-          <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
+
         </div>
         <div class="detail-center animate__animated animate__fadeInUp">
           <div class="current-position">
