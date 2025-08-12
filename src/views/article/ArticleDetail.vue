@@ -3,7 +3,7 @@
     <section class="detail">
       <NavMenu></NavMenu>
       <div class="detail-page">
-        <div class="detail-left animate__animated animate__fadeIn">
+        <div class="detail-left animate__animated animate__fadeInLeft">
           <!--        这是左边部分-->
           <!--    万维广告位-->
           <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
@@ -569,7 +569,7 @@ function action(articleID, articleData) {
     justify-content: space-between;
 
     .detail-left {
-      width: 15%;
+      width: 15vw;
     }
 
     .detail-center {

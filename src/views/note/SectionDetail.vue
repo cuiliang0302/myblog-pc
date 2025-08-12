@@ -3,8 +3,8 @@
     <section class="detail">
       <NavMenu></NavMenu>
       <div class="detail-page">
-        <div :class="'detail-left animate__animated animate__'+ (catalogShow===true?'fadeIn':'fadeOut')">
-          <el-tree v-if="catalogShow" accordion :data="catalogList" @node-click="handleNodeClick"
+        <div :class="'detail-left animate__animated animate__'+ (catalogShow===true?'fadeInLeft':'fadeOutLeft')">
+          <el-tree accordion :data="catalogList" @node-click="handleNodeClick"
                    :default-expanded-keys="expanded" node-key="id" :highlight-current="true"
                    :current-node-key="current" ref="treeRef"></el-tree>
           <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
@@ -604,7 +604,7 @@ function action(sectionID, sectionData) {
         height: 82vh;
         overflow-x: hidden; /* 水平隐藏 */
         overflow-y: auto; /* 垂直滚动 */
-        width: 15%;
+        width: 15vw;
         position: fixed;
         background-color: var(--el-background-color-base);
       }
