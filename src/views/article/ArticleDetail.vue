@@ -720,7 +720,7 @@ function action(articleID, articleData) {
 
   .detail-card {
     margin-top: 15px;
-    padding: 20px 10px;
+    //padding: 20px 10px;
     background-color: var(--el-bg-color-overlay);
   }
 }

@@ -727,7 +727,7 @@ function action(sectionID, sectionData) {
 
   .detail-card {
     margin-top: 15px;
-    padding: 20px 10px;
+    //padding: 20px 10px;
     background-color: var(--el-bg-color-overlay);
   }
 }
