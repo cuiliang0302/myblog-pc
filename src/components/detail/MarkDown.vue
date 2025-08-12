@@ -3,7 +3,7 @@
     <v-md-preview :text="text" @copy-code-success="handleCopyCodeSuccess" @image-click="showImg"></v-md-preview>
   </div>
   <el-image-viewer v-if="images.isShow" :initial-index="images.currentIndex"
-                   :url-list="images.MDimages" @close="images.isShow=false">
+                   :url-list="images.MDimages" @close="images.isShow=false" :teleported="true">
   </el-image-viewer>
 </template>
 

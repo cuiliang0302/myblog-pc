@@ -1,6 +1,7 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
+    <div class="animate__animated animate__slideInUp">
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
@@ -24,6 +25,7 @@
         <el-divider>我是有底线的</el-divider>
       </p>
     </el-card>
+    </div>
   </div>
   <Footer></Footer>
   <BackTop></BackTop>

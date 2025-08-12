@@ -9,7 +9,7 @@
                    :current-node-key="current" ref="treeRef"></el-tree>
           <div class="wwads-cn wwads-vertical wwads-sticky advertising" data-id="259"></div>
         </div>
-        <div class="detail-center">
+        <div class="detail-center animate__animated animate__fadeInUp">
           <div class="current-position">
             <span>您的位置：</span>
             <span>
@@ -64,7 +64,7 @@
             </div>
           </div>
         </div>
-        <div class="detail-right">
+        <div class="detail-right animate__animated animate__fadeIn">
           <Outline @rollTo="rollTo" :scrollTop="scrollTop"></Outline>
           <Action :detailType="'section'" @setCatalog="catalogShow=!catalogShow" :catalogShow="catalogShow"
                   @likeClick="likeClick" :isCollect="isCollect" @collectClick="collectClick"></Action>

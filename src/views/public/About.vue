@@ -1,7 +1,7 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
-    <div class="animate__animated animate__fadeIn">
+    <div class="animate__animated animate__fadeInUp">
       <el-collapse v-model="activeNames" expand-icon-position="left" >
         <el-collapse-item v-for="item in about" :key="item.id" :title="item.title" :name="item.id" >
           <MarkDown :text="item.body"></MarkDown>
