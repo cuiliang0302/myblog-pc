@@ -75,6 +75,9 @@ const images = reactive({
 })
 // markdown-图片查看
 const showImg = (MDimages, currentIndex) => {
+  console.log("查看图片了啊")
+  console.log(MDimages)
+  console.log(currentIndex)
   images.MDimages = MDimages
   images.currentIndex = currentIndex
   images.isShow = true
