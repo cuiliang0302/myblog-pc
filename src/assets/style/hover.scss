@@ -70,4 +70,7 @@
   border-radius: 5px;
   color: var(--el-bg-color-overlay);
   cursor: pointer;
+  .anticon {
+    color: var(--el-bg-color-overlay)!important;
+  }
 }

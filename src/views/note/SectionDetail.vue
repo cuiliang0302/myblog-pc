@@ -602,6 +602,7 @@ function action(sectionID, sectionData) {
       position: fixed;
       top: 70px;
       left: 0;
+      z-index: 1;
 
       .el-tree {
         height: 82vh;
