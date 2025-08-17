@@ -599,7 +599,9 @@ function action(sectionID, sectionData) {
     justify-content: space-between;
 
     .detail-left {
-      width: 15%;
+      position: fixed;
+      top: 70px;
+      left: 0;
 
       .el-tree {
         height: 82vh;
@@ -612,7 +614,8 @@ function action(sectionID, sectionData) {
     }
 
     .detail-center {
-      width: 70%;
+      width: 70vw;
+      padding-left:15vw;
 
       .main {
         h1 {
@@ -721,7 +724,7 @@ function action(sectionID, sectionData) {
     }
 
     .detail-right {
-      width: 15%;
+      width: 15vw;
     }
   }
 
