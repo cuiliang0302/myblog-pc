@@ -2,7 +2,7 @@
   <section class="home">
     <NavMenu></NavMenu>
     <div class="page">
-      <article class="animate__animated animate__fadeInLeft">
+      <article v-motion-slide-left :duration="1200">
         <div class="carousel">
           <el-skeleton :loading="carouselLoading" animated>
             <template #template>
@@ -36,9 +36,9 @@
               </div>
             </template>
             <ul>
-              <li v-for="item in article.list" :key="item.id">
-                <ArticleItem :article="item"></ArticleItem>
-              </li>
+                <li v-for="item in article.list" :key="item.id" v-motion-slide-visible-once-bottom :duration="1000">
+                  <ArticleItem :article="item"></ArticleItem>
+                </li>
             </ul>
             <p class="isLoading" v-if="loading" v-loading="loading"
                element-loading-text="玩命加载中"

@@ -1,5 +1,6 @@
 <template>
-  <section class="aside animate__animated animate__fadeInRight">
+  <section class="aside">
+    <MotionGroup preset="slideVisibleRight" :duration="1000">
     <el-card class="card-hover">
       <template #header>
         <span class="card-title no-choose">👍 推荐阅读</span>
@@ -209,6 +210,7 @@
         </div>
       </div>
     </el-card>
+    </MotionGroup>
   </section>
 </template>
 

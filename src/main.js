@@ -4,9 +4,8 @@ import router from '@/router';
 import store from '@/store';
 import mitt from 'mitt'
 import '@/assets/style/index.scss'
-import 'animate.css';
 import ElementPlus from '@/plugins/ElementPlus'
-// import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { MotionPlugin } from '@vueuse/motion'
 import 'dayjs/locale/zh-cn'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
@@ -24,6 +23,7 @@ app.use(pinia)
 app.use(router)
 app.use(ElementPlus)
 app.use(VueLoaders)
+app.use(MotionPlugin)
 app.mount('#app')
 // 自定义指令-动态title
 app.directive('title', {
