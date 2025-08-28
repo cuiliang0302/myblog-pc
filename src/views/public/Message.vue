@@ -1,7 +1,7 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
-    <div class="animate__animated animate__slideInUp">
+    <div v-motion-fade-visible :duration="1500">
     <el-card class="box-card">
       <template #header>
         <div class="card-header">

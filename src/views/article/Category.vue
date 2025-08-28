@@ -2,8 +2,8 @@
   <section class="category">
     <NavMenu></NavMenu>
     <div class="page">
-      <article class="animate__animated animate__fadeInLeft">
-        <div class="current-position">
+      <article>
+        <div class="current-position" v-motion-slide-visible-once-top  :duration="1200">
           <span>您的位置：</span>
           <span>
             <el-breadcrumb separator=">">
@@ -13,7 +13,7 @@
           </el-breadcrumb>
           </span>
         </div>
-        <div class="article-list">
+        <div class="article-list" v-motion-slide-visible-once-left :duration="1200">
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
@@ -21,7 +21,7 @@
               </div>
             </template>
             <ul>
-              <li v-for="item in article.list" :key="item.id">
+              <li v-for="item in article.list" :key="item.id" v-motion-slide-visible-once-bottom :duration="1000">
                 <ArticleItem :article="item"></ArticleItem>
               </li>
             </ul>

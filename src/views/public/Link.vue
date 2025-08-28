@@ -1,7 +1,7 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
-    <div class="animate__animated animate__zoomIn">
+    <div v-motion-fade-visible :duration="1500">
       <LinkContent :title="recommend.title" :linkList="recommend.link_list"></LinkContent>
       <LinkContent :title="link.title" :linkList="link.link_list"></LinkContent>
       <div class="title pointer" @click="$router.push('/applyLink')">

@@ -2,7 +2,7 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
-    <div class="animate__animated animate__zoomIn">
+    <div v-motion-fade-visible :duration="1500">
       <el-collapse v-model="activeNames" @change="handleChange" accordion expand-icon-position="left">
         <el-collapse-item v-for="(data,month) in classifyList" :key="month"
                           :title="formatMonth(month)+' (文章'+data.article+'篇 笔记'+data.section+'篇)'"

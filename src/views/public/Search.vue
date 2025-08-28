@@ -1,7 +1,7 @@
 <template>
   <NavMenu></NavMenu>
   <section class="page">
-    <div class="search-main animate__animated animate__zoomIn">
+    <div class="search-main" v-motion-pop :duration="1200">
       <div class="search-title">
         <span><MyIcon type="icon-search-logo"/></span>
         <p v-if="searchKind==='article'">文章搜索</p>

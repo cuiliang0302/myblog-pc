@@ -1,7 +1,7 @@
 <template>
   <NavMenu></NavMenu>
   <div class="page">
-    <div class="animate__animated animate__zoomIn">
+    <div v-motion-fade-visible :duration="1500">
       <el-card>
         <template #header>
           <span class="card-title no-choose"><MyIcon type="icon-tips-color"/> 申请须知</span>
