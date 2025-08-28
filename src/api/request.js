@@ -54,14 +54,14 @@ export function request(config) {
           return Promise.reject(error.response.data)
         case 401:
           console.log("无权访问")
-          showMessage('对不起，您暂无权限访问此接口，即将跳转登录页！')
+          showMessage('对不起，您的身份信息已过期，需重新登录！')
           localStorage.clear()
           sessionStorage.clear()
           await sleep(2000)
-          window.location.href = "/loginRegister?component=Login";
+          window.location.href = "/";
           break
         case 403:
-          showMessage('对不起，您的身份信息已过期，即将跳转登录页！')
+          showMessage('对不起，您无权限访问此数据，即将跳转至登录页')
           localStorage.clear()
           sessionStorage.clear()
           await sleep(2000)
