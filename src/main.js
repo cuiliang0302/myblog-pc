@@ -7,6 +7,7 @@ import '@/assets/style/index.scss'
 import ElementPlus from '@/plugins/ElementPlus'
 import { MotionPlugin } from '@vueuse/motion'
 import 'dayjs/locale/zh-cn'
+import 'animate.css';
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/assets/style/css-vars.css'
