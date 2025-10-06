@@ -59,7 +59,7 @@
           <el-tooltip content="按登录用户浏览文章笔记数统计top10" placement="top">
             <el-tab-pane label="🏃‍♂️卷王榜" name="access">
               <ol class="ranking" v-loading="rankingLoading">
-                <li v-for="user in accessTop" :key="user.id">
+                <li v-for="user in TopList" :key="user.id">
                   <p class="no-choose">
                     <el-avatar :src="user.photo" :size="25"/>
                     {{ user.username }}(文章{{ user.article_count }} 笔记{{ user.section_count }})
@@ -71,7 +71,7 @@
           <el-tooltip content="按登录用户评论文章笔记数统计top10" placement="top">
             <el-tab-pane label="🗣️话痨榜" name="comment">
               <ol class="ranking" v-loading="rankingLoading">
-                <li v-for="user in commentTop" :key="user.id">
+                <li v-for="user in TopList" :key="user.id">
                   <p class="no-choose">
                     <el-avatar :src="user.photo" :size="25"/>
                     {{ user.username }}(文章{{ user.article_count }} 笔记{{ user.section_count }})
@@ -319,29 +319,40 @@ async function rankingData() {
 // 卷王排行
 
 const activeTopName = ref("access")
-const handleClick  = (tab, event) => {
-  console.log(tab, event)
-}
-const accessTop = ref([])
-
-async function accessTopData() {
+const TopList = ref([])
+const handleClick  = (tab) => {
+  console.log(tab.index)
   const params = {
     kind: 'access'
   }
-  accessTop.value = await getUserRecord(params)
-  console.log("accessTop", accessTop.value)
-}
-
-// 话痨排行
-const commentTop = ref([])
-
-async function commentTopData() {
-  const params = {
-    kind: 'comment'
+  if (tab.index === 1) {
+    params.kind = 'comment'
   }
-  commentTop.value = await getUserRecord(params)
-  console.log("commentTop", commentTop.value)
+  getUserRecord(params).then((response) => {
+    console.log(response)
+    TopList.value = response
+  })
 }
+
+
+async function TopListData() {
+  const params = {
+    kind: 'access'
+  }
+  TopList.value = await getUserRecord(params)
+  console.log("TopList", TopList.value)
+}
+
+// // 话痨排行
+// const commentTop = ref([])
+//
+// async function commentTopData() {
+//   const params = {
+//     kind: 'comment'
+//   }
+//   commentTop.value = await getUserRecord(params)
+//   console.log("commentTop", commentTop.value)
+// }
 
 //关于博主信息
 const info = reactive({})
@@ -366,8 +377,7 @@ const toDetail = (detailID) => {
 onMounted(() => {
   recommendData()
   rankingData()
-  accessTopData()
-  commentTopData()
+  TopListData()
   infoData()
   statisticsData()
 })
