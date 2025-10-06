@@ -1,11 +1,11 @@
 <template>
   <section class="aside">
     <MotionGroup preset="slideVisibleRight" :duration="1000">
-    <el-card class="card-hover">
-      <template #header>
-        <span class="card-title no-choose">👍 推荐阅读</span>
-      </template>
-      <div class="recommend">
+      <el-card class="card-hover">
+        <template #header>
+          <span class="card-title no-choose">👍 推荐阅读</span>
+        </template>
+        <div class="recommend">
           <span class="recommend-hover"
                 v-for="article in recommend" :key="article.id"
                 @click="toDetail(article.id)">
@@ -19,15 +19,15 @@
           </el-image>
           <p class="no-choose">{{ article.title }}</p>
           </span>
-      </div>
-    </el-card>
-    <!--    万维广告位-->
-    <el-card class="card-hover advertising">
-      <div class="wwads-cn wwads-vertical" data-id="259"></div>
-    </el-card>
-    <el-card class="card-hover">
-      <template #header>
-        <el-dropdown @visible-change="dropdownChange" @command="handleCommand">
+        </div>
+      </el-card>
+      <!--    万维广告位-->
+      <el-card class="card-hover advertising">
+        <div class="wwads-cn wwads-vertical" data-id="259"></div>
+      </el-card>
+      <el-card class="card-hover">
+        <template #header>
+          <el-dropdown @visible-change="dropdownChange" @command="handleCommand">
           <span class="no-choose">
             <span class="card-title no-choose">🔥 {{ isRanking }}
               <!--              <i :class="isDropdown?'el-icon-caret-top':'el-icon-caret-bottom'+' el-icon&#45;&#45;right'"></i>-->
@@ -35,55 +35,87 @@
               <el-icon v-else><ArrowDown/></el-icon>
             </span>
           </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item
-                  v-for="(item,index) in ranking"
-                  :key="index" :command="index"
-                  :disabled="item.name===isRanking?true:false"
-              >
-                {{ item.name }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </template>
-      <ol class="ranking" v-loading="rankingLoading">
-        <li v-for="article in articleRanking" :key="article.id" @click="toDetail(article.id)">
-          <p class="no-choose ranking-hover">{{ article.title }}</p>
-        </li>
-      </ol>
-    </el-card>
-    <el-card class="card-hover tag-box">
-      <template #header>
-        <span class="card-title no-choose">🏷️ 所有标签</span>
-      </template>
-      <div class="all-tag">
-        <TagCloud></TagCloud>
-      </div>
-    </el-card>
-    <el-card class="card-hover">
-      <template #header>
-        <span class="card-title no-choose">👦 关于博主</span>
-      </template>
-      <div class="info">
-        <div class="no-choose">
-          <MyIcon type="icon-position"/>
-          {{ info.position }}
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                    v-for="(item,index) in ranking"
+                    :key="index" :command="index"
+                    :disabled="item.name===isRanking?true:false"
+                >
+                  {{ item.name }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+        <ol class="ranking" v-loading="rankingLoading">
+          <li v-for="article in articleRanking" :key="article.id" @click="toDetail(article.id)">
+            <p class="no-choose ranking-hover">{{ article.title }}</p>
+          </li>
+        </ol>
+      </el-card>
+      <el-card class="card-hover tag-box record-top">
+        <el-tabs>
+          <el-tooltip content="按登录用户浏览文章笔记数统计top10" placement="top">
+            <el-tab-pane label="🏃‍♂️卷王榜">
+              <ol class="ranking" v-loading="rankingLoading">
+                <li v-for="user in accessTop" :key="user.id">
+                  <p class="no-choose">
+                    <el-avatar
+                        :src="user.photo"
+                        :size="25"/>
+                    {{ user.username }}(文章{{ user.article_count }} 笔记{{ user.section_count }})
+                  </p>
+                </li>
+              </ol>
+            </el-tab-pane>
+          </el-tooltip>
+          <el-tooltip content="按登录用户评论文章笔记数统计top10" placement="top">
+            <el-tab-pane label="🗣️话痨榜">
+              <ol class="ranking" v-loading="rankingLoading">
+                <li v-for="user in commentTop" :key="user.id">
+                  <p class="no-choose">
+                    <el-avatar
+                        :src="user.photo"
+                        :size="25"/>
+                    {{ user.username }}(文章{{ user.article_count }} 笔记{{ user.section_count }})
+                  </p>
+                </li>
+              </ol>
+            </el-tab-pane>
+          </el-tooltip>
+        </el-tabs>
+      </el-card>
+      <el-card class="card-hover tag-box">
+        <template #header>
+          <span class="card-title no-choose">🏷️ 所有标签</span>
+        </template>
+        <div class="all-tag">
+          <TagCloud></TagCloud>
         </div>
-        <div class="no-choose">
-          <MyIcon type="icon-company"/>
-          {{ info.company }}
-        </div>
-        <div class="no-choose">
-          <MyIcon type="icon-location"/>
-          {{ info.location }}
-        </div>
-        <div>
-          <MyIcon type="icon-email"/>
-          {{ info.email }}
-        </div>
-        <div class="contact">
+      </el-card>
+      <el-card class="card-hover">
+        <template #header>
+          <span class="card-title no-choose">👦 关于博主</span>
+        </template>
+        <div class="info">
+          <div class="no-choose">
+            <MyIcon type="icon-position"/>
+            {{ info.position }}
+          </div>
+          <div class="no-choose">
+            <MyIcon type="icon-company"/>
+            {{ info.company }}
+          </div>
+          <div class="no-choose">
+            <MyIcon type="icon-location"/>
+            {{ info.location }}
+          </div>
+          <div>
+            <MyIcon type="icon-email"/>
+            {{ info.email }}
+          </div>
+          <div class="contact">
           <span>
               <el-popover
                   placement="top-start"
@@ -101,7 +133,7 @@
                 </template>
               </el-popover>
           </span>
-          <span>
+            <span>
             <el-popover
                 placement="top-start"
                 :width="235"
@@ -118,7 +150,7 @@
                 </template>
               </el-popover>
           </span>
-          <span>
+            <span>
             <el-popover
                 placement="top-start"
                 :width="235"
@@ -135,81 +167,81 @@
                 </template>
               </el-popover>
           </span>
-          <el-tooltip
-              effect="dark"
-              content="RSS订阅"
-              placement="top"
-          >
-            <span><a :href="info.rss" target="_blank"><MyIcon type="icon-rss"/></a></span>
-          </el-tooltip>
-          <el-tooltip
-              effect="dark"
-              content="GitHub仓库"
-              placement="top"
-          >
-            <span><a :href="info.github" target="_blank"><MyIcon type="icon-github-logo"/></a></span>
-          </el-tooltip>
-          <el-tooltip
-              effect="dark"
-              content="码云仓库"
-              placement="top"
-          >
-            <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
-          </el-tooltip>
+            <el-tooltip
+                effect="dark"
+                content="RSS订阅"
+                placement="top"
+            >
+              <span><a :href="info.rss" target="_blank"><MyIcon type="icon-rss"/></a></span>
+            </el-tooltip>
+            <el-tooltip
+                effect="dark"
+                content="GitHub仓库"
+                placement="top"
+            >
+              <span><a :href="info.github" target="_blank"><MyIcon type="icon-github-logo"/></a></span>
+            </el-tooltip>
+            <el-tooltip
+                effect="dark"
+                content="码云仓库"
+                placement="top"
+            >
+              <span><a :href="info.gitee" target="_blank"><MyIcon type="icon-gitee"/></a></span>
+            </el-tooltip>
+          </div>
         </div>
-      </div>
-    </el-card>
-    <el-card class="card-hover">
-      <template #header>
-        <span class="card-title no-choose">📊 网站统计</span>
-      </template>
-      <div class="statistics">
-        <div>
-          <MyIcon type="icon-uptime"/>
-          网站运行时长：{{ statistics.uptime }}天
+      </el-card>
+      <el-card class="card-hover">
+        <template #header>
+          <span class="card-title no-choose">📊 网站统计</span>
+        </template>
+        <div class="statistics">
+          <div>
+            <MyIcon type="icon-uptime"/>
+            网站运行时长：{{ statistics.uptime }}天
+          </div>
+          <div>
+            <MyIcon type="icon-pv"/>
+            24小时访问量：{{ statistics.pv }}次
+          </div>
+          <div>
+            <MyIcon type="icon-uv"/>
+            24小时访客数：{{ statistics.uv }}人
+          </div>
+          <div>
+            <MyIcon type="icon-ip"/>
+            24小时回访数：{{ statistics.bounces }}人
+          </div>
+          <div>
+            <MyIcon type="icon-online-user"/>
+            当前在线人数：{{ statistics.active }}人
+          </div>
+          <div>
+            <MyIcon type="icon-page-time"/>
+            平均访问时长：{{ statistics.page_time }}秒/页
+          </div>
+          <div>
+            <MyIcon type="icon-article"/>
+            文章篇数：{{ statistics.article }}篇
+          </div>
+          <div>
+            <MyIcon type="icon-section"/>
+            笔记篇数：{{ statistics.section }}篇
+          </div>
+          <div>
+            <MyIcon type="icon-category"/>
+            文章分类数：{{ statistics.category }}个
+          </div>
+          <div>
+            <MyIcon type="icon-tag"/>
+            文章标签数：{{ statistics.tag }}个
+          </div>
+          <div>
+            <MyIcon type="icon-note"/>
+            笔记分类数：{{ statistics.note }}个
+          </div>
         </div>
-        <div>
-          <MyIcon type="icon-pv"/>
-          24小时访问量：{{ statistics.pv }}次
-        </div>
-        <div>
-          <MyIcon type="icon-uv"/>
-          24小时访客数：{{ statistics.uv }}人
-        </div>
-        <div>
-          <MyIcon type="icon-ip"/>
-          24小时回访数：{{ statistics.bounces }}人
-        </div>
-        <div>
-          <MyIcon type="icon-online-user"/>
-          当前在线人数：{{ statistics.active }}人
-        </div>
-        <div>
-          <MyIcon type="icon-page-time"/>
-          平均访问时长：{{ statistics.page_time }}秒/页
-        </div>
-        <div>
-          <MyIcon type="icon-article"/>
-          文章篇数：{{ statistics.article }}篇
-        </div>
-        <div>
-          <MyIcon type="icon-section"/>
-          笔记篇数：{{ statistics.section }}篇
-        </div>
-        <div>
-          <MyIcon type="icon-category"/>
-          文章分类数：{{ statistics.category }}个
-        </div>
-        <div>
-          <MyIcon type="icon-tag"/>
-          文章标签数：{{ statistics.tag }}个
-        </div>
-        <div>
-          <MyIcon type="icon-note"/>
-          笔记分类数：{{ statistics.note }}个
-        </div>
-      </div>
-    </el-card>
+      </el-card>
     </MotionGroup>
   </section>
 </template>
@@ -225,6 +257,7 @@ import icon from "@/utils/icon";
 
 let {MyIcon} = icon()
 import {useRouter} from "vue-router";
+import {getUserRecord} from "@/api/record";
 
 const router = useRouter()
 //推荐阅读文章列表
@@ -287,8 +320,30 @@ async function rankingData() {
   console.log("articleRanking", articleRanking.value)
 }
 
+// 卷王排行
+const accessTop = ref([])
+
+async function accessTopData() {
+  const params = {
+    kind: 'access'
+  }
+  accessTop.value = await getUserRecord(params)
+  console.log("accessTop", accessTop.value)
+}
+
+// 话痨排行
+const commentTop = ref([])
+
+async function commentTopData() {
+  const params = {
+    kind: 'comment'
+  }
+  commentTop.value = await getUserRecord(params)
+  console.log("commentTop", commentTop.value)
+}
+
 //关于博主信息
-let info = reactive({})
+const info = reactive({})
 
 async function infoData() {
   Object.assign(info, await getInfo());
@@ -296,7 +351,7 @@ async function infoData() {
 }
 
 // 网站数据统计
-let statistics = reactive({})
+const statistics = reactive({})
 
 async function statisticsData() {
   Object.assign(statistics, await getSiteStatistics());
@@ -310,6 +365,8 @@ const toDetail = (detailID) => {
 onMounted(() => {
   recommendData()
   rankingData()
+  accessTopData()
+  commentTopData()
   infoData()
   statisticsData()
 })
@@ -397,6 +454,21 @@ onMounted(() => {
 
     li:nth-child(10) {
       color: #3498db;
+    }
+  }
+
+  .record-top {
+    :deep(.el-tabs__nav-scroll) {
+      padding: 0 20px !important;
+    }
+
+    :deep(.el-tabs__item) {
+      font-size: 22px !important;
+      padding-bottom: 10px !important;
+    }
+
+    :deep(.el-tabs__content) {
+      padding: 0 15px !important;
     }
   }
 

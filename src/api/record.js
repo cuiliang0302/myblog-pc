@@ -162,3 +162,9 @@ export function getUserEcharts(params) {
   const url = '/record/userEcharts/'
   return index.get(url, params)
 }
+
+// 查询用户浏览评论排行
+export function getUserRecord(params) {
+    const url = '/record/userRecord/'
+    return index.get(url, params)
+}
