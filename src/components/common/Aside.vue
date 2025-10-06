@@ -61,9 +61,7 @@
               <ol class="ranking" v-loading="rankingLoading">
                 <li v-for="user in accessTop" :key="user.id">
                   <p class="no-choose">
-                    <el-avatar
-                        :src="user.photo"
-                        :size="25"/>
+                    <el-avatar :src="user.photo" :size="25"/>
                     {{ user.username }}(文章{{ user.article_count }} 笔记{{ user.section_count }})
                   </p>
                 </li>
@@ -75,9 +73,7 @@
               <ol class="ranking" v-loading="rankingLoading">
                 <li v-for="user in commentTop" :key="user.id">
                   <p class="no-choose">
-                    <el-avatar
-                        :src="user.photo"
-                        :size="25"/>
+                    <el-avatar :src="user.photo" :size="25"/>
                     {{ user.username }}(文章{{ user.article_count }} 笔记{{ user.section_count }})
                   </p>
                 </li>
