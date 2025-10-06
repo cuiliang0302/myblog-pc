@@ -58,7 +58,7 @@
         <el-tabs v-model="activeTopName" @tab-click="handleClick">
           <el-tooltip content="按登录用户浏览文章笔记数统计top10" placement="top">
             <el-tab-pane label="🏃‍♂️卷王榜" name="access">
-              <ol class="ranking" v-loading="rankingLoading">
+              <ol class="ranking" v-loading="rankingLoading" v-if="activeTopName === 'access'">
                 <li v-for="user in TopList" :key="user.id">
                   <p class="no-choose">
                     <el-avatar :src="user.photo" :size="25"/>
@@ -70,7 +70,7 @@
           </el-tooltip>
           <el-tooltip content="按登录用户评论文章笔记数统计top10" placement="top">
             <el-tab-pane label="🗣️话痨榜" name="comment">
-              <ol class="ranking" v-loading="rankingLoading">
+              <ol class="ranking" v-loading="rankingLoading"  v-if="activeTopName === 'comment'">
                 <li v-for="user in TopList" :key="user.id">
                   <p class="no-choose">
                     <el-avatar :src="user.photo" :size="25"/>
@@ -325,9 +325,10 @@ const handleClick  = (tab) => {
   const params = {
     kind: 'access'
   }
-  if (tab.index === 1) {
+  if (tab.index === '1') {
     params.kind = 'comment'
   }
+  console.log(params)
   getUserRecord(params).then((response) => {
     console.log(response)
     TopList.value = response
