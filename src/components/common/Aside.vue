@@ -55,9 +55,9 @@
         </ol>
       </el-card>
       <el-card class="card-hover tag-box record-top">
-        <el-tabs>
+        <el-tabs v-model="activeTopName">
           <el-tooltip content="按登录用户浏览文章笔记数统计top10" placement="top">
-            <el-tab-pane label="🏃‍♂️卷王榜">
+            <el-tab-pane label="🏃‍♂️卷王榜" name="卷王榜">
               <ol class="ranking" v-loading="rankingLoading">
                 <li v-for="user in accessTop" :key="user.id">
                   <p class="no-choose">
@@ -69,7 +69,7 @@
             </el-tab-pane>
           </el-tooltip>
           <el-tooltip content="按登录用户评论文章笔记数统计top10" placement="top">
-            <el-tab-pane label="🗣️话痨榜">
+            <el-tab-pane label="🗣️话痨榜" name="️话痨榜">
               <ol class="ranking" v-loading="rankingLoading">
                 <li v-for="user in commentTop" :key="user.id">
                   <p class="no-choose">
@@ -317,6 +317,8 @@ async function rankingData() {
 }
 
 // 卷王排行
+
+const activeTopName = ref("卷王榜")
 const accessTop = ref([])
 
 async function accessTopData() {
