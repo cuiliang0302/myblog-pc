@@ -190,7 +190,11 @@ article {
     font-size: 30px;
   }
 }
-
+.box-card{
+  :deep(.el-card__body){
+    overflow: hidden;
+  }
+}
 aside {
 }
 </style>

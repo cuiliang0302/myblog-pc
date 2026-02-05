@@ -213,7 +213,6 @@ a:hover {
 
 /* tags-cloud */
 #tags-cloud {
-  width: 280px;
   height: 200px;
   position: relative;
   font-size: 12px;
