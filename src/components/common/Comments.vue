@@ -55,6 +55,8 @@
       v-model="textareaShow"
       title="回复留言"
       width="50%"
+      center
+      append-to-body
   >
     <Editor ref="replyEditor"></Editor>
     <template #footer>
