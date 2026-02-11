@@ -36,9 +36,9 @@
               </div>
             </template>
             <ul>
-                <li v-for="item in article.list" :key="item.id" v-motion-slide-visible-once-bottom :duration="1000">
-                  <ArticleItem :article="item"></ArticleItem>
-                </li>
+              <li v-for="item in article.list" :key="item.id">
+                <ArticleItem :article="item"></ArticleItem>
+              </li>
             </ul>
             <p class="isLoading" v-if="loading" v-loading="loading"
                element-loading-text="玩命加载中"
@@ -116,35 +116,27 @@ const svg = `
       `
 // 加载下一页
 const load = () => {
-  console.log("加载下一页了")
   getArticle(article_params).then((response) => {
     article.list.push(...response.results)
     article.count = response.count
-    console.log(response.results)
-    loading.value = false;
+    loading.value = false
     article_params.page = article_params.page + 1
   })
 }
-// 页面滚动事件
-const scrollHandle = () => {
-  const scrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight
-  const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
-  const clientHeight = document.documentElement.clientHeight
+const DISTANCE_TO_LOAD = 600 // 距页面底部多少 px 时提前加载（约一屏高度，避免滚到底才加载）
+const onPageScroll = () => {
+  if (!noMore.value || loading.value) return
+  const { scrollHeight, scrollTop, clientHeight } = document.documentElement
   const distance = scrollHeight - scrollTop - clientHeight
-  if (distance <= 400 && noMore.value) {
-    if (!loading.value) {
-      loading.value = true;
-      setTimeout(() => {
-        load()
-      }, 300);
-    }
+  if (distance <= DISTANCE_TO_LOAD) {
+    loading.value = true
+    load()
   }
 }
 onMounted(() => {
   CarouselData()
   load()
-  // 监听滚动事件
-  window.addEventListener("scroll", scrollHandle, false)
+  window.addEventListener('scroll', onPageScroll, { passive: true })
   setTimeout(() => {
     carouselLoading.value = false
   }, 2000)
@@ -155,11 +147,9 @@ onMounted(() => {
   script.setAttribute('data-website-id', "148a1e4d-f683-4819-a172-7605346b75e7")
   script.setAttribute('data-auto-track', "false")
   document.body.appendChild(script)
-  // console.log("umami", window.umami.track)
 })
 onUnmounted(() => {
-  // 组件卸载时，停止监听
-  window.removeEventListener("scroll", scrollHandle, false)
+  window.removeEventListener('scroll', onPageScroll)
 })
 onActivated(() => {
   common.setMenuIndex('1')
@@ -190,8 +180,8 @@ article {
     font-size: 30px;
   }
 }
-.box-card{
-  :deep(.el-card__body){
+.box-card {
+  :deep(.el-card__body) {
     overflow: hidden;
   }
 }

@@ -78,11 +78,14 @@ async function getLogoData() {
   console.log("logo:", logo.value)
 }
 
-// 获取用户头像
+// 获取用户头像（接口返回数组，取第一项）
 async function getPhotoData() {
-  let data = await getUserinfo(user.user_id)
-  console.log(data)
-  photo.value = data.photo
+  try {
+    let data = await getUserinfo()
+    if (data?.[0]?.photo) photo.value = data[0].photo
+  } catch (err) {
+    console.error('获取用户头像失败', err)
+  }
 }
 
 // 留言列表

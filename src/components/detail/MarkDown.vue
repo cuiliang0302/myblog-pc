@@ -30,7 +30,7 @@ import css from 'highlight.js/lib/languages/css';
 import scss from 'highlight.js/lib/languages/scss';
 import xml from 'highlight.js/lib/languages/xml';
 import {ElMessage} from "element-plus";
-import {nextTick, onMounted, reactive, ref, watch} from "vue";
+import {nextTick, onMounted, onBeforeUnmount, reactive, ref, watch} from "vue";
 import useStore from "@/store";
 import {storeToRefs} from 'pinia'
 const {common} = useStore();
@@ -87,27 +87,38 @@ const editor = ref(null)
 // markdown-文章标题列表
 const titleList = ref([])
 
-// markdown-获取标题
+// 防抖：图片/布局多次变化时只重算一次
+let getTitleTimer = null
+function scheduleGetTitle() {
+  if (getTitleTimer) clearTimeout(getTitleTimer)
+  getTitleTimer = setTimeout(() => {
+    getTitleTimer = null
+    getTitle()
+  }, 150)
+}
+
+// markdown-获取标题（高度为相对文档的垂直位置，图片加载后需通过 ResizeObserver 重新计算）
 async function getTitle() {
+  if (!editor.value) return
   await nextTick()
   const anchors = editor.value.querySelectorAll(
       '.v-md-editor-preview h1,h2,h3,h4,h5,h6'
   )
-  // console.log(anchors)
   const titles = Array.from(anchors).filter((title) => !!title.innerText.trim());
-  // console.log(titles)
   if (!titles.length) {
     titleList.value = [];
+    outline_list.value = []
+    common.setOutlineList(outline_list.value)
     return;
   }
   const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort();
+  const docTop = () => window.pageYOffset || document.documentElement.scrollTop;
   titleList.value = titles.map((el) => ({
     title: el.innerText,
     lineIndex: el.getAttribute('data-v-md-line'),
     indent: hTags.indexOf(el.tagName),
-    height: el.offsetTop,
+    height: el.getBoundingClientRect().top + docTop(),
   }));
-  console.log(titleList.value)
   outline_list.value = titleList.value
   common.setOutlineList(outline_list.value)
 }
@@ -133,8 +144,29 @@ watch(
       }
     }
 )
+let resizeObserver = null
+let observedEl = null
 onMounted(async () => {
   await getTitle()
+  // 图片等资源加载会改变内容高度，用 ResizeObserver 在尺寸变化后重新计算标题位置
+  observedEl = editor.value?.querySelector?.('.v-md-editor-preview') || editor.value
+  if (observedEl) {
+    resizeObserver = new ResizeObserver(scheduleGetTitle)
+    resizeObserver.observe(observedEl)
+  }
+  // 预览区域内图片 load 时也触发重算（懒加载/慢速网络时更及时）
+  const imgs = editor.value?.querySelectorAll?.('.v-md-editor-preview img') || []
+  imgs.forEach((img) => {
+    if (img.complete) scheduleGetTitle()
+    else img.addEventListener('load', scheduleGetTitle)
+  })
+})
+onBeforeUnmount(() => {
+  if (resizeObserver && observedEl) {
+    resizeObserver.unobserve(observedEl)
+    resizeObserver.disconnect()
+  }
+  if (getTitleTimer) clearTimeout(getTitleTimer)
 })
 </script>
 

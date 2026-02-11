@@ -577,6 +577,7 @@ function action(articleID, articleData) {
       width: 70%;
 
       .main {
+        padding:10px 0;
         h1 {
           text-align: center;
           margin: 20px 0;
@@ -644,6 +645,7 @@ function action(articleID, articleData) {
       }
 
       .guess {
+        padding:10px;
         > div {
           display: flex;
           justify-content: center;
@@ -675,7 +677,7 @@ function action(articleID, articleData) {
 
       .comments {
         margin-bottom: 15px;
-
+        padding: 10px;
         .input-field {
           display: flex;
           justify-content: center;

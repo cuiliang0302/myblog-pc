@@ -685,6 +685,7 @@ function action(sectionID, sectionData) {
       }
 
       .comments {
+        padding: 10px;
         margin-bottom: 15px;
 
         .input-field {

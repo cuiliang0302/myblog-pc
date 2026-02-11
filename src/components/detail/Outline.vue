@@ -50,19 +50,17 @@ const rollTo = (anchor, index) => {
   emit('rollTo', anchor)
   heightTitle.value = index
 }
-// 监听页面滚动
+// 监听页面滚动：高亮「已进入视口」的最后一个标题（与文档顶对齐，height 与 scrollTop 同坐标系）
 watch(
     () => props.scrollTop,
     (value) => {
-      if (outline_list.value) {
-        const absList = [] // 各个h标签与当前距离绝对值
-        outline_list.value.forEach((item) => {
-          absList.push(Math.abs(item.height - value))
-        })
-        // 屏幕滚动距离与标题具体最近的index高亮
-        heightTitle.value = absList.indexOf(Math.min.apply(null, absList))
-        // console.log("距离最近的标题index", heightTitle.value)
+      if (!outline_list.value?.length) return
+      const offset = 80 // 标题接近视口顶部时的切换阈值
+      let lastIndex = -1
+      for (let i = 0; i < outline_list.value.length; i++) {
+        if (outline_list.value[i].height <= value + offset) lastIndex = i
       }
+      heightTitle.value = lastIndex >= 0 ? lastIndex : 0
     }
 )
 </script>

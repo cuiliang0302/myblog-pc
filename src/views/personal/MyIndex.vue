@@ -259,6 +259,9 @@ async function trend() {
     },
     legend: {
       data: ['浏览文章数', '收藏文章数', '评论文章数', '浏览笔记数', '收藏笔记数', '评论笔记数'],
+      bottom: '0%',
+      left: 'center',
+      orient: 'horizontal',
       textStyle: {
         color: text.value
       }
@@ -266,7 +269,8 @@ async function trend() {
     grid: {
       left: '3%',
       right: '5%',
-      bottom: '3%',
+      bottom: '18%',
+      top: '12%',
       containLabel: true
     },
     xAxis: [
@@ -370,6 +374,9 @@ async function article() {
     },
     legend: {
       type: 'scroll',
+      bottom: '0%',
+      left: 'center',
+      orient: 'horizontal',
       textStyle: {
         color: text.value
       }
@@ -377,7 +384,8 @@ async function article() {
     series: [
       {
         type: 'pie',
-        radius: '50%',
+        radius: '45%',
+        center: ['50%', '42%'],
         data: chartData,
         emphasis: {
           itemStyle: {
@@ -486,6 +494,9 @@ async function time() {
     },
     legend: {
       data: ['浏览文章数', '浏览笔记数'],
+      bottom: '0%',
+      left: 'center',
+      orient: 'horizontal',
       textStyle: {
         color: text.value
       }
@@ -493,7 +504,8 @@ async function time() {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
+      bottom: '18%',
+      top: '10%',
       containLabel: true
     },
     xAxis: {
