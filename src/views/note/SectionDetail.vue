@@ -619,6 +619,7 @@ function action(sectionID, sectionData) {
       padding-left:15vw;
 
       .main {
+        padding: 10px 0;
         h1 {
           text-align: center;
           margin: 20px 0;
