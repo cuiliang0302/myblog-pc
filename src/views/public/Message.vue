@@ -16,7 +16,7 @@
         <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
       </div>
       <div class="comment-list">
-        <Comments :commentsList="messageList.data" :key="refreshKey"></Comments>
+        <Comments :commentsList="messageList.data" :key="refreshKey" @like-message="handleLikeMessage" @reply-send="handleReplySend" @del-message="handleDelMessage" @reply-view="handleReplyView"></Comments>
       </div>
       <p class="isLoading" v-if="loading" v-loading="loading"
          element-loading-text="玩命加载中"
@@ -40,7 +40,7 @@ import BackTop from "@/components/common/BackTop.vue"
 import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue";
 import LoginPopup from "@/components/common/LoginPopup.vue"
-import {getCurrentInstance, onMounted, onUnmounted, reactive, ref, computed} from "vue";
+import {onMounted, onUnmounted, reactive, ref, computed} from "vue";
 import {
   deleteLeaveMessage,
   getLeaveMessage,
@@ -56,9 +56,6 @@ import useStore from "@/store";
 
 const {user,common} = useStore();
 const router = useRouter()
-// 事件总线
-const internalInstance = getCurrentInstance();  //当前组件实例
-const $bus = internalInstance.appContext.config.globalProperties.$bus;
 // 页面刷新
 import {inject} from 'vue';
 
@@ -179,7 +176,7 @@ const handleScroll = () => {
   }
 };
 // 留言查看回复事件
-if (!$bus.all.get("replyView")) $bus.on("replyView", (value) => {
+const handleReplyView = (value) => {
   getLeaveMessageDetail(value).then((response) => {
     console.log(response)
     console.log(messageList.data)
@@ -195,9 +192,9 @@ if (!$bus.all.get("replyView")) $bus.on("replyView", (value) => {
     console.log(response)
     ElMessage.error(response.msg)
   });
-});
+}
 // 留言点赞事件
-if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", (value) => {
+const handleLikeMessage = (value) => {
   const params = {'like': value.like}
   patchLeaveMessage(value.id, params).then((response) => {
     console.log(response)
@@ -212,9 +209,9 @@ if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", (value) => {
     console.log(response)
     ElMessage.error(response.msg)
   });
-});
+}
 // 留言回复事件
-if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+const handleReplySend = replyForm => {
   console.log(replyForm)
   postReplyLeaveMessage(replyForm).then((response) => {
     console.log(response)
@@ -231,9 +228,9 @@ if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
       ElMessage.error(i + response[i][0])
     }
   });
-});
+}
 // 留言删除事件
-if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+const handleDelMessage = messageId => {
   console.log(messageId)
   deleteLeaveMessage(messageId).then((response) => {
     console.log(response)
@@ -248,7 +245,7 @@ if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
     console.log(response)
     ElMessage.error(response.msg)
   });
-});
+}
 onMounted(() => {
   common.setMenuIndex('5')
   leaveMessageData()

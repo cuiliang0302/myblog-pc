@@ -50,18 +50,20 @@ const rollTo = (anchor, index) => {
   emit('rollTo', anchor)
   heightTitle.value = index
 }
-// 监听页面滚动：高亮「已进入视口」的最后一个标题（与文档顶对齐，height 与 scrollTop 同坐标系）
+// 滚动或图片加载导致标题位置变化时，重新匹配当前浏览位置
 watch(
-    () => props.scrollTop,
-    (value) => {
+    [() => props.scrollTop, outline_list],
+    () => {
       if (!outline_list.value?.length) return
+      const value = window.scrollY
       const offset = 80 // 标题接近视口顶部时的切换阈值
       let lastIndex = -1
       for (let i = 0; i < outline_list.value.length; i++) {
         if (outline_list.value[i].height <= value + offset) lastIndex = i
       }
       heightTitle.value = lastIndex >= 0 ? lastIndex : 0
-    }
+    },
+    {immediate: true}
 )
 </script>
 

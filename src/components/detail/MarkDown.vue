@@ -99,8 +99,8 @@ function scheduleGetTitle() {
 
 // markdown-获取标题（高度为相对文档的垂直位置，图片加载后需通过 ResizeObserver 重新计算）
 async function getTitle() {
-  if (!editor.value) return
   await nextTick()
+  if (!editor.value) return
   const anchors = editor.value.querySelectorAll(
       '.v-md-editor-preview h1,h2,h3,h4,h5,h6'
   )
@@ -154,14 +154,13 @@ onMounted(async () => {
     resizeObserver = new ResizeObserver(scheduleGetTitle)
     resizeObserver.observe(observedEl)
   }
-  // 预览区域内图片 load 时也触发重算（懒加载/慢速网络时更及时）
-  const imgs = editor.value?.querySelectorAll?.('.v-md-editor-preview img') || []
-  imgs.forEach((img) => {
-    if (img.complete) scheduleGetTitle()
-    else img.addEventListener('load', scheduleGetTitle)
-  })
+  // 捕获图片事件，兼容正文更新后新增的图片以及图片加载失败。
+  editor.value?.addEventListener('load', scheduleGetTitle, true)
+  editor.value?.addEventListener('error', scheduleGetTitle, true)
 })
 onBeforeUnmount(() => {
+  editor.value?.removeEventListener('load', scheduleGetTitle, true)
+  editor.value?.removeEventListener('error', scheduleGetTitle, true)
   if (resizeObserver && observedEl) {
     resizeObserver.unobserve(observedEl)
     resizeObserver.disconnect()

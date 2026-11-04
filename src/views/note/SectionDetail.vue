@@ -61,7 +61,7 @@
               <span v-else><el-button type="primary" round @click="showLogin">登录</el-button></span>
             </div>
             <div class="comment-list">
-              <Comments :comments-list="commentsList"></Comments>
+              <Comments :comments-list="commentsList" @like-message="handleLikeMessage" @reply-send="handleReplySend" @del-message="handleDelMessage"></Comments>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@ import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElMessage, ElLoading} from 'element-plus'
 import {getSectionDetail, getContextSection, getCatalogueList, postLike} from "@/api/blog";
-import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
+import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -141,7 +141,10 @@ let {
   logo,
   photo,
   showLogin,
-  clickSend
+  clickSend,
+  handleLikeMessage,
+  handleReplySend,
+  handleDelMessage
 } = comment(sectionID, loginPopupRef, messageEditor)
 // 调用动作菜单模块
 let {likeClick, isCollect, collectClick, getSectionHistoryData, postSectionHistoryData} = action(sectionID, sectionData)
@@ -348,9 +351,6 @@ function markdown() {
 
 // 评论回复点赞模块
 function comment(sectionID) {
-  // 事件总线
-  const internalInstance = getCurrentInstance();  //当前组件实例
-  const $bus = internalInstance.appContext.config.globalProperties.$bus;
   // logo
   const logo = ref()
   // 用户头像
@@ -429,7 +429,7 @@ function comment(sectionID) {
     }
   }
   // 评论点赞事件
-  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", value => {
+  const handleLikeMessage = value => {
     const params = {'like': value.like}
     patchSectionComment(value.id, params).then((response) => {
       console.log(response)
@@ -444,9 +444,9 @@ function comment(sectionID) {
       console.log(response)
       ElMessage.error(response.msg)
     });
-  });
+  }
   // 留言回复事件
-  if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+  const handleReplySend = replyForm => {
     replyForm['section_id'] = sectionID.value
     replyForm['url'] = window.location.href
     console.log(replyForm)
@@ -465,9 +465,9 @@ function comment(sectionID) {
         ElMessage.error(i + response[i][0])
       }
     });
-  });
+  }
   // 评论删除事件
-  if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+  const handleDelMessage = messageId => {
     deleteSectionComment(messageId).then((response) => {
       console.log(response)
       ElMessage({
@@ -481,7 +481,7 @@ function comment(sectionID) {
       console.log(response)
       ElMessage.error(response.msg)
     });
-  });
+  }
   onMounted(() => {
     getSectionCommentData()
     if (user.isLoggedIn === true) {
@@ -491,7 +491,7 @@ function comment(sectionID) {
     }
   })
   return {
-    commentsList, getSectionCommentData, logo, photo, messageForm, showLogin, clickSend
+    commentsList, getSectionCommentData, logo, photo, messageForm, showLogin, clickSend, handleLikeMessage, handleReplySend, handleDelMessage
   }
 }
 

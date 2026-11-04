@@ -94,7 +94,7 @@
             </div>
             <div class="comment-list">
               <div class="comment-list">
-                <Comments :comments-list="commentsList"></Comments>
+                <Comments :comments-list="commentsList" @like-message="handleLikeMessage" @reply-send="handleReplySend" @del-message="handleDelMessage"></Comments>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@ import Editor from "@/components/common/Editor.vue"
 import Comments from "@/components/common/Comments.vue"
 import {ElLoading, ElMessage} from 'element-plus'
 import {getArticleDetail, getContextArticle, getGuessLike, postLike} from "@/api/blog";
-import {onMounted, reactive, ref, onBeforeUnmount, nextTick, getCurrentInstance} from "vue";
+import {onMounted, reactive, ref, onBeforeUnmount, nextTick} from "vue";
 import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import {getImgProxy} from "@/api/public";
 import timeFormat from "@/utils/timeFormat";
@@ -166,7 +166,10 @@ let {
   logo,
   photo,
   showLogin,
-  clickSend
+  clickSend,
+  handleLikeMessage,
+  handleReplySend,
+  handleDelMessage
 } = comment(articleID, getArticleData, loginPopupRef, messageEditor)
 // 调用动作菜单模块
 let {likeClick, isCollect, getArticleHistoryData, collectClick, postArticleHistoryData} = action(articleID, articleData)
@@ -185,10 +188,10 @@ onMounted(async () => {
   await getContextData(articleID.value)
   await getGuessLikeData(articleID.value)
   await postArticleHistoryData(articleID.value)
-  window.addEventListener('scroll', scroll())
+  window.addEventListener('scroll', scroll, {passive: true})
 })
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', scroll())
+  window.removeEventListener('scroll', scroll)
 })
 onBeforeRouteUpdate(async (to) => {
   // 开启加载中动画
@@ -306,25 +309,23 @@ function markdown() {
     }
   }
   // markdown-页面滚动高度
-  const scrollTop = ref()
-  // markdown-页面滚动
+  const scrollTop = ref(0)
+  let scrollFrame = null
   const scroll = () => {
-    let timeOut = null; // 初始化空定时器
-    return () => {
-      clearTimeout(timeOut)   // 频繁操作，一直清空先前的定时器
-      timeOut = setTimeout(() => {  // 只执行最后一次事件
-        scrollTop.value = window.pageYOffset
-      }, 500)
-    }
+    if (scrollFrame !== null) return
+    scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = null
+      scrollTop.value = window.scrollY
+    })
   }
+  onBeforeUnmount(() => {
+    if (scrollFrame !== null) cancelAnimationFrame(scrollFrame)
+  })
   return {rollTo, scrollTop, scroll}
 }
 
 // 评论回复模块
 function comment(articleID) {
-  // 事件总线
-  const internalInstance = getCurrentInstance();  //当前组件实例
-  const $bus = internalInstance.appContext.config.globalProperties.$bus;
   // logo
   const logo = ref()
   // 用户头像
@@ -399,7 +400,7 @@ function comment(articleID) {
     }
   }
   // 评论点赞事件
-  if (!$bus.all.get("likeMessage")) $bus.on("likeMessage", value => {
+  const handleLikeMessage = value => {
     const params = {'like': value.like}
     patchArticleComment(value.id, params).then((response) => {
       console.log(response)
@@ -414,9 +415,9 @@ function comment(articleID) {
       console.log(response)
       ElMessage.error(response.msg)
     });
-  });
+  }
   // 评论回复事件
-  if (!$bus.all.get("replySend")) $bus.on("replySend", replyForm => {
+  const handleReplySend = replyForm => {
     replyForm['article_id'] = articleID.value
     console.log(replyForm)
     postReplyArticleComment(replyForm).then((response) => {
@@ -434,9 +435,9 @@ function comment(articleID) {
         ElMessage.error(i + response[i][0])
       }
     });
-  });
+  }
   // 评论删除事件
-  if (!$bus.all.get("delMessage")) $bus.on("delMessage", messageId => {
+  const handleDelMessage = messageId => {
     deleteArticleComment(messageId).then((response) => {
       console.log(response)
       console.log("要开始删除了")
@@ -451,7 +452,7 @@ function comment(articleID) {
       console.log(response)
       ElMessage.error(response.msg)
     });
-  });
+  }
   onMounted(() => {
     getArticleCommentData()
     if (user.isLoggedIn === true) {
@@ -461,7 +462,7 @@ function comment(articleID) {
     }
   })
   return {
-    commentsList, logo, photo, messageForm, showLogin, clickSend
+    commentsList, logo, photo, messageForm, showLogin, clickSend, handleLikeMessage, handleReplySend, handleDelMessage
   }
 }
 

@@ -47,7 +47,11 @@
       </span>
     </li>
     <div class="reply">
-      <Comments :commentsList="item.child"></Comments>
+      <Comments :commentsList="item.child"
+                @like-message="emit('likeMessage', $event)"
+                @del-message="emit('delMessage', $event)"
+                @reply-send="emit('replySend', $event)"
+                @reply-view="emit('replyView', $event)"></Comments>
     </div>
   </ol>
 
@@ -69,7 +73,7 @@
 </template>
 
 <script setup>
-import {reactive, ref, getCurrentInstance} from "vue";
+import {reactive, ref} from "vue";
 import timeFormat from "@/utils/timeFormat";
 import icon from "@/utils/icon";
 import {ElMessage} from "element-plus";
@@ -87,9 +91,6 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['likeMessage', 'delMessage', 'replySend', 'replyView'])
-// 事件总线
-const internalInstance = getCurrentInstance();
-const $bus = internalInstance.appContext.config.globalProperties.$bus;
 // 时间显示几天前
 let {timeAgo} = timeFormat()
 // 已点赞列表
@@ -106,7 +107,7 @@ const isLike = (messageId) => {
 // 查看回复
 const replyView = (messageId) => {
   console.log("查看回复了啊")
-  $bus.emit("replyView", messageId);
+  emit("replyView", messageId);
   console.log(messageId)
 }
 // 留言评论点赞
@@ -125,7 +126,7 @@ const likeMessage = (messageId, likeMessage) => {
     'id': messageId,
     'like': likeMessage + 1
   }
-  $bus.emit("likeMessage", value);
+  emit("likeMessage", value);
   console.log(messageId)
 }
 // 回复输入框默认状态
@@ -158,7 +159,7 @@ const replySend = () => {
   } else {
     console.log(replyForm)
     console.log(replyForm.content)
-    $bus.emit("replySend", replyForm);
+    emit("replySend", replyForm);
     replyEditor.value.clear()
     replyForm.content = ''
     textareaShow.value = false
@@ -175,7 +176,7 @@ const isDelete = (userID) => {
 // 评论留言删除
 const delMessage = (messageId) => {
   console.log(messageId)
-  $bus.emit("delMessage", messageId);
+  emit("delMessage", messageId);
 }
 </script>
 
